@@ -1,0 +1,467 @@
+# New Cluster program
+class computation:
+
+    def __init__(self, computation_path="", computation_file="computation",
+                 mode=1, plot_bool=1, N=1500, potential_id=0,
+                 medim1=60, medim0=60, meBND=6, meBND_small=6,
+                 system_output_filepath="./output/system",
+                 summary_output_filepath="./output/summary",
+                 result_output_filepath="./output/result",
+                 evo_method=1, solve_method=2, abstol=1e-8, ideg=2, timebool=1,
+                 xranges=8.0e0, appendbool = 0, performancebool=1, rhox_tolerance=1e-6):
+        
+        self.computation_path = computation_path
+        self.computation_file = computation_file
+        self.computation = self.computation_path + "/" + self.computation_file
+        
+        self.mode = mode
+        self.plot_bool = plot_bool
+        self.N = N
+        self.potential_id = potential_id
+        self.medim1 = medim1
+        self.medim0 = medim0
+        self.meBND = meBND
+        self.meBND_small = meBND_small
+        self.system_output_filepath = system_output_filepath
+        self.result_output_filepath = result_output_filepath
+        self.summary_output_filepath = summary_output_filepath
+        self.evo_method = evo_method
+        self.solve_method = solve_method
+        self.abstol = abstol
+        self.ideg = ideg
+        self.timebool = timebool
+        self.xranges = xranges
+        self.appendbool = appendbool
+        self.performancebool = performancebool
+        self.rhox_tolerance = rhox_tolerance    
+        
+
+    def write_computation_file(self):
+
+        Computation = open(self.computation, "w")  
+        Computation.write("---------------Program Mode-------------------------------------\n")
+        Computation.write("%20d" % self.mode + "           " +  "#Program-Mode | 1: Voltage-Loop\n")
+        Computation.write("%20d" % self.plot_bool + "           " + "#Output System Generation: 0: No output, 1: Output\n")
+        Computation.write("---------------System-------------------------------------------\n")
+        Computation.write("%20d" % self.N + "           " + "#N\n")
+        Computation.write("%20d" % self.potential_id + "           " + "#id\n")
+        Computation.write("--------------MasterEq-----------------------------------------\n")
+        Computation.write("%20d" % self.medim0 + "           "  + "  #medim00          Dimension 00\n")
+        Computation.write("%20d" % self.medim1 + "           " + "  #medim11          Dimension 11\n")
+        Computation.write("%20d" % self.meBND + "           " + "  #meBand           Bandwidth\n")
+        Computation.write("%20d" % self.meBND_small + "           " + "  #meBand           Bandwidth\n")
+        Computation.write("----------------OuputPaths--------------------------------------\n")
+        Computation.write("--- System output filepath\n")
+        Computation.write(self.system_output_filepath + "\n")
+        Computation.write("--- Summary output filepath\n")
+        Computation.write(self.summary_output_filepath + "\n")
+        Computation.write("--- Result output filepath\n")
+        Computation.write(self.result_output_filepath + "\n")
+        Computation.write("---------------Time Evolution-----------------------------------\n")
+        Computation.write("%20d" % self.evo_method + "           " + "  #Evaluation Method (1=expokit chebjev, 2=zvode, 3=expokit pade)\n")
+        Computation.write("%20d" % self.ideg + "           " + "  #Pade Coefficient for Calcs\n")
+        Computation.write("---------------Schroedinger ------------------------------------\n")
+        Computation.write("%20d" % self.ideg + "           " + "  #Logical for Eigensystem Routine for Schroedinger\n")
+        Computation.write("%20d" % self.abstol + "           " + "\n")
+        Computation.write("---------------------------ups -------------------------------\n")
+        Computation.write("%20d" % self.timebool + "           " + "  #Boolean for the \n")
+        Computation.write("%20e" % self.xranges + "           " + "xrange for the 3d plots \n")
+        Computation.write("%20d" % self.appendbool + "           " + "append bool for performance testing\n")
+        Computation.write("%20e" % self.rhox_tolerance + "           " + "tolerance parameter for the 3d plots\n")
+        Computation.write("---------------------------E O F -------------------------------\n")
+        Computation.close()
+        
+        print "Computation file written: " + self.computation
+        
+class inputfile:
+  
+    def __init__(self, inputfile_path="",
+                 inputfile_name="inputfile", l=1.25,
+                 delta=0.4, Vb=0.5, shiftEnergy=0.1,
+                 xshift=0.0, omega=1.0, lambdas=0.0,
+                 parabolashift=0.3,
+                 A=1.0, B=0.2, C=1.0, switchshift=0.0,
+                 grid_bias_voltage=10, start_bias_voltage=0.3, end_bias_voltage=0.3,
+                 grid_gate_voltage=100, start_gate_voltage=0.0, end_gate_voltage=1.8, d=1.0,
+                 Lj = 1, angle = 60, trans_shift = 0.0,
+                 beta1L=3.0, beta2L=0.1, beta1R=3.0, beta2R=0.1, T=293.0,
+                 fermi_level=0.0, time_grid=1000, time_start=0.0, time_end=1e3,
+                 rhox_step=1000, parameter_start=0, parameter_end=1000, parameter1=5):
+
+        self.Lj = Lj
+        self.angle = angle
+        self.trans_shift = trans_shift       
+       
+        self.fermi_level = fermi_level
+        
+        self.time_grid = time_grid
+        self.time_start = time_start
+        self.time_end = time_end
+        
+        self.rhox_step = rhox_step
+        
+        self.parameter_start = parameter_start
+        self.parameter_end = parameter_end 
+        
+        self.beta1L = beta1L 
+        self.beta2L = beta2L 
+        
+        self.beta1R = beta1R 
+        self.beta2R = beta2R 
+  
+        self.T = T
+        
+        self.inputfile_name = inputfile_name
+        self.inputfile_path = inputfile_path
+        self.l = l
+        self.delta = delta
+        self.Vb = Vb
+        self.shiftEnergy = shiftEnergy
+        self.xshift = xshift
+        self.omega = omega
+        self.lambdas = lambdas
+        self.parabolashift = parabolashift
+        self.A = A
+        self.B = B
+        self.C = C
+        self.switchshift = switchshift
+       
+        self.grid_bias_voltage = grid_bias_voltage
+        self.start_bias_voltage = start_bias_voltage
+        self.end_bias_voltage = end_bias_voltage
+        
+        self.grid_gate_voltage = grid_gate_voltage
+        self.start_gate_voltage = start_gate_voltage
+        self.end_gate_voltage = end_gate_voltage
+        self.d = d
+        
+        self.inputfile = self.inputfile_path + "/" + self.inputfile_name 
+ 
+    def write_file(self):
+
+        InputFile = open(self.inputfile, 'w')
+        InputFile.write("-----------------------Potential----------------------------------------------" + "\n")          
+        InputFile.write("%20.10f" % self.l + "  #translocation length" + "\n") 
+        InputFile.write("%20.10f" % self.delta + "  #Delta + \n")
+        InputFile.write("%20.10f" % self.Vb + "  #Barrier Height Vb" + "\n")
+        InputFile.write("%20.10f" % self.shiftEnergy + "  # Energy shift between occupied and unoccupied Potential" + "\n")
+        InputFile.write("%20.10f" % self.xshift + "   #x-shift" + "\n")
+        InputFile.write("-----------------------Vibronic-----------------------------------------" + "\n")                
+        InputFile.write("%20.10f" % self.omega + "  #Omega (.1) " + "\n")
+        InputFile.write("%20.10f" % self.lambdas + "  #Lambda (0.06)" + "\n")
+        InputFile.write("%20.10f" % self.parabolashift + "  #Parabola Shift (.3)" + "\n")
+        InputFile.write("-----------------------Switch Function-----------------------------------------" + "\n")                
+        InputFile.write("%20.10f" % self.A + "  #A" + "\n")
+        InputFile.write("%20.10f" % self.B + "  #B" + "\n")
+        InputFile.write("%20.10f" % self.C + "  #C" + "\n")
+        InputFile.write("%20.10f" % self.switchshift + "  #switchShift" + "\n")
+        InputFile.write("--------------- --------Voltage Grid---------------------) " + "\n")       
+        InputFile.write("%20d" % self.grid_bias_voltage + "  #Bias Grid" + "\n")
+        InputFile.write("%20.10f" % self.start_bias_voltage + " #start voltage" + "\n")
+        InputFile.write("%20.10f" % self.end_bias_voltage + " #end voltage" + "\n")
+        InputFile.write("-----------------------Field Grid----------------------------------------------" + "\n")                               
+        InputFile.write("%20d" % self.grid_gate_voltage + "  #Gate Grid" + "\n")
+        InputFile.write("%20.10f" % self.start_gate_voltage + "  #Voltage gate1 (= intial Gate voltage!)" + "\n")
+        InputFile.write("%20.10f" % self.end_gate_voltage + "  #Voltage gate2" + "\n")
+        InputFile.write("%20.10f" % self.d + "  #d in nano meter" + "\n")
+        InputFile.write("-----------------------Field in Dependance of V--------------------------------" + "\n")                               
+        InputFile.write("%20.10f" % self.Lj + "  #Gate Grid" + "\n")
+        InputFile.write("%20.10f" % self.angle + "  #Angle " + "\n")
+        InputFile.write("%20.10f" % self.trans_shift + "  #transshift" + "\n")
+        InputFile.write("-----------------------Self-Energy---------------------------------------------" + "\n")
+        InputFile.write("------------Left- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" + "\n")
+        InputFile.write("%20.10f" % self.beta1L + "  #beta1" + "\n")
+        InputFile.write("%20.10f" % self.beta2L + "  #beta2" + "\n")
+        InputFile.write("                       #someday a new variable..." + "\n")
+        InputFile.write("------------Right - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -" + "\n")
+        InputFile.write("%20.10f" % self.beta1R + "  #beta1" + "\n")    
+        InputFile.write("%20.10f" % self.beta2R + "  #beta2" + "\n")
+        InputFile.write("                       #someday a new variable..." + "\n")
+        InputFile.write("------------Left & Right - - - - - - - - - - - - - - - - - - - - - - - - - - - -" + "\n")
+        InputFile.write("%20.10f" % self.T + "  #Temperature" + "\n")
+        InputFile.write("%20.10f" % self.fermi_level + "  #Fermi-Level" + "\n")
+        InputFile.write("-----------------------Time Evolution- - - - - - - - - - - - - - - - - - - - - -" + "\n") 
+        InputFile.write(("%20d" % self.time_grid + " #Time step") + "\n")
+        InputFile.write(("%20.5e" % self.time_end).replace("e", "d") + "  #Time start in au" + "\n")
+        InputFile.write(("%20.10e" % self.time_start).replace("e", "d") + "  #Time End in au" + "\n")
+        InputFile.write("-----------------------Various Parameter Grid- - - - - - - - - - - - - - - - - -" + "\n")
+        InputFile.write("%20d" % self.rhox_step + "  #Paramter Grid" + "\n")
+        InputFile.write("%20.10f" % self.parameter_start + "  #Parameter 1" + "\n")
+        InputFile.write("%20.10f" % self.parameter_end + "  #Parameter 2" + "\n")
+        InputFile.write(" " + "\n")
+        InputFile.write(" " + "\n")
+        InputFile.write("-----------------------Various Parameter Grid-----------------------------------" + "\n")      
+        InputFile.write("Infos: " + "\n")
+        InputFile.write("")
+        
+        print "inputfile in: " + self.inputfile
+
+
+class jobproject(computation): 
+    
+    def __init__(self, name, program, programprojectpath, projectpath, *args, **kwargs):
+
+        from os.path import expanduser
+
+        self.projectpath = projectpath
+        self.programprojectpath = programprojectpath
+        self.program = program
+        self.name = name
+
+        self.home = expanduser("~")
+   
+        self.mainpath =  self.projectpath + "/" + self.name
+    
+        # Paths    
+        self.resultpath =  self.mainpath + "/result"
+        self.summarypath = self.mainpath + "/summary"
+        self.systempath = self.mainpath + "/system"
+        self.collectorpath = self.mainpath + "/collector"
+        self.joboutpath = self.mainpath + "/joboutput"
+        self.jobfilespath = self.mainpath + "/jobfiles"
+        self.testscriptspath = self.programprojectpath + "/" + "testscripts" + "/" + self.name
+    
+        # Computation File           
+        self.computation_file = "computation" + "_" + self.name
+        
+        computation.__init__(self, system_output_filepath=self.systempath,
+                             result_output_filepath=self.resultpath,
+                             summary_output_filepath=self.summarypath,
+                             computation_file=self.computation_file, computation_path=self.jobfilespath,
+                             *args, **kwargs)
+    
+        self.joblist = []
+        
+        # Create Folder + Computation File
+        self.create_project_folder()
+        computation.write_computation_file(self)
+        self.put_bash()
+
+    def reset_jobs(self): 
+  
+        self.joblist[:] = []
+        self.delete_project()
+ 
+        self.create_project_folder()
+        computation.write_computation_file(self)
+        self.put_bash()
+
+        pass
+    
+    def delete_project(self):
+        
+        import shutil
+        import os 
+        # Create Folders
+        # --- result 
+        if os.path.exists(self.mainpath):
+            shutil.rmtree(self.mainpath)
+
+        # --- Testscriptspath 
+        if os.path.exists(self.testscriptspath):
+            shutil.rmtree(self.testscriptspath)
+  
+    def add_job(self, *args, **kwargs):
+  
+        jobnumber = len(self.joblist) + 1  
+        jobname = self.name + str(jobnumber)
+        
+        job = job_rrze(name=jobname, programprojectname=self.programprojectpath, program=self.program, computation_file=self.computation_file,
+                              jobfilespath=self.jobfilespath, joboutpath=self.joboutpath, *args, **kwargs)
+       
+        self.joblist.append(job) 
+   
+    def print_job_list(self): 
+        
+        for job in self.joblist:
+            print job.name 
+            
+    def put_jobproject(self): 
+       
+        for job in self.joblist:
+            job.put_job()
+       
+        self.put_testscripts() 
+        
+    def put_testscripts(self):
+           
+        for job in self.joblist: 
+            #---------------------------------------
+            # Testscript Folder
+            #---------------------------------------
+            # Create a Test file to execute the created inputfile easily
+            
+            path = self.testscriptspath + "/" + job.name + ".sh"
+            Testscript = open(path, 'w')
+            Testscript.write("#!/bin/bash\n")
+            Testscript.write("#Program to execute current inputfile \n")
+            Testscript.write(job.execution)
+            Testscript.close()
+            
+            print "Testscript in: " +  path
+     
+    def put_local_jobscript(self, path="./jobstarters"): 
+       
+            import os 
+ 
+            if not os.path.exists(path):
+                os.makedirs(path)
+           
+            # Create Bash File for job execution
+            Jobsubmit = open(path + "/" + self.name + "_jobstart.sh", 'w')
+            Jobsubmit.write("#!/bin/bash \n")
+            Jobsubmit.write("echo \"Processing" + self.name + "\" \n ")
+           
+            for job in self.joblist: 
+                submitt_string = "qsub " + job.jobfile
+                Jobsubmit.write(submitt_string + "\n") 
+                Jobsubmit.write("sleep 2 \n")
+            
+            Jobsubmit.close()
+
+    def create_project_folder(self):
+    
+        import os
+        # Create Folders
+        # --- result 
+        if not os.path.exists(self.summarypath):
+            os.makedirs(self.summarypath)
+        # --- system
+        if not os.path.exists(self.systempath):
+            os.makedirs(self.systempath)
+        # --- result
+        if not os.path.exists(self.resultpath):
+            os.makedirs(self.resultpath)
+        # --- joboutputpath
+        if not os.path.exists(self.joboutpath):
+            os.makedirs(self.joboutpath)
+        # --- Jobfiles
+        if not os.path.exists(self.jobfilespath):
+            os.makedirs(self.jobfilespath)
+        # --- Testscriptspath 
+        if not os.path.exists(self.testscriptspath):
+            os.makedirs(self.testscriptspath)
+            
+    def put_bash(self):
+
+        #---------------------------------------
+            # SMALL Bash Script to submitt all Jobs
+            #---------------------------------------
+
+        # Create Bash File for job execution
+            Jobsubmit = open(self.jobfilespath + "/" + "jobsubmit.sh", 'w')
+            Jobsubmit.write("#!/bin/bash \n")
+            Jobsubmit.write("for FILE in *.job; do \n")
+            Jobsubmit.write("echo \"Processing $FILE \" \n ")
+            Jobsubmit.write("qsub ${FILE}\n")
+            Jobsubmit.write("sleep 3\n")
+            Jobsubmit.write("done")
+            Jobsubmit.close()
+
+class job_rrze(inputfile):
+    
+    def __init__(self, name, programprojectname, program, computation_file, jobfilespath, joboutpath, specific="",cluster="lima", time="24:00:00", *args, **kwargs):
+  
+        # Read In
+        self.name = name + specific 
+        self.program = program
+        self.programprojectname = programprojectname
+        self.computation_file = computation_file
+        self.jobfilespath = jobfilespath
+        self.joboutpath = joboutpath
+        self.cluster = cluster 
+        self.time = time      
+       
+        self.inputfile = "inputfile_" + self.name + ".inp"
+        self.jobfile = self.jobfilespath + "/" + self.name + ".job"
+
+        if self.cluster == "lima":
+            self.cores = "24" 
+        elif self.cluster == "emmy":    
+            self.cores = "48" 
+        
+        # RESOURCES 
+        #---Threads MKL
+        self.mkldynamic = "export MKL_DYNAMIC=true"
+        self.mklnumthreads = "export MKL_NUM_THREADS=" + self.cores 
+        
+        #---OpenMP
+        self.kmpaffinity = "#export KMP_AFFINITY=disabled"
+        self.ompdynamic = "#export OMP_DYNAMIC=false"
+        self.ompnumthreads = "#export OMP_NUM_THREADS=6"
+        
+        self.resource1 = "#PBS -l nodes=1:ppn=" + self.cores
+        self.resource2 = "#PBS -l walltime=" + self.time
+
+        # JobFile
+        self.jobName = "#PBS -N " + self.name
+        self.jobOutput = "#PBS -o " + self.joboutpath + "/" + "${PBS_JOBNAME}.log"
+        self.jobError = "#PBS -e " + self.joboutpath + "/" + "${PBS_JOBNAME}.err"
+        
+        self.moduleLoad = "module load intel64"
+        self.changeDirectory = "cd " + self.programprojectname
+
+        self.execution = self.program + " " + self.inputfile + " " + self.computation_file + " " + self.jobfilespath + "/"
+       
+        inputfile.__init__(self, inputfile_path=self.jobfilespath, inputfile_name=self.inputfile, *args, **kwargs)
+      
+        pass
+    
+    def put_job(self):
+       
+        # Write the inputfile 
+        inputfile.write_file(self)
+        # Write the jobfile
+        self.write_job_file()
+        
+    def run_job(self):
+        
+        import os
+        
+        command = "qsub " + self.jobfile
+        
+        print "Execution of: " + self.jobfile 
+        os.system(command) 
+        
+
+    def write_job_file(self):
+        
+        JobFile = open(self.jobfile, "w")
+        JobFile.write("#!/bin/bash -l" + "\n")
+        JobFile.write('#' + "\n")
+        JobFile.write('# Resources' + "\n")
+        JobFile.write(self.resource1 + "\n")
+        JobFile.write(self.resource2 + "\n")
+        JobFile.write("\n")
+    
+        JobFile.write('# Job Specifications' + "\n")
+        JobFile.write('# Job Name' + "\n")  
+        JobFile.write(self.jobName + "\n")
+        JobFile.write("\n")
+        JobFile.write('# Job Output' + "\n")
+        JobFile.write(self.jobOutput + "\n")
+        JobFile.write(self.jobError + "\n")
+        JobFile.write("\n")    
+        JobFile.write("#Mail with (a)bort, (b)egin, (e)nd" + "\n")
+        JobFile.write("#PBS -m abe" + "\n") 
+        JobFile.write("\n")
+        JobFile.write('# Job Execution' + "\n")
+        JobFile.write("#OpenMP" + "\n")
+        JobFile.write(self.kmpaffinity + "\n")
+        JobFile.write(self.ompdynamic + "\n")
+        JobFile.write(self.ompnumthreads + "\n")
+        JobFile.write("\n")
+        JobFile.write("#Threads MKL" + "\n")
+        JobFile.write(self.mkldynamic + "\n")    
+        JobFile.write(self.mklnumthreads + "\n")     
+        JobFile.write('# Module Load' + "\n")
+        JobFile.write(self.moduleLoad + "\n")
+        JobFile.write("\n")
+        JobFile.write('# Change Directory' + "\n")
+        JobFile.write(self.changeDirectory + "\n")
+        JobFile.write("\n")
+        JobFile.write('# Run' + "\n")
+        JobFile.write(self.execution)
+        JobFile.close()
+        
+        pass
