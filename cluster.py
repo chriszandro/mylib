@@ -1,6 +1,9 @@
 # New Cluster program
+
+#Class of the computation file
 class computation:
 
+    #Computation File Constructor retrieving parameters
     def __init__(self, computation_path="", computation_file="computation",
                  mode=1, plot_bool=1, N=1500, potential_id=0,
                  medim1=60, medim0=60, meBND=6, meBND_small=6,
@@ -8,7 +11,8 @@ class computation:
                  summary_output_filepath="./output/summary",
                  result_output_filepath="./output/result",
                  evo_method=1, solve_method=2, abstol=1e-8, ideg=2, timebool=1,
-                 xranges=8.0e0, appendbool = 0, performancebool=1, rhox_tolerance=1e-6):
+                 xranges=8.0e0, appendbool = 0, performancebool=1, rhox_tolerance=1e-6,
+		 fermion_bath=1,boson_bath=1,initialstate=1):
         
         self.computation_path = computation_path
         self.computation_file = computation_file
@@ -34,8 +38,11 @@ class computation:
         self.appendbool = appendbool
         self.performancebool = performancebool
         self.rhox_tolerance = rhox_tolerance    
+	self.fermion_bath = fermion_bath
+	self.boson_bath = boson_bath
+	self.initialstate =  initialstate
         
-
+    #Writing the computation file
     def write_computation_file(self):
 
         Computation = open(self.computation, "w")  
@@ -69,12 +76,17 @@ class computation:
         Computation.write("%20d" % self.appendbool + "           " + "append bool for performance testing\n")
         Computation.write("%20e" % self.rhox_tolerance + "           " + "tolerance parameter for the 3d plots\n")
         Computation.write("---------------------------E O F -------------------------------\n")
+        Computation.write("%20d" % self.fermion_bath + "           " + "  #(=1 for including fermion both, 0 otherwise) \n")
+        Computation.write("%20d" % self.boson_bath+ "           " + "(=1 for including harmonic bath, 0 otherwise \n")
+        Computation.write("%20d" % self.appendbool + "           " + "Initial state for time evolution. 1 for conventinal switching. 2 for pure state\n")
         Computation.close()
         
         print "Computation file written: " + self.computation
-        
+
+#Inputfile for physical parameters        
 class inputfile:
-  
+
+    #Constructor to obtain the parameters   
     def __init__(self, inputfile_path="",
                  inputfile_name="inputfile", l=1.25,
                  delta=0.4, Vb=0.5, shiftEnergy=0.1,
@@ -86,7 +98,8 @@ class inputfile:
                  Lj = 1, angle = 60, trans_shift = 0.0,
                  beta1L=3.0, beta2L=0.1, beta1R=3.0, beta2R=0.1, T=293.0,
                  fermi_level=0.0, time_grid=1000, time_start=0.0, time_end=1e3,
-                 rhox_step=1000, parameter_start=0, parameter_end=1000, parameter1=5):
+                 rhox_step=1000, parameter_start=0, parameter_end=1000, parameter1=5,
+	         wcut=0.097, eta=0.0138,hbat_temp=293):
 
         self.Lj = Lj
         self.angle = angle
@@ -136,7 +149,8 @@ class inputfile:
         self.d = d
         
         self.inputfile = self.inputfile_path + "/" + self.inputfile_name 
- 
+
+    #Writing the inputfile in given path 
     def write_file(self):
 
         InputFile = open(self.inputfile, 'w')
@@ -188,11 +202,12 @@ class inputfile:
         InputFile.write("%20d" % self.rhox_step + "  #Paramter Grid" + "\n")
         InputFile.write("%20.10f" % self.parameter_start + "  #Parameter 1" + "\n")
         InputFile.write("%20.10f" % self.parameter_end + "  #Parameter 2" + "\n")
-        InputFile.write(" " + "\n")
-        InputFile.write(" " + "\n")
-        InputFile.write("-----------------------Various Parameter Grid-----------------------------------" + "\n")      
-        InputFile.write("Infos: " + "\n")
-        InputFile.write("")
+        InputFile.write("-----------------------Harmonic Bath Parameters-----------------------------------" + "\n")      
+        InputFile.write("%20.10f" % self.wcut + "  #Wcut" + "\n")
+        InputFile.write("%20.10f" % self.eta + "  #eta" + "\n")
+        InputFile.write("%20.10f" % self.hbat_temp + "  #Temperature of the harmonic Bath" + "\n")
+        InputFile.write("-----------------------END OF INPUTFILE-----------------------------------" + "\n")      
+	InputFile.write("")
         
         print "inputfile in: " + self.inputfile
 
@@ -200,6 +215,10 @@ class inputfile:
 class jobproject(computation): 
     
     def __init__(self, name, program, programprojectpath, projectpath, *args, **kwargs):
+	"""
+	Main Object to handle a jobproject. It prepares all necessary paths and folders. Subsequently it
+	creates the computation file. The "joblist" array contains all jobs associated by the jobproject
+	"""
 
         from os.path import expanduser
 
@@ -238,6 +257,9 @@ class jobproject(computation):
         self.put_bash()
 
     def reset_jobs(self): 
+	"""
+	Empty the Joblist. 
+	"""
   
         self.joblist[:] = []
         self.delete_project()
@@ -249,6 +271,9 @@ class jobproject(computation):
         pass
     
     def delete_project(self):
+	"""
+	Deletes the folder associated to the project
+	"""
         
         import shutil
         import os 
@@ -262,6 +287,9 @@ class jobproject(computation):
             shutil.rmtree(self.testscriptspath)
   
     def add_job(self, *args, **kwargs):
+	"""
+	ADD a jobobject to the jobfilelist
+	"""
   
         jobnumber = len(self.joblist) + 1  
         jobname = self.name + str(jobnumber)
@@ -272,11 +300,17 @@ class jobproject(computation):
         self.joblist.append(job) 
    
     def print_job_list(self): 
+	"""
+	Print out the added jobs for check
+	"""
         
         for job in self.joblist:
             print job.name 
             
     def put_jobproject(self): 
+	"""
+	Finishes te Jobproject
+	"""
        
         for job in self.joblist:
             job.put_job()
@@ -284,6 +318,9 @@ class jobproject(computation):
         self.put_testscripts() 
         
     def put_testscripts(self):
+	"""
+	This script writes a small bash script into the testscript folder to perform a test
+	"""
            
         for job in self.joblist: 
             #---------------------------------------
@@ -301,6 +338,9 @@ class jobproject(computation):
             print "Testscript in: " +  path
      
     def put_local_jobscript(self, path="./jobstarters"): 
+            """
+            Creates bash scripts in to the "path" folder which executes all jobs created by the jobproject
+	    """
        
             import os 
  
@@ -320,6 +360,9 @@ class jobproject(computation):
             Jobsubmit.close()
 
     def create_project_folder(self):
+	"""
+	Creates all necessary folders
+        """
     
         import os
         # Create Folders
@@ -343,6 +386,9 @@ class jobproject(computation):
             os.makedirs(self.testscriptspath)
             
     def put_bash(self):
+	"""
+	Creats Bash Script in the Jobproject folder which executes all jobs at once
+	"""
 
         #---------------------------------------
             # SMALL Bash Script to submitt all Jobs
@@ -358,6 +404,7 @@ class jobproject(computation):
             Jobsubmit.write("done")
             Jobsubmit.close()
 
+#Class for the jobfile a the RRZE Computing systems
 class job_rrze(inputfile):
     
     def __init__(self, name, programprojectname, program, computation_file, jobfilespath, joboutpath, specific="",cluster="lima", time="24:00:00", *args, **kwargs):
