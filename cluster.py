@@ -95,11 +95,11 @@ class inputfile:
                  A=1.0, B=0.2, C=1.0, switchshift=0.0,
                  grid_bias_voltage=10, start_bias_voltage=0.3, end_bias_voltage=0.3,
                  grid_gate_voltage=100, start_gate_voltage=0.0, end_gate_voltage=1.8, d=1.0,
-                 Lj = 1, angle = 60, trans_shift = 0.0,
+                 Lj = 1, angle = 60, trans_shift = 1.0,
                  beta1L=3.0, beta2L=0.1, beta1R=3.0, beta2R=0.1, T=293.0,
                  fermi_level=0.0, time_grid=1000, time_start=0.0, time_end=1e3,
                  rhox_step=1000, parameter_start=0, parameter_end=1000, parameter1=5,
-	         wcut=0.097, eta=0.0138,hbat_temp=293):
+	         wcut=0.097, eta=0.0138,hbath_temp=293):
 
         self.Lj = Lj
         self.angle = angle
@@ -147,7 +147,11 @@ class inputfile:
         self.start_gate_voltage = start_gate_voltage
         self.end_gate_voltage = end_gate_voltage
         self.d = d
-        
+       
+        self.wcut= wcut
+	self.eta=eta
+	self.hbath_temp=hbath_temp
+ 
         self.inputfile = self.inputfile_path + "/" + self.inputfile_name 
 
     #Writing the inputfile in given path 
@@ -205,7 +209,7 @@ class inputfile:
         InputFile.write("-----------------------Harmonic Bath Parameters-----------------------------------" + "\n")      
         InputFile.write("%20.10f" % self.wcut + "  #Wcut" + "\n")
         InputFile.write("%20.10f" % self.eta + "  #eta" + "\n")
-        InputFile.write("%20.10f" % self.hbat_temp + "  #Temperature of the harmonic Bath" + "\n")
+        InputFile.write("%20.10f" % self.hbath_temp + "  #Temperature of the harmonic Bath" + "\n")
         InputFile.write("-----------------------END OF INPUTFILE-----------------------------------" + "\n")      
 	InputFile.write("")
         
@@ -386,23 +390,19 @@ class jobproject(computation):
             os.makedirs(self.testscriptspath)
             
     def put_bash(self):
-	"""
-	Creats Bash Script in the Jobproject folder which executes all jobs at once
-	"""
-
+      Jobsubmit = open(self.jobfilespath + "/" + "jobsubmit.sh", 'w')
+      Jobsubmit.write("#!/bin/bash \n")
+      Jobsubmit.write("for FILE in *.job; do \n")
+      Jobsubmit.write("echo \"Processing $FILE \" \n ")
+      Jobsubmit.write("qsub ${FILE}\n")
+      Jobsubmit.write("sleep 3\n")
+      Jobsubmit.write("done")
+      Jobsubmit.close()
         #---------------------------------------
             # SMALL Bash Script to submitt all Jobs
-            #---------------------------------------
+        #---------------------------------------
 
         # Create Bash File for job execution
-            Jobsubmit = open(self.jobfilespath + "/" + "jobsubmit.sh", 'w')
-            Jobsubmit.write("#!/bin/bash \n")
-            Jobsubmit.write("for FILE in *.job; do \n")
-            Jobsubmit.write("echo \"Processing $FILE \" \n ")
-            Jobsubmit.write("qsub ${FILE}\n")
-            Jobsubmit.write("sleep 3\n")
-            Jobsubmit.write("done")
-            Jobsubmit.close()
 
 #Class for the jobfile a the RRZE Computing systems
 class job_rrze(inputfile):
