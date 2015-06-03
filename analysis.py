@@ -72,7 +72,8 @@ class system(object):
             self.switch = self.system_data[:,5]
             self.gate = self.system_data[:,6]
             self.wavefunction = self.system_data[:,7:]
-        
+            self.spectralength = len(self.energy_occupied)
+            self.spectra_range = range(0, self.spectralength)     
         #READING OCCUPATION .po
         if occupation_data!="None":
                 self.occupation = np.loadtxt(occupation_data, unpack=True, comments='?')
@@ -87,9 +88,6 @@ class system(object):
         if franck_data!="None":
             self.franck = np.loadtxt(franck_data, comments='?')
         
-        
-        self.spectralength = len(self.energy_occupied)
-        self.spectra_range = range(0, self.spectralength)     
         
 
     def integralS(self, axes, plot_number=50):
