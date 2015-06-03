@@ -71,7 +71,7 @@ class computation:
         Computation.write("%20d" % self.ideg + "           " + "  #Logical for Eigensystem Routine for Schroedinger\n")
         Computation.write("%20d" % self.abstol + "           " + "\n")
         Computation.write("---------------------------ups -------------------------------\n")
-        Computation.write("%20d" % self.timebool + "           " + "  #Boolean for the \n")
+        Computation.write("%20d" % self.timebool + "           " + "  #Boolean for timestamps in the outputfiles \n")
         Computation.write("%20e" % self.xranges + "           " + "xrange for the 3d plots \n")
         Computation.write("%20d" % self.appendbool + "           " + "append bool for performance testing\n")
         Computation.write("%20e" % self.rhox_tolerance + "           " + "tolerance parameter for the 3d plots\n")
