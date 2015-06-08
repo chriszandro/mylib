@@ -79,6 +79,8 @@ class computation:
         Computation.write("%20d" % self.fermion_bath + "           " + "  #(=1 for including fermion both, 0 otherwise) \n")
         Computation.write("%20d" % self.boson_bath+ "           " + "(=1 for including harmonic bath, 0 otherwise \n")
         Computation.write("%20d" % self.appendbool + "           " + "Initial state for time evolution. 1 for conventinal switching. 2 for pure state\n")
+        Computation.write("Modes: 1 CVC Mode bias-independent | 2 Varying Gate Voltage with constant voltage | 3 CVC with heatmaps | 4 CVC biasDEPENDENT |")
+        Computation.write("20 Zvode Time Evolution | 30 Expokit Time Evolution | 50 Snaptshot Mode | 42...")
         Computation.close()
         
         print "Computation file written: " + self.computation

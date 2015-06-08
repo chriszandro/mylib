@@ -24,8 +24,11 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.image as mpimg
 from matplotlib import rcParams
+from matplotlib import cm
+from matplotlib.ticker import LinearLocator, FormatStrFormatter
+from mpl_toolkits.mplot3d import Axes3D
 
-
+from mayavi import mlab
 
 class system(object):
    
@@ -48,15 +51,16 @@ class system(object):
         self.bohrtoangstrom = 0.529177249
         
         #Reading COMPUTATION .dat files
-        self.computation_data = np.loadtxt(computation_data)
-        
-        #Distribution of COMPUTATION
-        self.parameter = self.computation_data[:,0]
-        self.position = self.computation_data[:,1]
-        self.current = self.computation_data[:,2]
-        self.energy = self.computation_data[:,3]
-        self.bridge_occupation = self.computation_data[:,4]
-        self.bridge_unoccupation = self.computation_data[:,5]
+        if computation_data!="None":
+            self.computation_data = np.loadtxt(computation_data)
+            
+            #Distribution of COMPUTATION Data Sets over numpy arrays
+            self.parameter = self.computation_data[:,0]
+            self.position = self.computation_data[:,1]
+            self.current = self.computation_data[:,2]
+            self.energy = self.computation_data[:,3]
+            self.bridge_occupation = self.computation_data[:,4]
+            self.bridge_unoccupation = self.computation_data[:,5]
         
         #Reading SYSTEM .sum files
         if system_data!="None":
@@ -472,4 +476,28 @@ class system(object):
             transition.append((self.energy_occupied[i+quanta]-self.energy_occupied[i])*self.factor)
             pair.append(str(i) + '->' + str(i+quanta))
 
-
+class density:
+    def __init__(self, rhoxfile="None", time_grid="None", position_grid="None"):
+        self.data = np.loadtxt(rhoxfile, comments="?")
+        self.grid_points = self.data[0,:]
+        self.number = len(self.data[:,1])-1
+        self.density=[self.data[i,:] for i in range(1,self.number+1)]
+        self.densitymatrix = np.delete(self.data,0,0)
+        
+    def norm(self):
+        integral = [np.trapz(self.density[i], self.grid_points) for i in range(0,self.number)]
+        return integral
+    def plotnorm(self, ax):
+        normtable = self.norm()
+        ax.plot(range(0,self.number),normtable)
+        return ax
+    def plotdensity(self, ax, index=0, colorb="b", labelb="no label", linestyleb="-"):
+        ax.plot(self.grid_points, self.density[index] , color = colorb, label=labelb, linestyle=linestyleb, linewidth=1.5)
+        return ax
+    def plotdensity_sgn(self, ax, index=0, colorb="b", labelb="no label", linestyleb="-"):
+        ax.plot(self.grid_points, np.sign(self.density[index]), color = colorb, label=labelb, linestyle=linestyleb, linewidth=1.5)
+        return ax      
+    def signummatrix(self):
+        sgnmatrix = [np.sign(initial.densitymatrix[i]) for  i in range(0, initial.number)]
+        return sgnmatrix
+      
