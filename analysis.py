@@ -92,7 +92,6 @@ class system(object):
         if franck_data!="None":
             self.franck = np.loadtxt(franck_data, comments='?')
         
-        
 
     def integralS(self, axes, plot_number=50):
         
@@ -477,12 +476,27 @@ class system(object):
             pair.append(str(i) + '->' + str(i+quanta))
 
 class density:
-    def __init__(self, rhoxfile="None", time_grid="None", position_grid="None"):
-        self.data = np.loadtxt(rhoxfile, comments="?")
-        self.grid_points = self.data[0,:]
-        self.number = len(self.data[:,1])-1
-        self.density=[self.data[i,:] for i in range(1,self.number+1)]
-        self.densitymatrix = np.delete(self.data,0,0)
+    def __init__(self, rhoxfile="None", parameter_grid="None", position_grid="None"):
+        
+        if rhoxfile!="None":
+            self.data = np.loadtxt(rhoxfile, comments="?")
+        if parameter_grid!="None":
+            self.parameter_grid = np.loadtxt(parameter_grid)
+        if position_grid!="None":
+            self.grid = np.loadtxt(position_grid)
+        
+        self.number = len(self.data[:,1])
+       
+        print self.number
+        print "parameter grid" 
+        print len(self.parameter_grid)
+        print "position grid"
+        print len(self.grid)
+        
+        #Seperating the self.data into the single points in time
+        self.density=[self.data[i,:] for i in range(0,self.number)]
+        
+        #self.densitymatrix = np.delete(self.data,0,0)
         
     def norm(self):
         integral = [np.trapz(self.density[i], self.grid_points) for i in range(0,self.number)]
