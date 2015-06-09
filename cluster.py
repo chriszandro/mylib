@@ -262,6 +262,9 @@ class jobproject(computation):
         computation.write_computation_file(self)
         self.put_bash()
 
+    def __del__(self):
+	self.delta_project()
+
     def reset_jobs(self): 
 	"""
 	Empty the Joblist. 
@@ -283,8 +286,8 @@ class jobproject(computation):
         
         import shutil
         import os 
-        # Create Folders
-        # --- result 
+        # Delete Created Folders
+        # --- Main Folder 
         if os.path.exists(self.mainpath):
             shutil.rmtree(self.mainpath)
 
