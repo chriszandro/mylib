@@ -264,7 +264,7 @@ class jobproject(computation):
         self.put_bash()
 
     def __del__(self):
-	self.delta_project()
+	self.delete_project()
 
     def reset_jobs(self): 
 	"""
