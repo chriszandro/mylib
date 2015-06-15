@@ -477,7 +477,12 @@ class system(object):
 
 class density:
     def __init__(self, rhoxfile="None", parameter_grid="None", position_grid="None"):
-        
+        """
+        rhoxfile: File containing the z data
+        paramter_grid: Parameter 
+        position_grid: Position
+        """
+
         if rhoxfile!="None":
             self.data = np.loadtxt(rhoxfile, comments="?")
         if parameter_grid!="None":
@@ -487,30 +492,28 @@ class density:
         
         self.number = len(self.data[:,1])
        
-        print self.number
-        print "parameter grid" 
-        print len(self.parameter_grid)
-        print "position grid"
-        print len(self.grid)
-        
-        #Seperating the self.data into the single points in time
+        #Assign parameter value into single array entries in self.density
         self.density=[self.data[i,:] for i in range(0,self.number)]
-        
-        #self.densitymatrix = np.delete(self.data,0,0)
-        
+       
+        #Coordinate Sytem for plotting
+        xv, yv = np.meshgrid(self.grid, self.parameter_grid)
+        zv = self.density
+
     def norm(self):
-        integral = [np.trapz(self.density[i], self.grid_points) for i in range(0,self.number)]
+        integral = [np.trapz(self.density[i], self.grid) for i in range(0,self.number)]
         return integral
-    def plotnorm(self, ax):
+   
+   def plotnorm(self, ax):
         normtable = self.norm()
         ax.plot(range(0,self.number),normtable)
         return ax
     def plotdensity(self, ax, index=0, colorb="b", labelb="no label", linestyleb="-"):
-        ax.plot(self.grid_points, self.density[index] , color = colorb, label=labelb, linestyle=linestyleb, linewidth=1.5)
+        ax.plot(self.grid, self.density[index] , color = colorb, label=labelb, linestyle=linestyleb, linewidth=1.5)
         return ax
     def plotdensity_sgn(self, ax, index=0, colorb="b", labelb="no label", linestyleb="-"):
-        ax.plot(self.grid_points, np.sign(self.density[index]), color = colorb, label=labelb, linestyle=linestyleb, linewidth=1.5)
+        ax.plot(self.grid, np.sign(self.density[index]), color = colorb, label=labelb, linestyle=linestyleb, linewidth=1.5)
         return ax      
+
     def signummatrix(self):
         sgnmatrix = [np.sign(initial.densitymatrix[i]) for  i in range(0, initial.number)]
         return sgnmatrix
