@@ -216,8 +216,6 @@ class inputfile:
         InputFile.write("-----------------------END OF INPUTFILE-----------------------------------" + "\n")      
 	InputFile.write("")
         
-        print "inputfile in: " + self.inputfile
-
 
 class jobproject(computation): 
     
