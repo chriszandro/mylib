@@ -5,14 +5,14 @@ class computation:
 
     #Computation File Constructor retrieving parameters
     def __init__(self, computation_path="", computation_file="computation",
-                 mode=1, plot_bool=1, rhox_bool=1, N=1500, potential_id=0,
+                 mode=1, plot_bool=1, rhox_bool=1, surf_bool=1, pop_bool=1, N=1500, potential_id=0,
                  medim1=60, medim0=60, meBND=6, meBND_small=6,
                  system_output_filepath="./output/system",
                  summary_output_filepath="./output/summary",
                  result_output_filepath="./output/result",
                  evo_method=1, solve_method=2, abstol=1e-8, ideg=2, timebool=1,
                  xranges=8.0e0, appendbool = 0, performancebool=1, rhox_tolerance=1e-6,
-		 fermion_bath=1,boson_bath=1,initialstate=1, initial_occupation=0, initial_state_number=1):
+		 fermion_bath=1,boson_bath=1,initialstate=1):
         
         self.computation_path = computation_path
         self.computation_file = computation_file
@@ -21,6 +21,8 @@ class computation:
         self.mode = mode
         self.plot_bool = plot_bool
         self.rhox_bool = rhox_bool
+        self.surf= surf_bool 
+        self.pop_bool = pop_bool
         self.N = N
         self.potential_id = potential_id
         self.medim1 = medim1
@@ -42,8 +44,6 @@ class computation:
 	self.fermion_bath = fermion_bath
 	self.boson_bath = boson_bath
 	self.initialstate =  initialstate
-        self.initial_occupation = initial_occupation 
-        self.initial_state_number= initial_state_number
         
     #Writing the computation file
     def write_computation_file(self):
@@ -53,6 +53,8 @@ class computation:
         Computation.write("%20d" % self.mode + "           " +  "#Program-Mode | 1: Voltage-Loop\n")
         Computation.write("%20d" % self.plot_bool + "           " + "#Output System Generation: 0: No output, 1: Output\n")
         Computation.write("%20d" % self.rhox_bool + "           " + "#rhox Output 0: No output, 1: Output\n")
+        Computation.write("%20d" % surf.rhox_bool + "           " + "#surface Output 0: No output, 1: Output\n")
+        Computation.write("%20d" % pop.rhox_bool + "           " + "#population Output 0: No output, 1: Output\n")
         Computation.write("---------------System-------------------------------------------\n")
         Computation.write("%20d" % self.N + "           " + "#N\n")
         Computation.write("%20d" % self.potential_id + "           " + "#id\n")
@@ -84,8 +86,6 @@ class computation:
         Computation.write("%20d" % self.boson_bath+ "           " + "(=1 for including harmonic bath, 0 otherwise \n")
         Computation.write("---------------------------Initial States -------------------------------\n")
         Computation.write("%20d" % self.initialstate + "           " + "Initial state for time evolution. 1 for conventinal switching. 2 for pure state\n")
-        Computation.write("%20d" % self.initial_occupation + "           " + "Initial occupation switching. 2 for pure state\n")
-        Computation.write("%20d" % self.initial_state_number + "           " + "Initial state number\n")
         Computation.write("---------------End Of File------------------------------------\n")
         Computation.write("Modes: 1 CVC Mode bias-independent | 2 Varying Gate Voltage with constant voltage |\n 3 CVC with heatmaps | 4 CVC biasDEPENDENT |")
         Computation.write("20 Zvode Time Evolution | 30 Expokit Time Evolution |\n 50 Snaptshot Mode | 42...")
@@ -109,7 +109,7 @@ class inputfile:
                  beta1L=3.0, beta2L=0.1, beta1R=3.0, beta2R=0.1, T=293.0,
                  fermi_level=0.0, time_grid=1000, time_start=0.0, time_end=1e3,
                  rhox_step=1000, parameter_start=0, parameter_end=1000, parameter1=5,
-	         wcut=0.097, eta=0.0138,hbath_temp=293):
+	         wcut=0.097, eta=0.0138,hbath_temp=293, initial_occupation=0, initial_state_number=1):
 
         self.Lj = Lj
         self.angle = angle
@@ -164,6 +164,8 @@ class inputfile:
  
         self.inputfile = self.inputfile_path + "/" + self.inputfile_name 
 
+        self.initial_occupation = initial_occupation 
+        self.initial_state_number= initial_state_number
     #Writing the inputfile in given path 
     def write_file(self):
 
@@ -220,6 +222,9 @@ class inputfile:
         InputFile.write("%20.10f" % self.wcut + "  #Wcut" + "\n")
         InputFile.write("%20.10f" % self.eta + "  #eta" + "\n")
         InputFile.write("%20.10f" % self.hbath_temp + "  #Temperature of the harmonic Bath" + "\n")
+        InputFile.write("-----------------------Pure State Management-----------------------------------" + "\n")      
+        InputFile.write("%20d" % self.initial_occupation + "           " + "Initial occupation switching. 2 for pure state\n")
+        InputFile.write("%20d" % self.initial_state_number + "           " + "Initial state number\n")
         InputFile.write("-----------------------END OF INPUTFILE-----------------------------------" + "\n")      
 	InputFile.write("")
         
