@@ -21,7 +21,7 @@ class computation:
         self.mode = mode
         self.plot_bool = plot_bool
         self.rhox_bool = rhox_bool
-        self.surf= surf_bool 
+        self.surf_bool = surf_bool 
         self.pop_bool = pop_bool
         self.N = N
         self.potential_id = potential_id
@@ -53,8 +53,8 @@ class computation:
         Computation.write("%20d" % self.mode + "           " +  "#Program-Mode | 1: Voltage-Loop\n")
         Computation.write("%20d" % self.plot_bool + "           " + "#Output System Generation: 0: No output, 1: Output\n")
         Computation.write("%20d" % self.rhox_bool + "           " + "#rhox Output 0: No output, 1: Output\n")
-        Computation.write("%20d" % surf.rhox_bool + "           " + "#surface Output 0: No output, 1: Output\n")
-        Computation.write("%20d" % pop.rhox_bool + "           " + "#population Output 0: No output, 1: Output\n")
+        Computation.write("%20d" % self.surf_bool + "           " + "#surface Output 0: No output, 1: Output\n")
+        Computation.write("%20d" % self.pop_bool + "           " + "#population Output 0: No output, 1: Output\n")
         Computation.write("---------------System-------------------------------------------\n")
         Computation.write("%20d" % self.N + "           " + "#N\n")
         Computation.write("%20d" % self.potential_id + "           " + "#id\n")
@@ -211,9 +211,9 @@ class inputfile:
         InputFile.write("%20.10f" % self.T + "  #Temperature" + "\n")
         InputFile.write("%20.10f" % self.fermi_level + "  #Fermi-Level" + "\n")
         InputFile.write("-----------------------Time Evolution- - - - - - - - - - - - - - - - - - - - - -" + "\n") 
-        InputFile.write(("%20d" % self.time_grid + " #Time step") + "\n")
-        InputFile.write(("%20.5e" % self.time_end).replace("e", "d") + "  #Time start in au" + "\n")
-        InputFile.write(("%20.10e" % self.time_start).replace("e", "d") + "  #Time End in au" + "\n")
+        InputFile.write(("%20d" % self.time_grid + "      #Time step") + "\n")
+        InputFile.write(("%20.5e" % self.time_end).replace("e", "d") + "      #Time start in au" + "\n")
+        InputFile.write(("%20.10e" % self.time_start).replace("e", "d") + "     #Time End in au" + "\n")
         InputFile.write("-----------------------Various Parameter Grid- - - - - - - - - - - - - - - - - -" + "\n")
         InputFile.write("%20d" % self.rhox_step + "  #Paramter Grid" + "\n")
         InputFile.write("%20.10f" % self.parameter_start + "  #Parameter 1" + "\n")
@@ -223,8 +223,8 @@ class inputfile:
         InputFile.write("%20.10f" % self.eta + "  #eta" + "\n")
         InputFile.write("%20.10f" % self.hbath_temp + "  #Temperature of the harmonic Bath" + "\n")
         InputFile.write("-----------------------Pure State Management-----------------------------------" + "\n")      
-        InputFile.write("%20d" % self.initial_occupation + "           " + "Initial occupation switching. 2 for pure state\n")
-        InputFile.write("%20d" % self.initial_state_number + "           " + "Initial state number\n")
+        InputFile.write("%10d" % self.initial_occupation + "           " + "Initial occupation switching. 2 for pure state\n")
+        InputFile.write("%10d" % self.initial_state_number + "           " + "Initial state number\n")
         InputFile.write("-----------------------END OF INPUTFILE-----------------------------------" + "\n")      
 	InputFile.write("")
         
