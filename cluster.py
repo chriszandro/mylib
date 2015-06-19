@@ -335,7 +335,7 @@ class jobproject(computation):
         for job in self.joblist:
             job.put_job()
        
-        self.put_testscripts() 
+        #self.put_testscripts() 
         
     def put_testscripts(self):
 	"""
