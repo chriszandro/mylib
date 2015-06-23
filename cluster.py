@@ -12,7 +12,7 @@ class computation:
                  result_output_filepath="./output/result",
                  evo_method=1, solve_method=2, abstol=1e-8, ideg=2, timebool=1,
                  xranges=8.0e0, appendbool = 0, performancebool=1, rhox_tolerance=1e-6,
-		 fermion_bath=1,boson_bath=1,initialstate=1):
+                 fermion_bath=1,boson_bath=1,initialstate=1):
 
         self.computation_path = computation_path
         self.computation_file = computation_file
@@ -41,9 +41,9 @@ class computation:
         self.appendbool = appendbool
         self.performancebool = performancebool
         self.rhox_tolerance = rhox_tolerance
-	self.fermion_bath = fermion_bath
-	self.boson_bath = boson_bath
-	self.initialstate =  initialstate
+        self.fermion_bath = fermion_bath
+        self.boson_bath = boson_bath
+        self.initialstate =  initialstate
 
     #Writing the computation file
     def write_computation_file(self):
@@ -109,7 +109,7 @@ class inputfile:
                  beta1L=3.0, beta2L=0.1, beta1R=3.0, beta2R=0.1, T=293.0,
                  fermi_level=0.0, time_grid=1000, time_start=0.0, time_end=1e3,
                  rhox_step=1000, parameter_start=0, parameter_end=1000, parameter1=5,
-	         wcut=0.097, eta=0.0138,hbath_temp=293, initial_occupation=0, initial_state_number=1):
+                 wcut=0.097, eta=0.0138,hbath_temp=293, initial_occupation=0, initial_state_number=1):
 
         self.Lj = Lj
         self.angle = angle
@@ -159,8 +159,8 @@ class inputfile:
         self.d = d
 
         self.wcut= wcut
-	self.eta=eta
-	self.hbath_temp=hbath_temp
+        self.eta=eta
+        self.hbath_temp=hbath_temp
 
         self.inputfile = self.inputfile_path + "/" + self.inputfile_name
 
@@ -226,7 +226,7 @@ class inputfile:
         InputFile.write("%10d" % self.initial_occupation + "           " + "Initial occupation switching. 2 for pure state\n")
         InputFile.write("%10d" % self.initial_state_number + "           " + "Initial state number\n")
         InputFile.write("-----------------------END OF INPUTFILE-----------------------------------" + "\n")
-	InputFile.write("")
+        InputFile.write("")
 
 
 class jobproject(computation):
