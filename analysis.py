@@ -514,7 +514,7 @@ class density(object):
 
 
 class heatmap(object):
-    def __init__(self, heatmap="None", parameter_grid="None", secondary_grid="None"):
+    def __init__(self, heatmap="None", primary_grid="None", secondary_grid="None"):
         """
         heatmap: File containing the z data
         paramter_grid: Parameter
@@ -523,16 +523,16 @@ class heatmap(object):
 
         if heatmap!="None":
             self.data = np.loadtxt(heatmap, comments="?")
-        if parameter_grid!="None":
-            self.parameter_grid = np.loadtxt(parameter_grid)
+        if primary_grid!="None":
+            self.primary_grid = np.loadtxt(primary_grid)
         if secondary_grid!="None":
             self.secondary_grid = np.loadtxt(secondary_grid)
 
-        #self.number = len(self.data[:,1])
+        self.number = len(self.data[:,1])
 
         #Assign parameter value into single array entries in self.density
         #self.density=[self.data[i,:] for i in range(0,self.number)]
 
         #Coordinate Sytem for plotting
-        self.xv, self.yv = np.meshgrid(self.parameter_grid, self.secondary_grid)
+        self.xv, self.yv = np.meshgrid(self.primary_grid, self.secondary_grid)
         #self.zv = self.density
