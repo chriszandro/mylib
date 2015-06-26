@@ -441,7 +441,7 @@ class job_rrze(inputfile):
         if self.cluster == "lima":
             self.cores = "24"
         elif self.cluster == "emmy":
-            self.cores = "48"
+            self.cores = "40"
 
         # RESOURCES
         #---Threads MKL
