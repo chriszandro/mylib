@@ -20,7 +20,7 @@ from scipy import fftpack
 import matplotlib.pyplot as plt
 # from matplotlib.backends.backend_pdf import PdfPages
 # import matplotlib.image as mpimg
-# from matplotlib import rcParams
+from matplotlib import rcParams
 # from matplotlib import cm
 # from matplotlib.ticker import LinearLocator, FormatStrFormatter
 # from mpl_toolkits.mplot3d import Axes3D
@@ -73,6 +73,7 @@ class system(object):
             self.wavefunction = self.system_data[:, 7:]
             self.spectralength = len(self.energy_occupied)
             self.spectra_range = range(0, self.spectralength)
+            print "Spectral Length: ", self.spectralength
         # READING OCCUPATION .po
         if occupation_data != "None":
                 self.occupation = np.loadtxt(occupation_data, unpack=True, comments='?')
@@ -87,6 +88,8 @@ class system(object):
         if franck_data != "None":
             self.franck = np.loadtxt(franck_data, comments='?')
 
+        self.exitations = None
+        self.exitations_ticks = None
 
     def integralS(self, axes, plot_number=50):
 
@@ -158,7 +161,7 @@ class system(object):
             if density:
                 axes.plot(self.grid, self.energy_occupied[i] + ((self.wavefunction[:, i] - self.energy_occupied[i]) ** 2) * amplification, linewidth=1, linestyle=lw, label='State ' + str(i))
             else:
-                axes.plot(self.grid, self.wavefunction[:, i], linewidth=1, linestyle=lw, label='State ' + str(i))
+                axes.plot(self.grid, self.wavefunction[:, i] * amplification, linewidth=1, linestyle=lw, label='State ' + str(i))
 
         axes.set_xlabel('Position [a.u.]')
         axes.set_ylabel('Energy [eV]')
@@ -228,20 +231,6 @@ class system(object):
 
         return axes
 
-    def plot_current_t(self, axes , scale='lin', colorp="b", name='', siunits=True):
-
-        axes.set_xscale(scale)
-
-        if siunits:
-            axes.plot(self.parameter, self.current, linestyle='-', color=colorp, lw='2', label=name)
-            # ax.set_xlabel('Time [a.u.]')
-            axes.set_ylabel('Current [$\mu$A]')
-        else:
-            axes.plot(self.parameter * self.au2second, self.current, color=colorp, linestyle='-', lw='2', label=name)
-            # ax.set_xlabel('Seconds')
-            axes.set_ylabel('Current [$\mu$A]')
-        return axes
-
     def plot_position(self, axes , siunits=False, scale='lin', name=''):
 
 
@@ -261,32 +250,46 @@ class system(object):
 
         return axes
 
-    def plot_position_t(self, axes , scale='lin', colorp="b", siunits=True, name=''):
+    def plot_current_t(self, axes , scale='lin', style='-', colorp="b", name='', siunits=True):
 
         axes.set_xscale(scale)
 
         if siunits:
-            axes.plot(self.parameter, self.position, linestyle='-', lw='2', color=colorp, label=name)
+            axes.plot(self.parameter, self.current, linestyle=style, color=colorp, lw='2', label=name)
+            # ax.set_xlabel('Time [a.u.]')
+            axes.set_ylabel('Current [$\mu$A]')
+        else:
+            axes.plot(self.parameter * self.au2second, self.current, color=colorp, linestyle=style, lw='2', label=name)
+            # ax.set_xlabel('Seconds')
+            axes.set_ylabel('Current [$\mu$A]')
+        return axes
+
+    def plot_position_t(self, axes , scale='lin', style='-', colorp="b", siunits=True, name=''):
+
+        axes.set_xscale(scale)
+
+        if siunits:
+            axes.plot(self.parameter, self.position, linestyle=style, lw='2', color=colorp, label=name)
             axes.set_xlabel('Time [a.u]')
             axes.set_ylabel('Position [a.u]')
         else:
-            axes.plot(self.parameter * self.au2second, self.position * self.bohrtoangstrom, linestyle='-', color=colorp, lw='2', label=name)
-            axes.set_xlabel('Time [s]')
+            axes.plot(self.parameter * self.au2second, self.position * self.bohrtoangstrom, linestyle=style, color=colorp, lw='2', label=name)
+            axes.set_xlabel('Time [fs]')
             axes.set_ylabel('Position [$\AA$]')
         return axes
 
-    def plot_energy_t(self, axes , scale='lin', siunits=True, name=''):
+    def plot_energy_t(self, axes , style='-', scale='lin', colorp="b",  siunits=True, name=''):
 
         axes.set_xscale(scale)
 
         if siunits:
-            axes.plot(self.parameter, self.energy, linestyle='-', lw='2', label=name)
+            axes.plot(self.parameter, self.energy, linestyle=style, lw='2', color=colorp, label=name)
             axes.set_xlabel('Time [a.u]')
-            axes.set_ylabel('Position [a.u]')
+            axes.set_ylabel('Energy [eV]')
         else:
-            axes.plot(self.parameter * self.au2second, self.energy, linestyle='-', lw='2', label=name)
-            axes.set_xlabel('Time in s')
-            axes.set_ylabel('Position [a.u]')
+            axes.plot(self.parameter * self.au2second, self.energy, linestyle=style, color=colorp, lw='2', label=name)
+            axes.set_xlabel('Time [fs]')
+            axes.set_ylabel('Energy [eV]')
         return axes
 
     def plot_population(self, axes, pop_number=10, scale='lin'):
@@ -361,6 +364,21 @@ class system(object):
 
         return (d_energy, new_grid)
 
+    def plot_energy_derivate_t(self, axes , style='-', scale='lin', colorp="b",  siunits=True, name=''):
+
+        axes.set_xscale(scale)
+
+        d_energy, grid = self.derivate_energy()
+
+        if siunits:
+            axes.plot(grid, d_energy, linestyle=style, lw='2', color=colorp, label=name)
+            axes.set_xlabel('Time [a.u]')
+            axes.set_ylabel('dE/dt [a.u.]')
+        else:
+            axes.plot(grid * self.au2second, d_energy, linestyle=style, color=colorp, lw='2', label=name)
+            axes.set_xlabel('Time [fs]')
+            axes.set_ylabel('dE/dt [eV/s]')
+        return axes
 # Attention: Method works only for grid with a unit stepsize
     def derivate_position(self):
 
@@ -394,7 +412,42 @@ class system(object):
 
         return (dd_energy, new_grid)
 
-    def fft_position(self, axes, colorp='b'):
+    def fft_energy(self, axes, colorp='b', name=""):
+
+        time_step = np.average(np.diff(self.parameter))
+
+        sample_freq = fftpack.fftfreq(len(self.energy), d=time_step)
+
+        energy_fft= fftpack.fft(self.energy)
+        pidxs = np.where(sample_freq > 0)
+        freqs, power = sample_freq[pidxs], np.abs(energy_fft)[pidxs]
+        freq = freqs[power.argmax()]
+
+        axes.plot(freqs, power, lw='3', color=colorp, label=name)
+        axes.set_xlabel('Frequency [$\omega_0$]')
+        axes.set_ylabel('Amplitude')
+
+        return axes
+
+    def fft_energy_derivate(self, axes, colorp='b', name=""):
+
+        d_energy, grid = self.derivate_energy()
+
+        time_step = np.average(np.diff(grid))
+
+        sample_freq = fftpack.fftfreq(len(d_energy), d=time_step)
+
+        energy_fft= fftpack.fft(d_energy)
+        pidxs = np.where(sample_freq > 0)
+        freqs, power = sample_freq[pidxs], np.abs(energy_fft)[pidxs]
+        freq = freqs[power.argmax()]
+
+        axes.plot(freqs, power, lw='3', color=colorp, label=name)
+        axes.set_xlabel('Frequency [$\omega_0$]')
+        axes.set_ylabel('Amplitude')
+
+        return axes
+    def fft_position(self, axes, style='-', colorp='b', name=""):
 
         time_step = np.average(np.diff(self.parameter))
 
@@ -405,7 +458,7 @@ class system(object):
         freqs, power = sample_freq[pidxs], np.abs(position_fft)[pidxs]
         freq = freqs[power.argmax()]
 
-        axes.plot(freqs, power, lw='3', color=colorp)
+        axes.plot(freqs, power, lw='3', linestyle=style, color=colorp, label=name)
         axes.set_xlabel('Frequency [$\omega_0$]')
         axes.set_ylabel('Amplitude')
 
@@ -458,7 +511,19 @@ class system(object):
 
         return axes
 
-    def exitation_fft(self, lower_bound, upper_bound, quanta):
+    def exitation_fft2(self, lower_bound=0, upper_bound=10, quanta=1):
+
+        transition = []
+        pair = []
+
+        lrange = range(lower_bound, upper_bound)
+
+        for i in lrange:
+
+            self.exitations.append((self.energy_occupied[i + quanta] - self.energy_occupied[i]) * self.factor)
+            self.exitations_ticks.append(str(i) + '->' + str(i + quanta))
+
+    def exitation_fft(self, lower_bound=0, upper_bound=10, quanta=1):
 
         transition = []
         pair = []
@@ -469,6 +534,34 @@ class system(object):
 
             transition.append((self.energy_occupied[i + quanta] - self.energy_occupied[i]) * self.factor)
             pair.append(str(i) + '->' + str(i + quanta))
+
+        return transition, pair, lrange
+
+    def set_pupblication_style(self):
+        rcParams['axes.titlesize'] = 26 
+        rcParams['axes.labelsize'] = 30
+        rcParams['legend.fontsize'] = 26
+        rcParams['savefig.dpi'] = 1200
+        rcParams['axes.linewidth'] = 2.5 
+
+        rcParams['ytick.labelsize'] = 24
+        rcParams['ytick.major.pad'] = 12 
+        rcParams['ytick.major.size'] = 10
+        rcParams['ytick.minor.size'] = 8
+        rcParams['ytick.major.width'] = 2.5
+        rcParams['ytick.minor.width'] = 3
+
+        rcParams['xtick.labelsize'] = 24
+        rcParams['xtick.major.pad'] = 12 
+        rcParams['xtick.major.size'] = 10
+        rcParams['xtick.minor.size'] = 8
+        rcParams['xtick.major.width'] = 2.5
+        rcParams['xtick.minor.width'] = 3
+
+        rcParams['mathtext.fontset'] = 'stixsans'
+        rcParams['mathtext.default'] = 'regular'
+
+        rcParams['lines.markersize'] = 14
 
 class density(object):
     def __init__(self, rhoxfile="None", parameter_grid="None", position_grid="None"):
