@@ -2,7 +2,7 @@
 
 @author: chriszandro
 '''
-
+import os
 # from numpy import *
 import numpy as np
 
@@ -21,9 +21,9 @@ import matplotlib.pyplot as plt
 # from matplotlib.backends.backend_pdf import PdfPages
 # import matplotlib.image as mpimg
 from matplotlib import rcParams
-# from matplotlib import cm
+from matplotlib import cm
 # from matplotlib.ticker import LinearLocator, FormatStrFormatter
-# from mpl_toolkits.mplot3d import Axes3D
+from mpl_toolkits.mplot3d import Axes3D
 
 # from mayavi import mlab
 
@@ -88,8 +88,7 @@ class system(object):
         if franck_data != "None":
             self.franck = np.loadtxt(franck_data, comments='?')
 
-        self.exitations = None
-        self.exitations_ticks = None
+        self.exitation_list = [] 
 
     def integralS(self, axes, plot_number=50):
 
@@ -161,7 +160,7 @@ class system(object):
             if density:
                 axes.plot(self.grid, self.energy_occupied[i] + ((self.wavefunction[:, i] - self.energy_occupied[i]) ** 2) * amplification, linewidth=1, linestyle=lw, label='State ' + str(i))
             else:
-                axes.plot(self.grid, self.wavefunction[:, i] * amplification, linewidth=1, linestyle=lw, label='State ' + str(i))
+                axes.plot(self.grid, self.energy_occupied[i] + (self.wavefunction[:, i] - self.energy_occupied[i])*amplification , linewidth=1, linestyle=lw, label='State ' + str(i))
 
         axes.set_xlabel('Position [a.u.]')
         axes.set_ylabel('Energy [eV]')
@@ -447,6 +446,7 @@ class system(object):
         axes.set_ylabel('Amplitude')
 
         return axes
+
     def fft_position(self, axes, style='-', colorp='b', name=""):
 
         time_step = np.average(np.diff(self.parameter))
@@ -511,7 +511,7 @@ class system(object):
 
         return axes
 
-    def exitation_fft2(self, lower_bound=0, upper_bound=10, quanta=1):
+    def exitation_fft2(self, color = 'b', lower_bound=0, upper_bound=10, quanta=1):
 
         transition = []
         pair = []
@@ -519,9 +519,13 @@ class system(object):
         lrange = range(lower_bound, upper_bound)
 
         for i in lrange:
+            
+            transition = (self.energy_occupied[i + quanta] - self.energy_occupied[i]) * self.factor
+            ticks = str(i) + '->' + str(i + quanta)
 
-            self.exitations.append((self.energy_occupied[i + quanta] - self.energy_occupied[i]) * self.factor)
-            self.exitations_ticks.append(str(i) + '->' + str(i + quanta))
+            self.exitations.append([transition, ticks, color])
+            
+        return
 
     def exitation_fft(self, lower_bound=0, upper_bound=10, quanta=1):
 
@@ -537,6 +541,31 @@ class system(object):
 
         return transition, pair, lrange
 
+    def put_excitation_list(self, axes):
+        
+        for element in self.exitation_list:
+            axes.axvline(element[0], linewidth=1, color=element[2])
+            axes.set_xticks([element[0]])
+            axes.set_xticklabels(element[1] , fontsize='20')
+        
+        return axes
+
+    def create_excitation_list(self, lower_bound=0, upper_bound=10, quanta=1, color='b'):
+
+        
+        for i in range(lower_bound, upper_bound):
+            
+            self.exitation_list.append(self.create_excitation_tulpel(i, quanta, color))
+
+        pass
+    
+    def create_excitation_tulpel(self, index, quanta, color):
+        
+        transition = (self.energy_occupied[index + quanta] - self.energy_occupied[index]) * self.factor
+        label = str(index) + '->' + str(index + quanta)
+
+        return [transition, label, color]
+    
     def set_pupblication_style(self):
         rcParams['axes.titlesize'] = 26 
         rcParams['axes.labelsize'] = 30
@@ -636,7 +665,7 @@ class heatmap(object):
         self.xv, self.yv = np.meshgrid(self.primary_grid, self.secondary_grid)
         # self.zv = self.density
         
-        self.calculate_conductance() 
+     #   self.calculate_conductance() 
     def calculate_conductance(self):
        
        self.conductance= np.array([np.diff(line) / self.primary_diff  for line in self.data.T]).T 
@@ -653,6 +682,7 @@ class rhox(object):
 
         if heatmap != "None":
             self.data = np.loadtxt(data, comments="?")
+            self.name = os.path.basename(data)   
         if primary_grid != "None":
             self.primary_grid = np.loadtxt(primary_grid)
         if secondary_grid != "None":
@@ -660,9 +690,59 @@ class rhox(object):
 
         # Meshgrid for 3d Plots 
         self.xv, self.yv = np.meshgrid(self.secondary_grid, self.primary_grid)
-        
-        
+       
         self.number = len(self.data[:, 1])
         # Assign parameter value into single array entries in self.density
         self.density = [self.data[i, :] for i in range(0, self.number)]
+    
+    def plot_overview(self, accuracy=1, save_path="./" ):
+        
+        fig = plt.figure(figsize=(24, 12))        
+        fig.suptitle('Wavepacket overview of ' + self.name, fontsize='17')
+        
+        #---- 1. subplot
+        ax = fig.add_subplot(2, 2, 1, projection='3d')
+        
+        surf1 = ax.plot_surface(self.xv, self.yv, self.data, rstride=accuracy, cstride=accuracy, cmap = cm.jet,
+        linewidth=0, antialiased=True)
+
+        ax.view_init(azim=0, elev=45)
+        ax.set_xlabel('Position [$\AA$]', fontsize='12')
+        ax.tick_params(labelsize='12', length=1, width=1)
+        ax.set_ylabel('Time [fs]', fontsize='12')
+      #  ax.yaxis.set_scale('log')
+        
+        #---- 2. subplot
+        ax = fig.add_subplot(2, 2, 2, projection='3d')
+
+        surf2 = ax.plot_surface(self.yv, self.xv, self.data,  rstride=accuracy, cstride=accuracy, cmap = cm.jet,
+        linewidth=0, antialiased=True)
+        ax.view_init(azim=90, elev=90)
+        ax.set_xlabel('Position [a.u.]', fontsize='12')
+        ax.tick_params(labelsize='8', length=1, width=1)
+        ax.set_ylabel('Time [fs]', fontsize='12')
+        
+        #---- 3. subplot
+        ax = fig.add_subplot(2, 2, 3, projection='3d')
+
+        surf3 = ax.plot_surface(self.xv, self.yv, self.data,  rstride=accuracy, cstride=accuracy, cmap = cm.jet,
+        linewidth=0, antialiased=True)
+        ax.set_xlabel('Position [a.u.]', fontsize='12')
+        ax.tick_params(labelsize='8', length=1, width=1)
+        ax.set_ylabel('Time [fs]', fontsize='12')
+
+        #---- 4. subplot
+        ax = fig.add_subplot(2, 2, 4, projection='3d')
+        surf4 = ax.plot_surface(self.xv, self.yv, self.data,  rstride=accuracy, cstride=accuracy, cmap = cm.jet,
+        linewidth=0, antialiased=True)
+
+        ax.view_init(azim=-69, elev=40)
+        ax.set_xlabel('Position [a.u.]', fontsize='12')
+        ax.tick_params(labelsize='8', length=1, width=1)
+        ax.set_ylabel('Time [fs]', fontsize='12')
+        
+        file_name = save_path + self.name + "rhox_overview.png"
+        fig.savefig(file_name)
+
+
         
