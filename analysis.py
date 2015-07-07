@@ -88,7 +88,7 @@ class system(object):
         if franck_data != "None":
             self.franck = np.loadtxt(franck_data, comments='?')
 
-        self.exitation_list = [] 
+        self.exitation_list = [[],[],[]] 
 
     def integralS(self, axes, plot_number=50):
 
@@ -543,10 +543,11 @@ class system(object):
 
     def put_excitation_list(self, axes):
         
-        for element in self.exitation_list:
-            axes.axvline(element[0], linewidth=1, color=element[2])
-            axes.set_xticks([element[0]])
-            axes.set_xticklabels(element[1] , fontsize='20')
+        for element in self.exitation_list[2]:
+            axes.axvline(element[0], linewidth=1, color=element[1])
+            
+        axes.set_xticks(self.exitation_list[0])
+        axes.set_xticklabels(self.exitation_list[1] , fontsize='10')
         
         return axes
 
@@ -555,15 +556,19 @@ class system(object):
         
         for i in range(lower_bound, upper_bound):
             
-            self.exitation_list.append(self.create_excitation_tulpel(i, quanta, color))
+            self.add_excitations(i, quanta, color)
 
         pass
     
-    def create_excitation_tulpel(self, index, quanta, color):
+    def add_excitations(self, index=1, quanta='1', color='k'):
         
         transition = (self.energy_occupied[index + quanta] - self.energy_occupied[index]) * self.factor
         label = str(index) + '->' + str(index + quanta)
 
+        self.exitation_list[0].append(transition)
+        self.exitation_list[1].append(label)
+        self.exitation_list[2].append([transition,color])
+        
         return [transition, label, color]
     
     def set_pupblication_style(self):
