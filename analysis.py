@@ -88,7 +88,7 @@ class system(object):
         if franck_data != "None":
             self.franck = np.loadtxt(franck_data, comments='?')
 
-        self.exitation_list = [[],[],[]] 
+        self.exitation_list = [[],[],[]]
 
     def integralS(self, axes, plot_number=50):
 
@@ -291,16 +291,17 @@ class system(object):
             axes.set_ylabel('Energy [eV]')
         return axes
 
-    def plot_population(self, axes, pop_number=10, scale='lin'):
+    def plot_population(self, axes, pop_number=10, scale='lin', name=''):
 
         axes.set_xscale(scale)
-        axes.set_xlabel('Voltage [V]')
+        axes.set_xlabel('Time [fs]')
         axes.set_ylabel('Population')
+
+        axes.set_title(name)
 
         for i in range(1, pop_number):
 
             axes.plot(self.occupation[0] * self.au2second, self.occupation[i], linestyle='-', lw='2', label='State' + str(i - 1))
-
         return axes
 
     def plot_notpopulation(self, axes, pop_number=10, scale='lin'):
@@ -519,12 +520,12 @@ class system(object):
         lrange = range(lower_bound, upper_bound)
 
         for i in lrange:
-            
+
             transition = (self.energy_occupied[i + quanta] - self.energy_occupied[i]) * self.factor
             ticks = str(i) + '->' + str(i + quanta)
 
             self.exitations.append([transition, ticks, color])
-            
+
         return
 
     def exitation_fft(self, lower_bound=0, upper_bound=10, quanta=1):
@@ -541,52 +542,52 @@ class system(object):
 
         return transition, pair, lrange
 
-    def put_excitation_list(self, axes):
-        
+    def put_excitation_list(self, axes, fontsize='10'):
+
         for element in self.exitation_list[2]:
             axes.axvline(element[0], linewidth=1, color=element[1])
-            
+
         axes.set_xticks(self.exitation_list[0])
-        axes.set_xticklabels(self.exitation_list[1] , fontsize='10')
-        
+        axes.set_xticklabels(self.exitation_list[1] , fontsize=fontsize)
+
         return axes
 
     def create_excitation_list(self, lower_bound=0, upper_bound=10, quanta=1, color='b'):
 
-        
+
         for i in range(lower_bound, upper_bound):
-            
+
             self.add_excitations(i, quanta, color)
 
         pass
-    
+
     def add_excitations(self, index=1, quanta='1', color='k'):
-        
+
         transition = (self.energy_occupied[index + quanta] - self.energy_occupied[index]) * self.factor
         label = str(index) + '->' + str(index + quanta)
 
         self.exitation_list[0].append(transition)
         self.exitation_list[1].append(label)
         self.exitation_list[2].append([transition,color])
-        
-        return [transition, label, color]
-    
+
+        pass
+
     def set_pupblication_style(self):
-        rcParams['axes.titlesize'] = 26 
+        rcParams['axes.titlesize'] = 26
         rcParams['axes.labelsize'] = 30
         rcParams['legend.fontsize'] = 26
         rcParams['savefig.dpi'] = 1200
-        rcParams['axes.linewidth'] = 2.5 
+        rcParams['axes.linewidth'] = 2.5
 
         rcParams['ytick.labelsize'] = 24
-        rcParams['ytick.major.pad'] = 12 
+        rcParams['ytick.major.pad'] = 12
         rcParams['ytick.major.size'] = 10
         rcParams['ytick.minor.size'] = 8
         rcParams['ytick.major.width'] = 2.5
         rcParams['ytick.minor.width'] = 3
 
         rcParams['xtick.labelsize'] = 24
-        rcParams['xtick.major.pad'] = 12 
+        rcParams['xtick.major.pad'] = 12
         rcParams['xtick.major.size'] = 10
         rcParams['xtick.minor.size'] = 8
         rcParams['xtick.major.width'] = 2.5
@@ -655,28 +656,56 @@ class heatmap(object):
         if secondary_grid != "None":
             self.secondary_grid = np.loadtxt(secondary_grid)
 
-        #Midpoints for derivates
         self.primary_diff = np.diff(self.primary_grid)
-
+        #Midpoints for derivates
+        self.xd = (self.primary_grid[1:]+ self.primary_grid[:-1])/2
         #Differential Conductance
         self.conductance= None
-        
+
         self.number = len(self.data[:, 1])
 
         # Assign parameter value into single array entries in self.density
         # self.density=[self.data[i,:] for i in range(0,self.number)]
 
-        # Meshgrid for 3d Plots 
+        # Meshgrid for 3d Plots
         self.xv, self.yv = np.meshgrid(self.primary_grid, self.secondary_grid)
         # self.zv = self.density
-        
-     #   self.calculate_conductance() 
+
+        self.calculate_conductance()
+
+    def plot_data_vs_bias(self, axes , index=1):
+
+        axes.plot(self.primary_grid, self.data[:,index] ,linestyle='-', lw='2', label=str(index) )
+
+        axes.set_xlabel('Bias Voltage [V]')
+        axes.set_ylabel('Current [$\mu$ A]')
+
+        return axes
+    
+    def plot_derivate_data_vs_bias(self, axes , index=1):
+
+        axes.plot(self.xd, self.conductance[:,index] ,linestyle='-', lw='2', label=str(index) )
+
+        axes.set_xlabel('Bias Voltage [V]')
+        axes.set_ylabel('Current [$\mu$ A]')
+
+        return axes
+
+    def plot_data_vs_gate(self, axes , index=1):
+
+        axes.plot(self.secondary_grid, self.data[index,:],linestyle='-', lw='2', label=str(index))
+
+        axes.set_xlabel('Gate Voltage [V]')
+        axes.set_ylabel('Current [$\mu$ A]')
+
+        return axes
+
     def calculate_conductance(self):
-       
-       self.conductance= np.array([np.diff(line) / self.primary_diff  for line in self.data.T]).T 
-    
-    
-    
+
+       self.conductance= np.array([np.diff(line) / self.primary_diff  for line in self.data.T]).T
+
+
+
 class rhox(object):
     def __init__(self, data="None", primary_grid="None", secondary_grid="None"):
         """
@@ -687,27 +716,27 @@ class rhox(object):
 
         if heatmap != "None":
             self.data = np.loadtxt(data, comments="?")
-            self.name = os.path.basename(data)   
+            self.name = os.path.basename(data)
         if primary_grid != "None":
             self.primary_grid = np.loadtxt(primary_grid)
         if secondary_grid != "None":
             self.secondary_grid = np.loadtxt(secondary_grid)
 
-        # Meshgrid for 3d Plots 
+        # Meshgrid for 3d Plots
         self.xv, self.yv = np.meshgrid(self.secondary_grid, self.primary_grid)
-       
+
         self.number = len(self.data[:, 1])
         # Assign parameter value into single array entries in self.density
         self.density = [self.data[i, :] for i in range(0, self.number)]
-    
+
     def plot_overview(self, accuracy=1, save_path="./" ):
-        
-        fig = plt.figure(figsize=(24, 12))        
+
+        fig = plt.figure(figsize=(24, 12))
         fig.suptitle('Wavepacket overview of ' + self.name, fontsize='17')
-        
+
         #---- 1. subplot
         ax = fig.add_subplot(2, 2, 1, projection='3d')
-        
+
         surf1 = ax.plot_surface(self.xv, self.yv, self.data, rstride=accuracy, cstride=accuracy, cmap = cm.jet,
         linewidth=0, antialiased=True)
 
@@ -716,7 +745,7 @@ class rhox(object):
         ax.tick_params(labelsize='12', length=1, width=1)
         ax.set_ylabel('Time [fs]', fontsize='12')
       #  ax.yaxis.set_scale('log')
-        
+
         #---- 2. subplot
         ax = fig.add_subplot(2, 2, 2, projection='3d')
 
@@ -726,7 +755,7 @@ class rhox(object):
         ax.set_xlabel('Position [a.u.]', fontsize='12')
         ax.tick_params(labelsize='8', length=1, width=1)
         ax.set_ylabel('Time [fs]', fontsize='12')
-        
+
         #---- 3. subplot
         ax = fig.add_subplot(2, 2, 3, projection='3d')
 
@@ -745,9 +774,9 @@ class rhox(object):
         ax.set_xlabel('Position [a.u.]', fontsize='12')
         ax.tick_params(labelsize='8', length=1, width=1)
         ax.set_ylabel('Time [fs]', fontsize='12')
-        
+
         file_name = save_path + self.name + "rhox_overview.png"
         fig.savefig(file_name)
 
 
-        
+
