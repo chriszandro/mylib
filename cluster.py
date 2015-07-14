@@ -5,14 +5,17 @@ class computation:
 
     #Computation File Constructor retrieving parameters
     def __init__(self, computation_path="", computation_file="computation",
-                 mode=1, plot_bool=1, rhox_bool=1, surf_bool=1, pop_bool=1, N=1500, potential_id=0,
+                 mode=1, plot_bool=1, rhox_bool=1, surf_bool=1, pop_bool=1, performance_bool = 0, 
+                 summary_bool = 1, coupling_bool=1,
+                 N=1500, dvr_method=1, fourier = 10.0e0, potential_id=0,
                  medim1=60, medim0=60, meBND=6, meBND_small=6,
                  system_output_filepath="./output/system",
                  summary_output_filepath="./output/summary",
                  result_output_filepath="./output/result",
                  evo_method=1, solve_method=2, abstol=1e-8, ideg=2, timebool=1,
-                 xranges=8.0e0, appendbool = 0, performancebool=1, rhox_tolerance=1e-6,
-                 fermion_bath=1,boson_bath=1,initialstate=1):
+                 xranges=8.0e0, appendbool = 0, performancebool=0, rhox_tolerance=1e-6,
+                 fermion_bath=1,boson_bath=1,initialstate=1, 
+                 computation_modell=1, computation_modell_2=1):
 
         self.computation_path = computation_path
         self.computation_file = computation_file
@@ -23,7 +26,14 @@ class computation:
         self.rhox_bool = rhox_bool
         self.surf_bool = surf_bool
         self.pop_bool = pop_bool
+
+        self.performance_bool = performance_bool
+        self.summary_bool = summary_bool
+        self.coupling_bool = coupling_bool
+        
         self.N = N
+        self.dvr_method = dvr_method 
+        self.fourier = fourier
         self.potential_id = potential_id
         self.medim1 = medim1
         self.medim0 = medim0
@@ -44,6 +54,9 @@ class computation:
         self.fermion_bath = fermion_bath
         self.boson_bath = boson_bath
         self.initialstate =  initialstate
+        
+        self.computation_modell = computation_modell
+        self.computation_modell_2 = computation_modell_2
 
     #Writing the computation file
     def write_computation_file(self):
@@ -55,8 +68,13 @@ class computation:
         Computation.write("%20d" % self.rhox_bool + "           " + "#rhox Output 0: No output, 1: Output\n")
         Computation.write("%20d" % self.surf_bool + "           " + "#surface Output 0: No output, 1: Output\n")
         Computation.write("%20d" % self.pop_bool + "           " + "#population Output 0: No output, 1: Output\n")
+        Computation.write("%20d" % self.performance_bool+ "           " + "# Performance File 0: No output, 1: Output\n")
+        Computation.write("%20d" % self.summary_bool + "           " + "#Summary 0: No output, 1: Output\n")
+        Computation.write("%20d" % self.coupling_bool  + "           " + "#Population Output 0: No output, 1: Output\n")
         Computation.write("---------------System-------------------------------------------\n")
-        Computation.write("%20d" % self.N + "           " + "#N\n")
+        Computation.write("%20d" % self.N + "           " + "#Number of Grid Points N\n")
+        Computation.write("%20d" % self.dvr_method + "           " + "#N \n")
+        Computation.write("%20e" % self.fourier + "           " + "Fourier \n")
         Computation.write("%20d" % self.potential_id + "           " + "#id\n")
         Computation.write("--------------MasterEq-----------------------------------------\n")
         Computation.write("%20d" % self.medim0 + "           "  + "  #medim00          Dimension 00\n")
@@ -86,6 +104,9 @@ class computation:
         Computation.write("%20d" % self.boson_bath+ "           " + "(=1 for including harmonic bath, 0 otherwise \n")
         Computation.write("---------------------------Initial States -------------------------------\n")
         Computation.write("%20d" % self.initialstate + "           " + "Initial state for time evolution. 1 for conventinal switching. 2 for pure state\n")
+        Computation.write("---------------------------Initial States -------------------------------\n")
+        Computation.write("%20d" % self.computation_modell + "           " + "Computation Modell \n")
+        Computation.write("%20d" % self.computation_modell_2 + "           " + "Computation Modell Paramter 2 \n")
         Computation.write("---------------End Of File------------------------------------\n")
         Computation.write("Modes: 1 CVC Mode bias-independent | 2 Varying Gate Voltage with constant voltage |\n 3 CVC with heatmaps | 4 CVC biasDEPENDENT |")
         Computation.write("20 Zvode Time Evolution | 30 Expokit Time Evolution |\n 50 Snaptshot Mode | 42...")
