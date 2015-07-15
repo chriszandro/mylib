@@ -71,7 +71,8 @@ class computation:
         Computation.write("%20d" % self.pop_bool + "           " + "#population Output 0: No output, 1: Output\n")
         Computation.write("%20d" % self.performance_bool+ "           " + "# Performance File 0: No output, 1: Output\n")
         Computation.write("%20d" % self.summary_bool + "           " + "#Summary 0: No output, 1: Output\n")
-        Computation.write("%20d" % self.coupling_bool  + "           " + "#Population Output 0: No output, 1: Output\n")
+        Computation.write("%20d" % self.coupling_bool  + "           " + "# Franck - Condon Matrix 0: No output, 1: Output\n")
+        Computation.write("%20d" % self.pop_number+ "           " + "# Number of Population \n")
         Computation.write("---------------System-------------------------------------------\n")
         Computation.write("%20d" % self.N + "           " + "#Number of Grid Points N\n")
         Computation.write("%20d" % self.dvr_method + "           " + "#N \n")
@@ -249,6 +250,7 @@ class inputfile:
         InputFile.write("-----------------------Pure State Management-----------------------------------" + "\n")
         InputFile.write("%10d" % self.initial_occupation + "           " + "Initial occupation switching. 2 for pure state\n")
         InputFile.write("%10d" % self.initial_state_number + "           " + "Initial state number\n")
+        InputFile.write("%10d" % self.initial_state_number_2 + "           " + "Second Initial state number\n")
         InputFile.write("-----------------------END OF INPUTFILE-----------------------------------" + "\n")
         InputFile.write("")
 
