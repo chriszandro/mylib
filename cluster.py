@@ -6,7 +6,7 @@ class computation:
     #Computation File Constructor retrieving parameters
     def __init__(self, computation_path="", computation_file="computation",
                  mode=1, plot_bool=1, rhox_bool=1, surf_bool=1, pop_bool=1, performance_bool = 0, 
-                 summary_bool = 1, coupling_bool=1,
+                 summary_bool = 1, coupling_bool=1, pop_number=0,
                  N=1500, dvr_method=1, fourier = 10.0e0, potential_id=0,
                  medim1=60, medim0=60, meBND=6, meBND_small=6,
                  system_output_filepath="./output/system",
@@ -14,7 +14,7 @@ class computation:
                  result_output_filepath="./output/result",
                  evo_method=1, solve_method=2, abstol=1e-8, ideg=2, timebool=1,
                  xranges=8.0e0, appendbool = 0, performancebool=0, rhox_tolerance=1e-6,
-                 fermion_bath=1,boson_bath=1,initialstate=1, 
+                 fermion_bath=1,boson_bath=1,initialstate=1,
                  computation_modell=1, computation_modell_2=1):
 
         self.computation_path = computation_path
@@ -26,6 +26,7 @@ class computation:
         self.rhox_bool = rhox_bool
         self.surf_bool = surf_bool
         self.pop_bool = pop_bool
+        self.pop_number = pop_number
 
         self.performance_bool = performance_bool
         self.summary_bool = summary_bool
@@ -130,7 +131,8 @@ class inputfile:
                  beta1L=3.0, beta2L=0.1, beta1R=3.0, beta2R=0.1, T=293.0,
                  fermi_level=0.0, time_grid=1000, time_start=0.0, time_end=1e3,
                  rhox_step=1000, parameter_start=0, parameter_end=1000, parameter1=5,
-                 wcut=0.097, eta=0.0138,hbath_temp=293, initial_occupation=0, initial_state_number=1):
+                 wcut=0.097, eta=0.0138,hbath_temp=293, 
+                 initial_occupation=0, initial_state_number=1, initial_state_number_2=2):
 
         self.Lj = Lj
         self.angle = angle
@@ -187,6 +189,7 @@ class inputfile:
 
         self.initial_occupation = initial_occupation
         self.initial_state_number= initial_state_number
+        self.initial_state_number_2 =  initial_state_number_2
     #Writing the inputfile in given path
     def write_file(self):
 
