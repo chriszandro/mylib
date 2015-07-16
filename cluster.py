@@ -362,6 +362,21 @@ class jobproject(computation):
             job.put_job()
 
         self.put_testscripts()
+        
+        pass
+
+    def put_job_file_merger(self):
+       
+        path = self.resultpath + "/filename.list" 
+
+        namefile = open(path, 'w')
+
+        for job in self.joblist:
+            namefile.write(job.name)
+        
+        namefile.close()
+
+        pass
 
     def put_testscripts(self):
 	"""
