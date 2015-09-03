@@ -104,8 +104,7 @@ class system(object):
     # states: number of states for occupied states
     def occupationsum(self, states):
 
-        summation = np.sum([self.occupation[i + 1] for i in states], axis=0)
-
+        summation = np.sum([self.occupation[i + 1] for i in states], axis=0) 
         return summation
 
 
@@ -125,6 +124,21 @@ class system(object):
 
         return axes
 
+    def plot_transition_dex(self, axes, quanta, inverseplot=False):
+
+        transitions, pair, rangel = self.deexitation(0, 200, quanta)
+
+        if inverseplot:
+            axes.plot(rangel, transitions, 'o--', label='m -> v = m + ' + str(quanta))
+            axes.set_ylabel('Voltage [V]')
+
+        else:
+            axes.plot(transitions, rangel, 'o--', label='m -> v = m + ' + str(quanta))
+            axes.set_xlabel('Voltage [V]')
+
+        axes.set_ylabel('m')
+
+        return axes
 
     def exitation(self, lower_bound, upper_bound, quanta):
 
@@ -140,6 +154,19 @@ class system(object):
 
         return transition, pair, lrange
 
+    def deexitation(self, lower_bound, upper_bound, quanta):
+
+        transition = []
+        pair = []
+
+        lrange = range(lower_bound, upper_bound)
+
+        for i in lrange:
+
+            transition.append(-2 * (self.energy_occupied[i-quanta] - self.energy_unoccupied[i]))
+            pair.append(str(i-quanta) + '->' + str(i))
+
+        return transition, pair, lrange
 
 
     def plot_system(self, axes, switch=False, density=False, start=0, end=20, amplification=10):
@@ -328,6 +355,39 @@ class system(object):
 
         return axes
 
+
+    def putdeexitationlines(self, axes, quanta=1, start=0, end=20):
+
+        deexitations, pair, lrange = self.deexitation(start, end, quanta)
+
+        [axes.axvline(_volt, linewidth=1) for _volt in deexitations]
+
+        axes.set_xticks(deexitations)
+        axes.set_xticklabels(pair , fontsize=7)
+
+        return axes
+
+
+    def putdeexitationslist(self, axes, exlist, inputcolor='b'):
+
+        transition = []
+        pair = []
+
+        # Caclulate
+        for element in exlist:
+            transition.append(2 * (self.energy_occupied[element[1]] - self.energy_unoccupied[element[0]]))
+            pair.append(str(element[0]) + '>' + str(element[1]))
+
+        #  print element[0], element[1], element
+
+        # Put into List
+        [axes.axvline(_volt, linewidth=2, color=inputcolor) for _volt in transition]
+
+        axes.set_xticks(transition)
+        axes.set_xticklabels(pair , color=inputcolor, fontsize=7)
+
+        return axes
+
     def putexitationslist(self, axes, exlist, inputcolor='b'):
 
         transition = []
@@ -394,6 +454,21 @@ class system(object):
         d_position = np.diff(self.position) / stepsize
 
         return (d_position, new_grid)
+
+    def derivate_current(self):
+
+        stepsize = np.average(np.diff(self.parameter))
+
+        # New Grid which is shifted by the half stepsize
+        # First temporary Calculation which has one extra grid ponts
+        new_grid_temp = self.parameter + stepsize / 2
+        # Real grid which excludes the last item
+        new_grid = new_grid_temp[0:-1]
+
+        # Calc Differences between values
+        d_current = np.diff(self.current) / stepsize
+
+        return (d_current, new_grid)
 
     def derivate_2_energy(self):
 
