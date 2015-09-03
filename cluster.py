@@ -5,8 +5,8 @@ class computation:
 
     #Computation File Constructor retrieving parameters
     def __init__(self, computation_path="", computation_file="computation",
-                 mode=1, plot_bool=1, rhox_bool=1, surf_bool=1, pop_bool=1, performance_bool = 0, 
-                 summary_bool = 1, coupling_bool=1, pop_number=0,
+                 mode=1, plot_bool=1, rhox_bool=1, surf_bool=1, pop_bool=1, performance_bool = 0,
+                 summary_bool = 1, coupling_bool=1, pop_number=10,
                  N=1500, dvr_method=1, fourier = 10.0e0, potential_id=0,
                  medim1=60, medim0=60, meBND=6, meBND_small=6,
                  system_output_filepath="./output/system",
@@ -31,9 +31,9 @@ class computation:
         self.performance_bool = performance_bool
         self.summary_bool = summary_bool
         self.coupling_bool = coupling_bool
-        
+
         self.N = N
-        self.dvr_method = dvr_method 
+        self.dvr_method = dvr_method
         self.fourier = fourier
         self.potential_id = potential_id
         self.medim1 = medim1
@@ -55,7 +55,7 @@ class computation:
         self.fermion_bath = fermion_bath
         self.boson_bath = boson_bath
         self.initialstate =  initialstate
-        
+
         self.computation_modell = computation_modell
         self.computation_modell_2 = computation_modell_2
 
@@ -69,8 +69,8 @@ class computation:
         Computation.write("%20d" % self.rhox_bool + "           " + "#rhox Output 0: No output, 1: Output\n")
         Computation.write("%20d" % self.surf_bool + "           " + "#surface Output 0: No output, 1: Output\n")
         Computation.write("%20d" % self.pop_bool + "           " + "#population Output 0: No output, 1: Output\n")
-        Computation.write("%20d" % self.performance_bool+ "           " + "# Performance File 0: No output, 1: Output\n")
-        Computation.write("%20d" % self.summary_bool + "           " + "#Summary 0: No output, 1: Output\n")
+        Computation.write("%20d" % self.summary_bool+ "           " + "# Performance File 0: No output, 1: Output\n")
+        Computation.write("%20d" % self.performance_bool + "           " + "#Summary 0: No output, 1: Output\n")
         Computation.write("%20d" % self.coupling_bool  + "           " + "# Franck - Condon Matrix 0: No output, 1: Output\n")
         Computation.write("%20d" % self.pop_number+ "           " + "# Number of Population \n")
         Computation.write("---------------System-------------------------------------------\n")
@@ -132,7 +132,7 @@ class inputfile:
                  beta1L=3.0, beta2L=0.1, beta1R=3.0, beta2R=0.1, T=293.0,
                  fermi_level=0.0, time_grid=1000, time_start=0.0, time_end=1e3,
                  rhox_step=1000, parameter_start=0, parameter_end=1000, parameter1=5,
-                 wcut=0.097, eta=0.0138,hbath_temp=293, 
+                 wcut=0.097, eta=0.0138,hbath_temp=293,
                  initial_occupation=0, initial_state_number=1, initial_state_number_2=2):
 
         self.Lj = Lj
