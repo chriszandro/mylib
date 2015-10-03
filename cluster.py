@@ -5,17 +5,17 @@ class computation:
 
     #Computation File Constructor retrieving parameters
     def __init__(self, computation_path="", computation_file="computation",
-                 mode=1, plot_bool=1, rhox_bool=1, surf_bool=1, pop_bool=1, performance_bool = 0, 
-                 summary_bool = 1, coupling_bool=1, pop_number=0,
-                 N=1500, dvr_method=1, fourier = 10.0e0, potential_id=0,
-                 medim1=60, medim0=60, meBND=6, meBND_small=6,
-                 system_output_filepath="./output/system",
-                 summary_output_filepath="./output/summary",
-                 result_output_filepath="./output/result",
-                 evo_method=1, solve_method=2, abstol=1e-8, ideg=2, timebool=1,
-                 xranges=8.0e0, appendbool = 0, performancebool=0, rhox_tolerance=1e-6,
-                 fermion_bath=1,boson_bath=1,initialstate=1,
-                 computation_modell=1, computation_modell_2=1):
+            mode=1, plot_bool=1, rhox_bool=1, surf_bool=1, pop_bool=1, performance_bool = 0, 
+            summary_bool = 1, coupling_bool=1, pop_number=0,
+            N=1500, dvr_method=1, fourier = 10.0e0, potential_id=0,
+            medim1=60, medim0=60, meBND=6, meBND_small=6,
+            system_output_filepath="./output/system",
+            summary_output_filepath="./output/summary",
+            result_output_filepath="./output/result",
+            evo_method=1, solve_method=2, abstol=1e-8, ideg=2, timebool=1,
+            xranges=8.0e0, appendbool = 0, performancebool=0, rhox_tolerance=1e-6,
+            fermion_bath=1,boson_bath=1,initialstate=1,
+            computation_modell=1, computation_modell_2=1):
 
         self.computation_path = computation_path
         self.computation_file = computation_file
@@ -31,7 +31,7 @@ class computation:
         self.performance_bool = performance_bool
         self.summary_bool = summary_bool
         self.coupling_bool = coupling_bool
-        
+
         self.N = N
         self.dvr_method = dvr_method 
         self.fourier = fourier
@@ -55,7 +55,7 @@ class computation:
         self.fermion_bath = fermion_bath
         self.boson_bath = boson_bath
         self.initialstate =  initialstate
-        
+
         self.computation_modell = computation_modell
         self.computation_modell_2 = computation_modell_2
 
@@ -121,19 +121,19 @@ class inputfile:
 
     #Constructor to obtain the parameters
     def __init__(self, inputfile_path="",
-                 inputfile_name="inputfile", l=1.25,
-                 delta=0.4, Vb=0.5, shiftEnergy=0.1,
-                 xshift=0.0, omega=1.0, lambdas=0.0,
-                 parabolashift=0.3,
-                 A=1.0, B=0.2, C=1.0, switchshift=0.0,
-                 grid_bias_voltage=10, start_bias_voltage=0.3, end_bias_voltage=0.3,
-                 grid_gate_voltage=100, start_gate_voltage=0.0, end_gate_voltage=1.8, d=1.0,
-                 Lj = 1, angle = 60, trans_shift = 1.0,
-                 beta1L=3.0, beta2L=0.1, beta1R=3.0, beta2R=0.1, T=293.0,
-                 fermi_level=0.0, time_grid=1000, time_start=0.0, time_end=1e3,
-                 rhox_step=1000, parameter_start=0, parameter_end=1000, parameter1=5,
-                 wcut=0.097, eta=0.0138,hbath_temp=293, 
-                 initial_occupation=0, initial_state_number=1, initial_state_number_2=2):
+            inputfile_name="inputfile", l=1.25,
+            delta=0.4, Vb=0.5, shiftEnergy=0.1,
+            xshift=0.0, omega=1.0, lambdas=0.0,
+            parabolashift=0.3,
+            A=1.0, B=0.2, C=1.0, switchshift=0.0,
+            grid_bias_voltage=10, start_bias_voltage=0.3, end_bias_voltage=0.3,
+            grid_gate_voltage=100, start_gate_voltage=0.0, end_gate_voltage=1.8, d=1.0,
+            Lj = 1, angle = 60, trans_shift = 1.0,
+            beta1L=3.0, beta2L=0.1, beta1R=3.0, beta2R=0.1, T=293.0,
+            fermi_level=0.0, time_grid=1000, time_start=0.0, time_end=1e3,
+            rhox_step=1000, parameter_start=0, parameter_end=1000, parameter1=5,
+            wcut=0.097, eta=0.0138,hbath_temp=293, 
+            initial_occupation=0, initial_state_number=1, initial_state_number_2=2):
 
         self.Lj = Lj
         self.angle = angle
@@ -258,10 +258,10 @@ class inputfile:
 class jobproject(computation):
 
     def __init__(self, name, program, programprojectpath, projectpath, *args, **kwargs):
-	"""
-	Main Object to handle a jobproject. It prepares all necessary paths and folders. Subsequently it
-	creates the computation file. The "joblist" array contains all jobs associated by the jobproject
-	"""
+        """
+        Main Object to handle a jobproject. It prepares all necessary paths and folders. Subsequently it
+        creates the computation file. The "joblist" array contains all jobs associated by the jobproject
+        """
 
         from os.path import expanduser
 
@@ -299,13 +299,10 @@ class jobproject(computation):
         computation.write_computation_file(self)
         self.put_bash()
 
-    def __del__(self):
-	self.delete_project()
-
     def reset_jobs(self):
-	"""
-	Empty the Joblist.
-	"""
+        """
+        Empty the Joblist.
+        """
 
         self.joblist[:] = []
         self.delete_project()
@@ -317,9 +314,9 @@ class jobproject(computation):
         pass
 
     def delete_project(self):
-	"""
-	Deletes the folder associated to the project
-	"""
+        """
+        Deletes the folder associated to the project
+        """
 
         import shutil
         import os
@@ -332,13 +329,17 @@ class jobproject(computation):
         if os.path.exists(self.testscriptspath):
             shutil.rmtree(self.testscriptspath)
 
-    def add_job(self, *args, **kwargs):
-	"""
-	ADD a jobobject to the jobfilelist
-	"""
+    def add_job(self, number_bool=0, *args, **kwargs):
+        """
+        ADD a jobobject to the jobfilelist
+        """
 
         jobnumber = len(self.joblist) + 1
-        jobname = self.name + str(jobnumber)
+
+        if number_bool==1: 
+            jobname = self.name + str(jobnumber)
+        else:
+            jobname = self.name 
 
         job = job_rrze(name=jobname, programprojectname=self.programprojectpath, program=self.program, computation_file=self.computation_file,
                               jobfilespath=self.jobfilespath, joboutpath=self.joboutpath, *args, **kwargs)
@@ -346,42 +347,42 @@ class jobproject(computation):
         self.joblist.append(job)
 
     def print_job_list(self):
-	"""
-	Print out the added jobs for check
-	"""
+        """
+        Print out the added jobs for check
+        """
 
         for job in self.joblist:
             print job.name
 
     def put_jobproject(self):
-	"""
-	Finishes te Jobproject
-	"""
+        """
+        Finishes te Jobproject
+        """
 
         for job in self.joblist:
             job.put_job()
 
         self.put_testscripts()
-        
+
         pass
 
     def put_job_file_merger(self):
-       
+
         path = self.resultpath + "/filename.list" 
 
         namefile = open(path, 'w')
 
         for job in self.joblist:
             namefile.write(job.name)
-        
+
         namefile.close()
 
         pass
 
     def put_testscripts(self):
-	"""
-	This script writes a small bash script into the testscript folder to perform a test
-	"""
+        """
+        This script writes a small bash script into the testscript folder to perform a test
+        """
 
         for job in self.joblist:
             #---------------------------------------
@@ -396,12 +397,12 @@ class jobproject(computation):
             Testscript.write(job.execution)
             Testscript.close()
 
-            print "Testscript in: " +  path
+            #print "Testscript in: " +  path
 
     def put_local_jobscript(self, path="./jobstarters"):
             """
             Creates bash scripts in to the "path" folder which executes all jobs created by the jobproject
-	    """
+            """
 
             import os
 
@@ -420,9 +421,28 @@ class jobproject(computation):
 
             Jobsubmit.close()
 
+    def put_runscript(self):
+
+            runscript = open(self.jobfilespath + "/runscript.sh", 'w')
+
+            for job in self.joblist:
+                execute = "./" +job.program + " " + job.inputfile_name + " " + job.computation_file 
+                runscript.write(execute + "\n")
+                runscript.write("sleep 2 \n")
+
+            runscript.close()
+
+            runscript_neg = open(self.jobfilespath + "/runscript_neg.sh", 'w')
+
+            for job in self.joblist:
+                execute = "#./" +job.program + " " + job.inputfile_name + " " + job.computation_file 
+                runscript_neg.write(execute + "\n")
+                runscript_neg.write("#sleep 2 \n")
+            runscript_neg.close()
+
     def create_project_folder(self):
-	"""
-	Creates all necessary folders
+        """
+        Creates all necessary folders
         """
 
         import os

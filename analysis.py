@@ -647,6 +647,26 @@ class system(object):
 
         pass
 
+
+    def scheme_3d(self):
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+       
+        transitions, pair, rangel = self.exitation(0, 200, quanta)
+
+        x = transitions
+        y = rangel
+    
+        ax.bar(xs, ys, zs=z, zdir='y', color=cs, alpha=0.8)
+
+        ax.set_zlabel('Z')
+        ax.set_xlabel('Voltages [V]')
+        ax.set_ylabel('m')
+
+        pass
+    
+    
     def set_pupblication_style(self):
         rcParams['axes.titlesize'] = 26
         rcParams['axes.labelsize'] = 30
