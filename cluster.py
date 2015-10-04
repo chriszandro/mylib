@@ -5,17 +5,17 @@ class computation:
 
     #Computation File Constructor retrieving parameters
     def __init__(self, computation_path="", computation_file="computation",
-            mode=1, plot_bool=1, rhox_bool=1, surf_bool=1, pop_bool=1, performance_bool = 0, 
-            summary_bool = 1, coupling_bool=1, pop_number=0,
-            N=1500, dvr_method=1, fourier = 10.0e0, potential_id=0,
-            medim1=60, medim0=60, meBND=6, meBND_small=6,
-            system_output_filepath="./output/system",
-            summary_output_filepath="./output/summary",
-            result_output_filepath="./output/result",
-            evo_method=1, solve_method=2, abstol=1e-8, ideg=2, timebool=1,
-            xranges=8.0e0, appendbool = 0, performancebool=0, rhox_tolerance=1e-6,
-            fermion_bath=1,boson_bath=1,initialstate=1,
-            computation_modell=1, computation_modell_2=1):
+                 mode=1, plot_bool=1, rhox_bool=1, surf_bool=1, pop_bool=1, performance_bool = 0,
+                 summary_bool = 1, coupling_bool=1, pop_number=10,
+                 N=1500, dvr_method=1, fourier = 10.0e0, potential_id=0,
+                 medim1=60, medim0=60, meBND=6, meBND_small=6,
+                 system_output_filepath="./output/system",
+                 summary_output_filepath="./output/summary",
+                 result_output_filepath="./output/result",
+                 evo_method=1, solve_method=2, abstol=1e-8, ideg=2, timebool=1,
+                 xranges=8.0e0, appendbool = 0, performancebool=0, rhox_tolerance=1e-6,
+                 fermion_bath=1,boson_bath=1,initialstate=1,
+                 computation_modell=1, computation_modell_2=1):
 
         self.computation_path = computation_path
         self.computation_file = computation_file
@@ -33,7 +33,7 @@ class computation:
         self.coupling_bool = coupling_bool
 
         self.N = N
-        self.dvr_method = dvr_method 
+        self.dvr_method = dvr_method
         self.fourier = fourier
         self.potential_id = potential_id
         self.medim1 = medim1
@@ -69,8 +69,8 @@ class computation:
         Computation.write("%20d" % self.rhox_bool + "           " + "#rhox Output 0: No output, 1: Output\n")
         Computation.write("%20d" % self.surf_bool + "           " + "#surface Output 0: No output, 1: Output\n")
         Computation.write("%20d" % self.pop_bool + "           " + "#population Output 0: No output, 1: Output\n")
-        Computation.write("%20d" % self.performance_bool+ "           " + "# Performance File 0: No output, 1: Output\n")
-        Computation.write("%20d" % self.summary_bool + "           " + "#Summary 0: No output, 1: Output\n")
+        Computation.write("%20d" % self.summary_bool+ "           " + "# Performance File 0: No output, 1: Output\n")
+        Computation.write("%20d" % self.performance_bool + "           " + "#Summary 0: No output, 1: Output\n")
         Computation.write("%20d" % self.coupling_bool  + "           " + "# Franck - Condon Matrix 0: No output, 1: Output\n")
         Computation.write("%20d" % self.pop_number+ "           " + "# Number of Population \n")
         Computation.write("---------------System-------------------------------------------\n")
@@ -191,7 +191,8 @@ class inputfile:
         self.initial_occupation = initial_occupation
         self.initial_state_number= initial_state_number
         self.initial_state_number_2 =  initial_state_number_2
-    #Writing the inputfile in given path
+ 
+ #Writing the inputfile in given path
     def write_file(self):
 
         InputFile = open(self.inputfile, 'w')
