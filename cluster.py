@@ -133,7 +133,8 @@ class inputfile:
             fermi_level=0.0, time_grid=1000, time_start=0.0, time_end=1e3,
             rhox_step=1000, parameter_start=0, parameter_end=1000, parameter1=5,
             wcut=0.097, eta=0.0138,hbath_temp=293, 
-            initial_occupation=0, initial_state_number=1, initial_state_number_2=2):
+            initial_occupation=0, initial_state_number=1, initial_state_number_2=2, 
+            l_2=1.25, delta_2=0.1, Vb_2=0.5 ):
 
         self.Lj = Lj
         self.angle = angle
@@ -192,6 +193,10 @@ class inputfile:
         self.initial_state_number= initial_state_number
         self.initial_state_number_2 =  initial_state_number_2
  
+        self.l_2 = l_2
+        self.delta_2 = delta_2
+        self.Vb_2 = Vb_2
+
  #Writing the inputfile in given path
     def write_file(self):
 
@@ -252,6 +257,10 @@ class inputfile:
         InputFile.write("%10d" % self.initial_occupation + "           " + "Initial occupation switching. 2 for pure state\n")
         InputFile.write("%10d" % self.initial_state_number + "           " + "Initial state number\n")
         InputFile.write("%10d" % self.initial_state_number_2 + "           " + "Second Initial state number\n")
+        InputFile.write("-----------------------Second Set of Double Well Parameters--------------------" + "\n")
+        InputFile.write("%20.10f" % self.l_2 + "  #2nd translocation length" + "\n")
+        InputFile.write("%20.10f" % self.delta_2 + "  #2nd Delta + \n")
+        InputFile.write("%20.10f" % self.Vb_2 + "  #2nd Barrier Height Vb" + "\n")
         InputFile.write("-----------------------END OF INPUTFILE-----------------------------------" + "\n")
         InputFile.write("")
 
@@ -568,7 +577,7 @@ class job_rrze(inputfile):
         JobFile.write(self.jobError + "\n")
         JobFile.write("\n")
         JobFile.write("#Mail with (a)bort, (b)egin, (e)nd" + "\n")
-        JobFile.write("#PBS -m abe" + "\n")
+        JobFile.write("#PBS -m ae" + "\n")
         JobFile.write("\n")
         JobFile.write('# Job Execution' + "\n")
         JobFile.write("#OpenMP" + "\n")
