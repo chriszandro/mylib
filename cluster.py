@@ -494,7 +494,7 @@ class jobproject(computation):
 #Class for the jobfile a the RRZE Computing systems
 class job_rrze(inputfile):
 
-    def __init__(self, name, programprojectname, program, computation_file, jobfilespath, joboutpath, specific="",cluster="lima", time="24:00:00", *args, **kwargs):
+    def __init__(self, name, programprojectname, program, computation_file, jobfilespath, joboutpath, specific="", subfolder="", cluster="lima", time="24:00:00", *args, **kwargs):
 
         # Read In
         self.name = name + specific
@@ -505,6 +505,7 @@ class job_rrze(inputfile):
         self.joboutpath = joboutpath
         self.cluster = cluster
         self.time = time
+        self.subfolder=subfolder
 
         self.inputfile = "inputfile_" + self.name + ".inp"
         self.jobfile = self.jobfilespath + "/" + self.name + ".job"
