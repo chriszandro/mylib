@@ -427,7 +427,7 @@ class jobproject(computation):
             for job in self.joblist:
                 submitt_string = "qsub " + job.jobfile
                 Jobsubmit.write(submitt_string + "\n")
-                Jobsubmit.write("sleep 2 \n")
+                Jobsubmit.write("sleep 1 \n")
 
             Jobsubmit.close()
 
@@ -438,7 +438,7 @@ class jobproject(computation):
             for job in self.joblist:
                 execute = "./" +job.program + " " + job.inputfile_name + " " + job.computation_file 
                 runscript.write(execute + "\n")
-                runscript.write("sleep 2 \n")
+                runscript.write("sleep 1 \n")
 
             runscript.close()
 
@@ -447,7 +447,7 @@ class jobproject(computation):
             for job in self.joblist:
                 execute = "#./" +job.program + " " + job.inputfile_name + " " + job.computation_file 
                 runscript_neg.write(execute + "\n")
-                runscript_neg.write("#sleep 2 \n")
+                runscript_neg.write("#sleep 1 \n")
             runscript_neg.close()
 
     def create_project_folder(self):
