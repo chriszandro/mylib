@@ -215,12 +215,12 @@ for system in configuration_stat:
 #External Parameters
 temp =[10, 293] 
 env =[0.0, 0.04] 
-bias = [0.1, 0.2, 0.3]
+bias = [0.2, 0.4]
 
 
 # In[8]:
 
-timestart = 0; timeend= 1e7; timegrid=1e5; clustertime_1 = "24:00:00"; cluster_1="lima"
+timestart = 0; timeend= 1e7; timegrid=1e5; clustertime_1 = "12:00:00"; cluster_1="lima"
 
 
 # ## off -> on
@@ -394,7 +394,7 @@ project_onoff_rhox.put_runscript(); project_onoff_rhox.put_jobproject()
 #External Parameters
 temp =[10, 293] 
 env =[0.0, 0.04] 
-bias = [0.1, 0.2, 0.3]
+bias = [0.2, 0.4]
 
 # Calc Paramters
 occupation =[0, 1] 
@@ -403,7 +403,7 @@ states =[1,2]
 
 # In[ ]:
 
-timestart = 0; timeend= 1e7; timegrid=1e5; clustertime_2 = "24:00:00"; cluster_2="lima"
+timestart = 0; timeend= 1e7; timegrid=1e5; clustertime_2 = "10:00:00"; cluster_2="lima"
 
 
 # In[ ]:
@@ -511,12 +511,12 @@ project_pure_rhox.put_runscript();project_pure_rhox.put_jobproject()
 #External Parameters
 temp =[10, 293] 
 env =[0.0, 0.04] 
-bias = [0.2, 0.4]
+bias = [0.1, 0.2, 0.4]
 
 
 # In[8]:
 
-timestart = 0; timeend= 1e7; timegrid=1e5; clustertime_3 = "24:00:00"; cluster_3="lima"
+timestart = 0; timeend= 1e8; timegrid=1e5; clustertime_3 = "24:00:00"; cluster_3="emmy"
 
 
 # In[9]:
