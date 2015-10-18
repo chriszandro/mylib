@@ -397,6 +397,7 @@ class system(object):
             transition.append(2 * (self.energy_occupied[element[1]] - self.energy_unoccupied[element[0]]))
             pair.append(str(element[0]) + '>' + str(element[1]))
 
+        #  print element[0], element[1], element
 
         # Put into List
         [axes.axvline(_volt, linewidth=2, color=inputcolor) for _volt in transition]
