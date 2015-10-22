@@ -235,7 +235,7 @@ project_offon = cluster.jobproject(name="off-on", program=program_rrze, programp
 
 # In[28]:
 
-project_offon_rhox = cluster.jobproject(name="off-on", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
+project_offon_rhox = cluster.jobproject(name="off-on_rhox", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
                                         mode=21, summary_bool=1, performance_bool=1, pop_bool=1,  N=2000, coupling_bool=1,
                                         pop_number=15, rhox_bool=1, plot_bool=1, meBND=6, meBND_small=6,xranges=2.0e0,
                                         medim1=60,medim0=60, timebool=0, potential_id=0)
@@ -253,7 +253,7 @@ project_onoff = cluster.jobproject(name="on-off", program=program_rrze, programp
 
 # In[30]:
 
-project_onoff_rhox = cluster.jobproject(name="on-off", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
+project_onoff_rhox = cluster.jobproject(name="on-off_rhox", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
                                         mode=21, summary_bool=1, performance_bool=1, pop_bool=1,  N=2000, coupling_bool=1,
                                         pop_number=15, rhox_bool=1, plot_bool=1, meBND=6, meBND_small=6,xranges=2.0e0,
                                         medim1=60,medim0=60, timebool=0, potential_id=0)
@@ -394,7 +394,7 @@ project_onoff_rhox.put_runscript(); project_onoff_rhox.put_jobproject()
 #External Parameters
 temp =[10, 293] 
 env =[0.0, 0.04] 
-bias = [0.2, 0.4]
+bias = [0, 0.2, 0.4]
 
 # Calc Paramters
 occupation =[0, 1] 
@@ -403,7 +403,7 @@ states =[1,2]
 
 # In[ ]:
 
-timestart = 0; timeend= 1e7; timegrid=1e5; clustertime_2 = "10:00:00"; cluster_2="lima"
+timestart = 0; timeend= 1e7; timegrid=1e5; clustertime_2 = "16:00:00"; cluster_2="lima"
 
 
 # In[ ]:
@@ -417,8 +417,8 @@ project_pure = cluster.jobproject(name="pure", program=program_rrze, programproj
 # In[ ]:
 
 project_pure_rhox = cluster.jobproject(name="pure_rhox", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
-                                        mode=21, N=2000, summary_bool=1, performance_bool=1, pop_bool=1, coupling_bool=1,
-                                        pop_number=15, rhox_bool=1, plot_bool=1, meBND=6, meBND_small=6, xranges=2.0e0,
+                                        mode=20, N=2000, summary_bool=1, performance_bool=1, pop_bool=1, coupling_bool=1,
+                                        pop_number=5, evo_method=2, rhox_bool=1, plot_bool=1, meBND=6, meBND_small=6, xranges=2.0e0,
                                         medim1=60,medim0=60, timebool=0, potential_id=0, initialstate=2)
 
 
