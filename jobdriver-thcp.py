@@ -22,9 +22,9 @@ if myhost=="lima" or myhost=="cshpc":
     path_rrze = "/home/hpc/mpet/mpet07/gmaster13"
     projectpath = "/home/vault/mpet/mpet07/projects/NEW_set_" + signature +"/"    
 else:
-    program_rrze =  "./gmaster13"
+    program_rrze =  "gmaster13"
     path_rrze = "/user/chriz/calculations"
-    projectpath =  "/user/chriz/calculations"    
+    projectpath =  "/user/chriz/calculations/NEW_set_" + signature +"/" 
 
 # ## Assists
 
@@ -174,22 +174,22 @@ def symmetric_gate_U(Fieldlength=10, delta=0.1, transloc=1):
 # In[4]:
 
 ### Dynamic
-system_l025_dyn = {"l":0.25, "delta":0.1, "gate":[0, 1.8, 2.8] , "frank":[0.0], "barrier":[0.2, 0.5], 
+system_l025_dyn = {"l":0.25, "delta":0.1, "gate":[0, 1.8, 2.8] , "frank":[0.0, -0.1], "barrier":[0.2, 0.5], 
                "operation":[], "A":0.1, "B":1, "C":7}  
 system_l05_dyn = {"l":0.5, "delta":0.1,"gate":[0, 0.8, 2.8] , "frank":[0.0, -0.3],"barrier":[0.2, 0.5], 
               "operation":[], "A":0.1, "B":1, "C":7}  
-system_l08_dyn = {"l":0.8, "delta":0.1, "gate":[0, 0.5, 2.8] , "frank":[0.0], "barrier":[0.2, 0.5], 
+system_l08_dyn = {"l":0.8, "delta":0.1, "gate":[0, 0.5, 2.8] , "frank":[0.0, -0.3], "barrier":[0.2, 0.5], 
               "operation":[], "A":0.1, "B":1, "C":7}
 configuration_dyn =[system_l025_dyn, system_l05_dyn, system_l08_dyn] 
 
 ### Stationary
-system_l025_stat = {"l":0.25, "delta":0.1, "gate":[0, 1.8, 2.8] , "frank":[0.0], "barrier":[0.2, 0.5], 
+system_l025_stat = {"l":0.25, "delta":0.1, "gate":[0, 1.8, 2.8, 4.5] , "frank":[0.0, -0.1], "barrier":[0.2, 0.5], 
                "operation":[], "A":0.1, "B":1, "C":7}  
-system_l05_stat = {"l":0.5, "delta":0.1,"gate":[0, 0.8, 2.8] , "frank":[0.0],"barrier":[0.2, 0.5], 
+system_l05_stat = {"l":0.5, "delta":0.1,"gate":[0, 0.8, 2.8] , "frank":[0.0, -0.3, 0.3],"barrier":[0.2, 0.5], 
               "operation":[], "A":0.1, "B":1, "C":7}  
 system_l08_stat = {"l":0.8, "delta":0.1, "gate":[0, 0.5, 2.8] , "frank":[0.0], "barrier":[0.2, 0.5], 
               "operation":[], "A":0.1, "B":1, "C":7}
-configuration_stat =[system_l025_stat, system_l05_stat, system_l08_stat] 
+configuration_stat =[ssystem_l025_stat, system_l05_stat, system_l08_stat] 
 
 map(create_switch_operation, configuration_stat)
 map(create_switch_operation, configuration_dyn)
@@ -215,12 +215,12 @@ for system in configuration_stat:
 #External Parameters
 temp =[10, 293] 
 env =[0.0, 0.04] 
-bias = [0.1, 0.2, 0.3]
+bias = [0.2, 0.4]
 
 
 # In[8]:
 
-timestart = 0; timeend= 1e7; timegrid=1e5; clustertime_1 = "24:00:00"; cluster_1="lima"
+timestart = 0; timeend= 1e7; timegrid=1e5; clustertime_1 = "12:00:00"; cluster_1="lima"
 
 
 # ## off -> on
@@ -394,7 +394,7 @@ project_onoff_rhox.put_runscript(); project_onoff_rhox.put_jobproject()
 #External Parameters
 temp =[10, 293] 
 env =[0.0, 0.04] 
-bias = [0.1, 0.2, 0.3]
+bias = [0.2, 0.4]
 
 # Calc Paramters
 occupation =[0, 1] 
@@ -403,7 +403,7 @@ states =[1,2]
 
 # In[ ]:
 
-timestart = 0; timeend= 1e7; timegrid=1e5; clustertime_2 = "24:00:00"; cluster_2="lima"
+timestart = 0; timeend= 1e7; timegrid=1e5; clustertime_2 = "10:00:00"; cluster_2="lima"
 
 
 # In[ ]:
@@ -616,7 +616,7 @@ project_switch_rhox.put_jobproject()
 
 # In[ ]:
 
-gate_values = np.arange(0, 4, 0.1)
+gate_values = np.arange(0, 5, 0.1)
 
 
 # In[ ]:
@@ -719,7 +719,7 @@ for potential in configuration_stat:
            
                                     start_bias_voltage=-2.5,
                                     end_bias_voltage=2.5,
-                                    grid_bias_voltage = 1000,
+                                    grid_bias_voltage = 250,
 
                                 
                                     ## Cluster
@@ -756,7 +756,7 @@ project_paper_cvc.put_runscript()
 # In[ ]:
 
 #External Parameters
-temp =[10, 293] 
+temp =[293] 
 env =[0.0, 0.04] 
 bias = [0.2, 0.4]
 
@@ -802,9 +802,9 @@ for potential in configuration_stat:
                                     project_slowswitch_paper.add_job(
                                     specific=string, 
            
-                                    start_bias_voltage=0.2,
-                                    end_bias_voltage=0.4,
-                                    grid_bias_voltage = 1,
+                                    start_bias_voltage=0.1,
+                                    end_bias_voltage=0.3,
+                                    grid_bias_voltage = 2,
                                 
                                     ## Cluster
                                     cluster = cluster_slow, 
@@ -847,9 +847,9 @@ project_slowswitch_paper.put_runscript()
 # In[ ]:
 
 #External Parameters
-temp =[10, 293] 
+temp =[293] 
 env =[0.0, 0.04] 
-bias = [0.2, 0.4]
+bias = [0.1, 0.2, 0.3]
 
 #Angle
 angle =[0, 25, 60] 
@@ -891,8 +891,8 @@ for potential in configuration_stat:
                                     specific=string, 
            
                                     start_bias_voltage=0,
-                                    end_bias_voltage=4.5,
-                                    grid_bias_voltage = 900,
+                                    end_bias_voltage=3.0,
+                                    grid_bias_voltage = 600,
                                 
                                     ## Cluster
                                     cluster = cluster_diode, 
