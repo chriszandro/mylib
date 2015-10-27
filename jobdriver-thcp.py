@@ -22,7 +22,7 @@ if myhost=="lima" or myhost=="cshpc":
     path_rrze = "/home/hpc/mpet/mpet07/gmaster13"
     projectpath = "/home/vault/mpet/mpet07/projects/NEW_set_" + signature +"/"    
 else:
-    program_rrze =  "gmaster13"
+    program_rrze =  "/user/chriz/Dropbox/PHD/workspace/gmaster13/Release_Intel64/gmaster13"
     path_rrze = "/user/chriz/calculations"
     projectpath =  "/user/chriz/calculations/NEW_set_" + signature +"/" 
 
@@ -182,17 +182,37 @@ system_l08_dyn = {"l":0.8, "delta":0.1, "gate":[0, 0.5, 2.8] , "frank":[0.0, -0.
               "operation":[], "A":0.1, "B":1, "C":7}
 configuration_dyn =[system_l025_dyn, system_l05_dyn, system_l08_dyn] 
 
-### Stationary
+### Stationary Standard
 system_l025_stat = {"l":0.25, "delta":0.1, "gate":[0, 1.8, 2.8, 4.5] , "frank":[0.0, -0.1], "barrier":[0.2, 0.5], 
                "operation":[], "A":0.1, "B":1, "C":7}  
-system_l05_stat = {"l":0.5, "delta":0.1,"gate":[0, 0.8, 2.8] , "frank":[0.0, -0.3, 0.3],"barrier":[0.2, 0.5], 
+system_l05_stat = {"l":0.5, "delta":0.1,"gate":[0, 0.8, 2.8] , "frank":[0.0, -0.3, -0.1, 0.3],"barrier":[0.2, 0.5], 
               "operation":[], "A":0.1, "B":1, "C":7}  
-system_l08_stat = {"l":0.8, "delta":0.1, "gate":[0, 0.5, 2.8] , "frank":[0.0], "barrier":[0.2, 0.5], 
+system_l08_stat = {"l":0.8, "delta":0.1, "gate":[0, 0.5, 2.8] , "frank":[0.0, -0.3], "barrier":[0.2, 0.5], 
               "operation":[], "A":0.1, "B":1, "C":7}
-configuration_stat =[ssystem_l025_stat, system_l05_stat, system_l08_stat] 
+configuration_stat =[system_l025_stat, system_l05_stat, system_l08_stat] 
+
+### NO Switch Function. Blank Double Well Examination
+system_l025_blank = {"l":0.25, "delta":0.1, "gate":[0, 1.8, 2.8, 4.5] , "frank":[0.0, -0.1], "barrier":[0.2, 0.5], 
+               "operation":[], "A":1, "B":1, "C":7}  
+system_l05_blank = {"l":0.5, "delta":0.1,"gate":[0, 0.8, 2.8] , "frank":[0.0, -0.3, 0.3],"barrier":[0.2, 0.5], 
+              "operation":[], "A":1, "B":1, "C":7}  
+system_l08_blank = {"l":0.8, "delta":0.1, "gate":[0, 0.5, 2.8] , "frank":[0.0], "barrier":[0.2, 0.5], 
+              "operation":[], "A":1, "B":1, "C":7}
+configuration_blank =[system_l025_blank, system_l05_blank, system_l08_blank] 
+
+### Occupied Potential Deformation
+system_l025_occ = {"l":0.25, "delta":0.1, "gate":[1.8, 2.0, 2.2] , "frank":[0.0, -0.1], "barrier":[0.2, 0.5], 
+               "operation":[], "A":0.1, "B":1, "C":7}  
+system_l05_occ = {"l":0.5, "delta":0.1,"gate":[0.8, 1.0, 1.2] , "frank":[0.0, -0.3, 0.3],"barrier":[0.2, 0.5], 
+              "operation":[], "A":0.1, "B":1, "C":7}  
+system_l08_occ = {"l":0.8, "delta":0.1, "gate":[0.4, 0.625, 0.8] , "frank":[0.0], "barrier":[0.2, 0.5], 
+              "operation":[], "A":0.1, "B":1, "C":7}
+configuration_occ =[system_l025_occ, system_l05_occ, system_l08_occ] 
 
 map(create_switch_operation, configuration_stat)
 map(create_switch_operation, configuration_dyn)
+map(create_switch_operation, configuration_blank)
+map(create_switch_operation, configuration_occ)
 
 
 # In[5]:
@@ -235,7 +255,7 @@ project_offon = cluster.jobproject(name="off-on", program=program_rrze, programp
 
 # In[28]:
 
-project_offon_rhox = cluster.jobproject(name="off-on", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
+project_offon_rhox = cluster.jobproject(name="off-on_rhox", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
                                         mode=21, summary_bool=1, performance_bool=1, pop_bool=1,  N=2000, coupling_bool=1,
                                         pop_number=15, rhox_bool=1, plot_bool=1, meBND=6, meBND_small=6,xranges=2.0e0,
                                         medim1=60,medim0=60, timebool=0, potential_id=0)
@@ -245,7 +265,7 @@ project_offon_rhox = cluster.jobproject(name="off-on", program=program_rrze, pro
 
 # In[29]:
 
-project_onoff = cluster.jobproject(name="on-off", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
+project_onoff = cluster.jobproject(name="on-off_rhox", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
                                         mode=20, summary_bool=1, performance_bool=1, pop_bool=1,  N=2000, coupling_bool=1,
                                         pop_number=15, rhox_bool=1, plot_bool=1, meBND=6, meBND_small=6,xranges=2.0e0,
                                         medim1=60,medim0=60, timebool=0, potential_id=0)
@@ -758,8 +778,6 @@ project_paper_cvc.put_runscript()
 #External Parameters
 temp =[293] 
 env =[0.0, 0.04] 
-bias = [0.2, 0.4]
-
 
 # In[ ]:
 
@@ -769,18 +787,9 @@ time_slow = "3:00:00"; cluster_slow="lima"
 # In[ ]:
 
 project_slowswitch_paper = cluster.jobproject(name="Paper_job_slow", program=program_rrze, programprojectpath=path_rrze , projectpath=projectpath,
-                                        mode=2, summary_bool=1, performance_bool=1, pop_bool=1, coupling_bool=1, 
+                                        mode=2, summary_bool=1, performance_bool=0, pop_bool=1, coupling_bool=1, 
                                         potential_id=0, pop_number=20, N=1000, rhox_bool=1, plot_bool=1, meBND=6, xranges=2.0e0,
                                         medim1=60,medim0=60, timebool=0)
-
-
-# In[ ]:
-
-project_slowswitch_paper = cluster.jobproject(name="Paper_job_slow", program=program_rrze, programprojectpath=path_rrze , projectpath=projectpath,
-                                        mode=2, summary_bool=1, performance_bool=1, pop_bool=1, coupling_bool=1, 
-                                        potential_id=0, pop_number=20, N=1000, rhox_bool=1, plot_bool=1, meBND=6, xranges=2.0e0,
-                                        medim1=60,medim0=60, timebool=0)
-
 
 # In[ ]:
 
@@ -803,8 +812,8 @@ for potential in configuration_stat:
                                     specific=string, 
            
                                     start_bias_voltage=0.1,
-                                    end_bias_voltage=0.3,
-                                    grid_bias_voltage = 2,
+                                    end_bias_voltage=0.9,
+                                    grid_bias_voltage = 4,
                                 
                                     ## Cluster
                                     cluster = cluster_slow, 
@@ -826,8 +835,8 @@ for potential in configuration_stat:
                                     eta = en,
 
                                     start_gate_voltage=0, 
-                                    end_gate_voltage=3,
-                                    grid_gate_voltage=600
+                                    end_gate_voltage=4,
+                                    grid_gate_voltage=800
                                 
                                     )
 
@@ -1026,3 +1035,214 @@ project_paper_barrier.put_jobproject(); project_paper_barrier.put_runscript()
 
 
 
+# # Temperatureffekt 
+
+# In[ ]:
+
+#External Parameters
+temp =[10, 293] 
+env =[0.0, 0.04] 
+bias = [0.2, 0.4]
+
+
+# In[ ]:
+
+clustertime_cvc_temperatur = "1:00:00"; cluster_cvc_temperatur="lima"
+
+
+# In[ ]:
+
+project_paper_cvc_temperatur = cluster.jobproject(name="Paper_job_cvc_temperatur", program=program_rrze, programprojectpath=path_rrze , projectpath=projectpath,
+                                        mode=1, summary_bool=1, performance_bool=1, pop_bool=1, coupling_bool=1, 
+                                        potential_id=0,pop_number=20, N=2000, rhox_bool=1, plot_bool=1,meBND_small=6, meBND=6,xranges=2.0e0,
+                                        medim1=60,medim0=60, timebool=0)
+
+
+# In[ ]:
+
+for potential in configuration_stat:
+    for gate in potential["gate"]:
+        for frank in potential["frank"]:
+            for vb in potential["barrier"]:
+                ## Reservoir Parameters
+                    for b in bias:
+                        for en in env:
+                            for T in temp:
+                                
+                                    string = ""
+                                    string += human_readable_length(potential["l"])                                    
+                                    string += "_G_" + str(gate) +  "_Vb_" + str(vb)                                                                
+                                    string += human_readable_frank(frank)        
+                                    string += human_readable_temperature(T)
+                                    string += human_readable_environment(env)
+                        
+                                    project_paper_cvc_temperatur.add_job(
+                                    specific=string, 
+           
+                                    start_bias_voltage= 0.0,
+                                    end_bias_voltage=1.5,
+                                    grid_bias_voltage = 150,
+                                
+                                    ## Cluster
+                                    cluster = cluster_cvc_temperatur, 
+                                    time = clustertime_cvc_temperatur,                
+                                
+                                    ## Fixed for this Project
+                                    C= potential["C"],
+                                    A =  potential["A"], B= potential["B"],
+                                    l = potential["l"],
+                                    delta= potential["delta"],
+                              
+                                    beta2L = 0.01, beta2R=0.01,
+    
+                                    #Loop Variables
+                                    Vb=vb,
+                                    xshift = frank,
+                                    T = T, hbath_temp=T,
+                                    eta = en,
+
+                                    start_gate_voltage=gate, 
+                                    end_gate_voltage=gate
+                                    )
+
+project_paper_cvc_temperatur.put_jobproject()
+project_paper_cvc_temperatur.put_runscript()
+
+
+# # Shifting Loop for Blank Double Wells
+
+# In[ ]:
+
+#External Parameters
+temp =[293] 
+env =[0.0, 0.04] 
+bias = [0.2, 0.4]
+frank_shifts = np.linspace(-1.5, 1.5, num=31)
+# In[ ]:
+clustertime_cvc_shift_blank = "1:00:00"; cluster_cvc_shift_blank="lima"
+
+
+project_paper_cvc_shift_blank = cluster.jobproject(name="Paper_job_cvc_shift_blank", program=program_rrze, programprojectpath=path_rrze , projectpath=projectpath,
+                                        mode=1, summary_bool=1, performance_bool=1, pop_bool=1, coupling_bool=1, 
+                                        potential_id=0,pop_number=20, N=2000, rhox_bool=1, plot_bool=1,meBND_small=6, meBND=6,xranges=2.0e0,
+                                        medim1=60,medim0=60, timebool=0)
+
+
+for potential in configuration_blank:
+    for gate in potential["gate"]:
+        for frank in frank_shifts:
+            print (frank)
+            for vb in potential["barrier"]:
+                ## Reservoir Parameters
+                    for b in bias:
+                        for en in env:
+                            for T in temp:
+                                
+                                    string = ""
+                                    string += human_readable_length(potential["l"])                                    
+                                    string += "_G_" + str(gate) +  "_Vb_" + str(vb)                                                                
+                                    string += "_F_" + str(frank)        
+                                    string += human_readable_temperature(T)
+                                    string += human_readable_environment(env)
+                        
+                                    project_paper_cvc_shift_blank.add_job(
+                                    specific=string, 
+           
+                                    start_bias_voltage=0,
+                                    end_bias_voltage=1.5,
+                                    grid_bias_voltage = 150,
+
+                                
+                                    ## Cluster
+                                    cluster = cluster_cvc_shift_blank,
+                                    time = clustertime_cvc_shift_blank,                
+                                
+                                    ## Fixed for this Project
+                                    C= potential["C"],
+                                    A =  potential["A"], B= potential["B"],
+                                    l = potential["l"],
+                                    delta= potential["delta"],
+                              
+                                    beta2L = set_bath_by_temp(T), beta2R=set_bath_by_temp(T),
+    
+                                    #Loop Variables
+                                    Vb=vb,
+                                    xshift = frank,
+                                    T = T, hbath_temp=T,
+                                    eta = en,
+
+                                    start_gate_voltage=gate, 
+                                    end_gate_voltage=gate
+                                    )
+
+
+project_paper_cvc_shift_blank.print_job_list()
+project_paper_cvc_shift_blank.put_jobproject()
+project_paper_cvc_shift_blank.put_runscript()
+
+### Symmtriebreaking
+temp =[293] 
+env =[0.0, 0.04] 
+bias = [0.2, 0.4]
+
+project_paper_cvc_symmetrie = cluster.jobproject(name="Paper_job_cvc_symmetrie", program=program_rrze, programprojectpath=path_rrze , projectpath=projectpath,
+                                        mode=1, summary_bool=1, performance_bool=0, pop_bool=1, coupling_bool=1, 
+                                        potential_id=20,pop_number=20, N=2000, rhox_bool=1, plot_bool=1,meBND_small=6, meBND=6,xranges=2.0e0,
+                                        medim1=60,medim0=60, timebool=0)
+
+
+for potential in configuration_occ:
+    for gate in potential["gate"]:
+        for frank in potential["frank"]:
+            for vb in potential["barrier"]:
+                ## Reservoir Parameters
+                    for b in bias:
+                        for en in env:
+                            for T in temp:
+                                
+                                    string = ""
+                                    string += human_readable_length(potential["l"])                                    
+                                    string += "_G_" + str(gate) +  "_Vb_" + str(vb)                                                                
+                                    string += human_readable_frank(frank)        
+                                    string += human_readable_temperature(T)
+                                    string += human_readable_environment(env)
+                        
+                                    project_paper_cvc_symmetrie.add_job(
+                                    specific=string, 
+           
+                                    start_bias_voltage=0,
+                                    end_bias_voltage=1.5,
+                                    grid_bias_voltage = 150,
+
+                                
+                                    ## Cluster
+                                    cluster = cluster_cvc, 
+                                    time = clustertime_cvc,                
+                                
+                                    ## Fixed for this Project
+                                    C= potential["C"],
+                                    A =  potential["A"], B= potential["B"],
+                                    l = potential["l"],
+                                    delta= potential["delta"],
+                              
+                                    beta2L = set_bath_by_temp(T), beta2R=set_bath_by_temp(T),
+    
+                                    ##Second Set
+                                    l_2 = potential["l"], Vb_2 = vb, 
+                                    delta_2 = - potential["delta"], 
+                                    
+                                    #Loop Variables
+                                    Vb=vb,
+                                    xshift = frank,
+                                    T = T, hbath_temp=T,
+                                    eta = en,
+
+                                    start_gate_voltage=gate, 
+                                    end_gate_voltage=gate
+                                    )
+
+
+# In[ ]:
+
+project_paper_cvc_symmetrie.put_jobproject()
+project_paper_cvc_symmetrie.put_runscript()

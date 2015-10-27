@@ -436,7 +436,7 @@ class jobproject(computation):
             runscript = open(self.jobfilespath + "/runscript.sh", 'w')
 
             for job in self.joblist:
-                execute = "./" +job.program + " " + job.inputfile_name + " " + job.computation_file 
+                execute = job.program + " " + job.inputfile_name + " " + job.computation_file 
                 runscript.write(execute + "\n")
                 runscript.write("sleep 1 \n")
 
