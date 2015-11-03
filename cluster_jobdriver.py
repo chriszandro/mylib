@@ -183,11 +183,11 @@ system_l08_dyn = {"l":0.8, "delta":0.1, "gate":[0, 0.5, 2.8] , "frank":[-0.3, 0.
 configuration_dyn =[system_l025_dyn, system_l05_dyn, system_l08_dyn] 
 
 ### Stationary
-system_l025_stat = {"l":0.25, "delta":0.1, "gate":[0, 1.8, 2.8] , "frank":[0.0], "barrier":[0.2, 0.5], 
+system_l025_stat = {"l":0.25, "delta":0.1, "gate":[0, 1.8, 2.8] , "frank":[0.0, -0.1], "barrier":[0.2, 0.5], 
                "operation":[], "A":0.1, "B":1, "C":7}  
-system_l05_stat = {"l":0.5, "delta":0.1,"gate":[0, 0.8, 2.8] , "frank":[0.0],"barrier":[0.2, 0.5], 
+system_l05_stat = {"l":0.5, "delta":0.1,"gate":[0, 0.8, 2.8] , "frank":[0.3, 0, -0.3],"barrier":[0.2, 0.5], 
               "operation":[], "A":0.1, "B":1, "C":7}  
-system_l08_stat = {"l":0.8, "delta":0.1, "gate":[0, 0.5, 2.8] , "frank":[0.0], "barrier":[0.2, 0.5], 
+system_l08_stat = {"l":0.8, "delta":0.1, "gate":[0, 0.5, 2.8] , "frank":[0.0, 0.3], "barrier":[0.2, 0.5], 
               "operation":[], "A":0.1, "B":1, "C":7}
 configuration_stat =[system_l025_stat, system_l05_stat, system_l08_stat] 
 
@@ -393,7 +393,7 @@ project_onoff_rhox.put_runscript(); project_onoff_rhox.put_jobproject()
 # In[ ]:
 
 #External Parameters
-temp =[293] 
+temp =[293, 10] 
 env =[0.0, 0.04] 
 bias = [0, 0.2, 0.4]
 

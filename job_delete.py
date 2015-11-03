@@ -1,7 +1,8 @@
 import subprocess
 
-index_start = 1735389
-index_end = 1736661
+
+index_start = 1765000 
+index_end = 1768692 
 
 for i in range(index_start, index_end):
     command_string = "qdel"
