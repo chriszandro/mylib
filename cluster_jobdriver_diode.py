@@ -22,16 +22,15 @@ medium_gate=[]
 large_gate=[]
 
 # Text
-
 ### Dioden Specs
 #----------Generell
-system_l025_diode = {"l":0.25, "delta":0.025, "gate":small_gate , "frank":[0.0], "barrier":[0.05], 
+system_l025_diode = {"l":0.25, "delta":0.025, "gate":small_gate , "frank":[0.0], "barrier":[0.05], "angle":[45,60],
         "operation":[], "A":1.0, "B":1, "C":7, "gate_start":-2.5, "gate_end":3.5, "gate_points":300, "Sym":0.5}  
-system_l05_diode = {"l":0.5, "delta":0.1,"gate":medium_gate , "frank":[0.0],"barrier":[0.2], 
+system_l05_diode = {"l":0.5, "delta":0.1,"gate":medium_gate , "frank":[0.0],"barrier":[0.2], "angle":[45,60],
         "operation":[], "A":1.0, "B":1, "C":7, "gate_start":-2.5, "gate_end":4.5, "gate_points":350, "Sym":1} 
-
-system_l075_diode = {"l":0.75, "delta":0.3, "gate":large_gate , "frank":[0.0], "barrier":[0.8], 
+system_l075_diode = {"l":0.75, "delta":0.3, "gate":large_gate , "frank":[0.0], "barrier":[0.8], "angle":[45,60],
         "operation":[], "A":1.0, "B":1, "C":7, "gate_start":-1.8, "gate_end":3.8, "gate_points":20, "Sym":2}
+
 #----------Speziell
 configuration_diode =[system_l075_diode] 
 
@@ -62,6 +61,7 @@ project_paper_diode_large_low = cluster.jobproject(name="Paper_job_diode_large_l
 project_list_diode = [project_paper_diode_large, project_paper_diode_large_low]
 
 for potential in configuration_diode:
+    for ang in potential["angle"]:
         for frank in potential["frank"]:
             for vb in potential["barrier"]:
                 ## Reservoir Parameters
@@ -70,7 +70,7 @@ for potential in configuration_diode:
                                 
                                     string = ""
                                     string += human.human_readable_length(potential["l"])                                    
-                                    string += "_Vb_" + str(vb)                                                                
+                                    string += "_Vb_" + str(vb) + "_phi_" + str(ang) 
                                     string += human.human_readable_frank(frank)        
                                     string += human.human_readable_temperature(T)
                                     string += human.human_readable_environment(en)
@@ -99,6 +99,7 @@ for potential in configuration_diode:
                                         A =  potential["A"], B= potential["B"],
                                         l = potential["l"],
                                         delta= potential["delta"],
+                                        angle = ang,
                                   
                                         beta2L = human.set_bath_by_temp(T), beta2R=human.set_bath_by_temp(T),
         
