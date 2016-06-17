@@ -114,21 +114,20 @@ class system(object):
         summation = np.sum([self.occupation[i + 1] for i in states], axis=0) 
         return summation
 
-
     def plot_transition(self, axes, quanta, inverseplot=False):
 
         transitions, pair, rangel = self.exitation(0, 200, quanta)
 
         if inverseplot:
-            axes.plot(rangel, transitions, 'o--', label='m -> v = m + ' + str(quanta))
-            axes.set_ylabel('Threshold Voltage [V]')
-            axes.xaxis.set_ticks_position('top') 
+            axes.plot(rangel, transitions, ls='--', marker='o', markersize=35, label='l= ' + str(quanta))
+            axes.set_xlabel('Threshold Voltage U [V]')
+            #axes.xaxis.set_ticks_position('top') 
 
         else:
-            axes.plot(transitions, rangel, 'o--', label='m -> v = m + ' + str(quanta))
-            axes.set_xlabel('Threshold Voltage [V]')
-            axes.xaxis.set_ticks_position('top') 
-        axes.set_ylabel('m')
+            axes.plot(transitions, rangel, ls='--', marker='o', markersize=35, label='l= ' + str(quanta))
+            axes.set_xlabel('Threshold Voltage $U_{n,l}$ [V]')
+            #axes.xaxis.set_ticks_position('top') 
+            axes.set_ylabel('n')
 
         return axes
 
