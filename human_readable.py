@@ -15,24 +15,44 @@ def create_switch_operation(system):
     system["operation"] = operation_list
     pass
 
+def create_switch_operation_around_symmetric(system, symmetric):
+    operation_list =[] 
+    for gate_init in system["gate"]:
+       for gate_final in system["gate"]:
+           if gate_init < symmetric < gate_final:
+                operation_list.append({"gate_init":gate_init  ,"gate_final":gate_final})
+           elif gate_init > symmetric > gate_final:
+                operation_list.append({"gate_final":gate_final ,"gate_init":gate_init})
+            
+    system["operation"] = operation_list
+    pass
+
 def human_readable_frank(frank):
     
     if frank == 0.1:
         label = "_shiPlus"
+    elif frank == 0.2:
+        label = "_shiPlus+"
     elif frank == 0.3:
         label = "_shiPlus++"
     elif frank == 0.4:
         label = "_shiPlus+++"               
-    elif frank == -0.1:
-        label = "_shiNEG"
-    elif frank == -0.3:
-        label = "_shiNEG++"
-    elif frank == -0.4:
-        label = "_shiNEG+++"  
-    elif frank == -0.6:
-        label = "_shiHU_NEG"     
     elif frank == 0.6:
         label = "_shiHU_Plu"  
+    elif frank == 0.8:
+        label = "_shiHU_Plu+"  
+    elif frank == -0.1:
+        label = "_shiNEG"
+    elif frank == -0.2:
+        label = "_shiNEG-"
+    elif frank == -0.3:
+        label = "_shiNEG--"
+    elif frank == -0.4:
+        label = "_shiNEG---"  
+    elif frank == -0.6:
+        label = "_shiHU_NEG"     
+    elif frank == -0.8:
+        label = "_shiHU_NEG-"     
     elif frank == 0:
         label ="_ZeroS"
     else:

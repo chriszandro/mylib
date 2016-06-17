@@ -32,7 +32,7 @@ class system(object):
     @param au2second: cool
     '''
 
-    def __init__(self, computation_data, system_data="None", occupation_data="None", unoccupation_data="None", franck_data="None"):
+    def __init__(self, computation_data, system_data="None", occupation_data="None", unoccupation_data="None", franck_data="None", prob_data="None"):
         '''
             System
         '''
@@ -90,9 +90,15 @@ class system(object):
             self.franck = np.loadtxt(franck_data, comments='?')
 
         self.exitation_list = [[],[],[]]
+        
+        # Tunnel Probability
+        if prob_data != "None":
+            self.prob = np.loadtxt(prob_data, comments='?')
+            self.left_tunnel = self.prob[:, 1]
+            self.right_tunnel = self.prob[:, 2]
+
 
     def integralS(self, axes, plot_number=50):
-
         lrange = range(1, plot_number)
 
         SO = [np.sum(self.energy_occupied[i] + ((self.wavefunction[:, i] - self.energy_occupied[i]))) for i in lrange]
@@ -115,26 +121,27 @@ class system(object):
 
         if inverseplot:
             axes.plot(rangel, transitions, 'o--', label='m -> v = m + ' + str(quanta))
-            axes.set_ylabel('Voltage [V]')
+            axes.set_ylabel('Threshold Voltage [V]')
+            axes.xaxis.set_ticks_position('top') 
 
         else:
             axes.plot(transitions, rangel, 'o--', label='m -> v = m + ' + str(quanta))
-            axes.set_xlabel('Voltage [V]')
-
+            axes.set_xlabel('Threshold Voltage [V]')
+            axes.xaxis.set_ticks_position('top') 
         axes.set_ylabel('m')
 
         return axes
 
     def plot_transition_dex(self, axes, quanta, inverseplot=False):
 
-        transitions, pair, rangel = self.deexitation(0, 200, quanta)
+        transitions, pair, rangel = self.deexitation(0+quanta, 20, quanta)
 
         if inverseplot:
-            axes.plot(rangel, transitions, 'o--', label='m -> v = m + ' + str(quanta))
+            axes.plot(rangel, transitions, 'o--', label='v ' + str(quanta) + '-> m')
             axes.set_ylabel('Voltage [V]')
 
         else:
-            axes.plot(transitions, rangel, 'o--', label='m -> v = m + ' + str(quanta))
+            axes.plot(transitions, rangel, 'o--', label='v -> m ' + str(quanta))
             axes.set_xlabel('Voltage [V]')
 
         axes.set_ylabel('m')
@@ -164,8 +171,13 @@ class system(object):
 
         for i in lrange:
 
-            transition.append(-2 * (self.energy_occupied[i-quanta] - self.energy_unoccupied[i]))
-            pair.append(str(i-quanta) + '->' + str(i))
+            transition_energy = -2 * (self.energy_unoccupied[i+quanta] - self.energy_occupied[i])
+            
+	    transition.append(transition_energy)
+
+            pair.append(str(i+quanta) + '->' + str(i))
+
+	    print (transition_energy, str(i-quanta) + '<-' + str(i))
 
         return transition, pair, lrange
 
@@ -347,7 +359,7 @@ class system(object):
     def putexitationlines(self, axes, quanta=1, start=0, end=20):
 
         exitations, pair, lrange = self.exitation(start, end, quanta)
-
+        axes.xaxis.set_ticks_position('top') 
         [axes.axvline(_volt, linewidth=1) for _volt in exitations]
 
         axes.set_xticks(exitations)
@@ -749,11 +761,11 @@ class heatmap(object):
         if secondary_grid != "None":
             self.secondary_grid = np.loadtxt(secondary_grid)
 
-        self.primary_diff = np.diff(self.primary_grid)
+        #self.primary_diff = np.diff(self.primary_grid)
         #Midpoints for derivates
-        self.xd = (self.primary_grid[1:]+ self.primary_grid[:-1])/2
+        #self.xd = (self.primary_grid[1:]+ self.primary_grid[:-1])/2
         #Differential Conductance
-        self.conductance= None
+        #self.conductance= None
 
         self.number = len(self.data[:, 1])
 
@@ -761,10 +773,10 @@ class heatmap(object):
         # self.density=[self.data[i,:] for i in range(0,self.number)]
 
         # Meshgrid for 3d Plots
-        self.xv, self.yv = np.meshgrid(self.primary_grid, self.secondary_grid)
+        #self.xv, self.yv = np.meshgrid(self.primary_grid, self.secondary_grid)
         # self.zv = self.density
 
-        self.calculate_conductance()
+        #self.calculate_conductance()
 
     def plot_data_vs_bias(self, axes , index=1):
 

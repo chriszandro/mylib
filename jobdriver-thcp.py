@@ -279,17 +279,8 @@ project_onoff_rhox = cluster.jobproject(name="on-off", program=program_rrze, pro
                                         medim1=60,medim0=60, timebool=0, potential_id=0)
 
 
-# In[31]:
-
 project_offon_list = [project_offon, project_offon_rhox] 
-
-
-# In[32]:
-
 project_onoff_list = [project_onoff, project_onoff_rhox] 
-
-
-# In[ ]:
 
 for potential in configuration_dyn:
     for gate in potential["gate"]:

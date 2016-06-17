@@ -1,9 +1,9 @@
+#### Preload 
 import human_readable as human
 import cluster
 import numpy as np
 import math
 import time
-
 import os
 myhost = os.uname()[1]
 signature = time.strftime("%d_%m")
@@ -13,7 +13,7 @@ if myhost=="lima" or myhost=="cshpc":
     path_rrze = "/home/hpc/mpet/mpet07/gmaster13"
     projectpath = "/home/vault/mpet/mpet07/projects/NEW_set_" + signature +"/"    
 else:
-    program_rrze =  "./gmaster13"
+    program_rrze =  "./gmaster14"
     path_rrze = "/user/chriz/calculations"
     projectpath =  "/user/chriz/calculations"    
 
@@ -22,85 +22,86 @@ generic_list_large = np.linspace(0, 6.0, 61)
 generic_list_medium = np.linspace(0, 3.0, 31)
 generic_list_small = np.linspace(0, 2.0, 21)
 
-large_resonance = [0.695, 2.0, 3.305,4.61,5.95]
+### Resonaces in the systems
+large_resonance = [-3.2, -1.95, -0.61, 0.695, 2.0, 3.305,4.61,5.95]
 medium_resonance = [-0.41, 1, 2.41]
 small_resonance = []
 
-large_gate = generic_list_large.tolist() + large_resonance
-medium_gate = generic_list_medium.tolist() + medium_resonance
-small_gate= generic_list_small.tolist() + small_resonance 
+### Very Close To Resonances
+close_paramter = 0.1
 
-#large_gate_dyn = large_resonance + [1.2, 2.6, 3.6, 3.0, 5.6]
-large_gate_dyn =  [0.695, 3.305, 4.61, 5.95] + [1.2, 2.6, 3.5, 3.0, 5.6]
-medium_gate_dyn = medium_resonance + [0.3, 1.6, 4.0, 5.0]
+large_resonance_close = []
+medium_resonance_close = []
+small_resonance_close = []
+
+for number in large_resonance: 
+    large_resonance_close.append(number + close_paramter) 
+    large_resonance_close.append(number - close_paramter) 
+
+### Exactly betwen the Resoances
+large_resonance_in_between = [1.35, 2.65, 0, 3.95, -1.26, 5.26, -2.6]
+medium_resonance_in_between = [1.7, 0.3]
+small_resonance_in_between = []
+
+### Non Barrier Switching
+large_resonance_non_barrier = [6.5, -3.0]
+medium_resonance_non_barrier = [   ]
+small_resonance_non_barrier = [   ]
+
+#### Additional
+
+
+###Listen Zusammenbauen
+large_gate_dyn = large_resonance + large_resonance_in_between + large_resonance_non_barrier + large_resonance_close
+medium_gate_dyn = medium_resonance + medium_resonance_in_between + medium_resonance_non_barrier + medium_resonance_close  
 small_gate_dyn = np.linspace(0, 2.0, 6)
 
-#Dynamic
-system_l025_dyn = {"l":0.25, "delta":0.025, "gate":small_gate_dyn , "frank":[0.0], "barrier":[0.05], 
-               "operation":[], "A":0.3, "B":1, "C":7} 
-system_l05_dyn = {"l":0.5, "delta":0.1,"gate":medium_gate_dyn , "frank":[0.0],"barrier":[0.2], 
-              "operation":[], "A":0.3, "B":1, "C":7}  
-system_l075_dyn = {"l":0.75, "delta":0.3, "gate":large_gate_dyn , "frank":[0.0], "barrier":[0.8], 
-              "operation":[], "A":0.3, "B":1, "C":7}
+print large_gate_dyn
 
-configuration_dyn =[system_l025_dyn, system_l05_dyn, system_l075_dyn] 
+#Switching Dynamic
+system_l025_dyn = {"l":0.25, "delta":0.025, "gate":small_gate_dyn , "frank":[0.0], "barrier":[0.05], "gateonoff":[0.0,2.5,3.304],
+        "operation":[], "A":0.1, "B":1, "C":7, "Sym":0.5} 
+system_l05_dyn = {"l":0.5, "delta":0.1,"gate":medium_gate_dyn , "frank":[0.0],"barrier":[0.2], "gateonoff":[0.0,2.5,3.304],
+        "operation":[], "A":0.1, "B":1, "C":7, "Sym":1}  
+system_l075_dyn = {"l":0.75, "delta":0.3, "gate":large_gate_dyn , "frank":[0.0], "barrier":[0.8], "gateonoff":[0.0,2.5,3.304],
+        "operation":[], "A":0.1, "B":1, "C":7, "Sym":2}
 
-### Stationary
-system_l025_stat = {"l":0.25, "delta":0.025, "gate":small_gate , "frank":[0.0], "barrier":[0.05], 
-        "operation":[], "A":0.1, "B":1, "C":7, "gate_start":-2.5, "gate_end":3.5, "gate_points":300}  
-system_l05_stat = {"l":0.5, "delta":0.1,"gate":medium_gate , "frank":[0.0],"barrier":[0.2], 
-        "operation":[], "A":0.1, "B":1, "C":7, "gate_start":-2.5, "gate_end":4.5, "gate_points":350} 
-system_l075_stat = {"l":0.75, "delta":0.3, "gate":large_gate , "frank":[0.0], "barrier":[0.8], 
-        "operation":[], "A":0.1, "B":1, "C":7, "gate_start":-2.5, "gate_end":6.5, "gate_points":450}
-
-configuration_stat =[system_l025_stat, system_l05_stat, system_l075_stat] 
-
-#With Fixed Point
-#for configuration in [configuration_stat,configuration_dyn]:
-#    for system in configuration:
-#        human.create_switch_operation_fixed_start(system, 0.0)
+configuration_dyn =[system_l075_dyn] 
 
 for system in configuration_dyn:
-    human.create_switch_operation(system)
+    human.create_switch_operation_around_symmetric(system, system["Sym"])
 
+### Switch ON-OFF
+large_gate_dyn_onoff = [1.8, 2.0, 2.5]
+medium_gate_dyn_onoff = medium_resonance + [2.3, 2.5, 1.6, 3.0, -3.0, -5.0, 5.0]
+small_gate_dyn_onoff = np.linspace(0, 2.0, 6)
 
-# # Voltage off/on and off/on
+#Dynamic
+system_l025_dyn_onoff = {"l":0.25, "delta":0.025, "gate":small_gate_dyn_onoff , "frank":[0.0], "barrier":[0.05], "gateonoff":[0.0,2.5,3.304],
+        "operation":[], "A":0.1, "B":1, "C":7, "Sym":0.5} 
+system_l05_dyn_onoff = {"l":0.5, "delta":0.1,"gate":medium_gate_dyn_onoff , "frank":[0.0],"barrier":[0.2], "gateonoff":[0.0,2.5,3.304],
+        "operation":[], "A":0.1, "B":1, "C":7, "Sym":1}  
+system_l075_dyn_onoff = {"l":0.75, "delta":0.3, "gate":large_gate_dyn_onoff , "frank":[0.0], "barrier":[0.8], "gateonoff":[0.0,2.5,3.304],
+        "operation":[], "A":0.1, "B":1, "C":7, "Sym":2}
 
-#External Parameters
-#temp =[293] 
-#env =[0.0, 0.04] 
-#bias = [0.2, 0.4, 0.8]
+configuration_dyn_onoff =[system_l075_dyn_onoff] 
 
+for system in configuration_dyn_onoff:
+    human.create_switch_operation_around_symmetric(system, system["Sym"])
 
-# In[8]:
-#timestart = 0; timeend= 1e8; timegrid=1e5; clustertime_1 = "24:00:00"; cluster_1="lima"
+#### STATIONARY
+large_gate = []
+medium_gate = []
+small_gate = []
 
-
-# ## off -> on
-########
-
-# In[27]:
-
-#project_offon = cluster.jobproject(name="off-on", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
-#				mode=20, summary_bool=1, performance_bool=0, pop_bool=1,  N=2000, coupling_bool=1,
-#				pop_number=15, rhox_bool=1, plot_bool=1, meBND=6, meBND_small=6,xranges=2.0e0,
-#				medim1=60,medim0=60, timebool=0, potential_id=0)
-
-
-# In[28]:
-
-#project_offon_rhox = cluster.jobproject(name="off-on_rhox", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
-#				mode=21, summary_bool=1, performance_bool=1, pop_bool=1,  N=2000, coupling_bool=1,
-#				pop_number=15, rhox_bool=1, plot_bool=1, meBND=6, meBND_small=6,xranges=2.0e0,
-#				medim1=60,medim0=60, timebool=0, potential_id=0)
-
+### Stationary for conventional heatmaps
 
 # ## on--> off
 
 # In[29]:
 
 #project_onoff = cluster.jobproject(name="on-off", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
-#				mode=20, summary_bool=1, performance_bool=1, pop_bool=1,  N=2000, coupling_bool=1,
+#				mode=20, summary_bool=1, performance_bool=0, pop_bool=1,  N=2000, coupling_bool=1,
 ##				pop_number=15, rhox_bool=1, plot_bool=1, meBND=6, meBND_small=6,xranges=2.0e0,
 #				medim1=60,medim0=60, timebool=0, potential_id=0)
 
@@ -108,7 +109,7 @@ for system in configuration_dyn:
 # In[30]:
 
 #project_onoff_rhox = cluster.jobproject(name="on-off_rhox", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
-#				mode=21, summary_bool=1, performance_bool=1, pop_bool=1,  N=2000, coupling_bool=1,
+#				mode=21, summary_bool=1, performance_bool=0, pop_bool=1,  N=2000, coupling_bool=1,
 #				pop_number=15, rhox_bool=1, plot_bool=1, meBND=6, meBND_small=6,xranges=2.0e0,
 #				medim1=60,medim0=60, timebool=0, potential_id=0)
 
@@ -247,107 +248,107 @@ for system in configuration_dyn:
 ## In[ ]:
 #
 ##External Parameters
-#temp =[293, 10] 
-#env =[0.0, 0.04] 
-#bias = [0, 0.2, 0.4]
+temp =[293] 
+env =[0.04,1e-4] 
+bias = [0, 0.3]
 #
 ## Calc Paramters
-#occupation =[0, 1] 
-#states =[1,2] 
+occupation =[0] 
+states =[1,2,8,10] 
 #
 #
 ## In[ ]:
 #
-#timestart = 0; timeend= 1e8; timegrid=1e5; clustertime_2 = "24:00:00"; cluster_2="lima"
+timestart = 0; timeend= 1e9; timegrid=1e6; clustertime_2 = "24:00:00"; cluster_2="emmy"
 #
 #
 ## In[ ]:
 #
 #project_pure = cluster.jobproject(name="pure", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
-#                                        mode=20, N=2000, summary_bool=1, performance_bool=1, pop_bool=1, coupling_bool=1,
-#                                        pop_number=15, rhox_bool=1, plot_bool=1, meBND=6, meBND_small=6, xranges=2.0e0,
-#                                        medim1=60,medim0=60, timebool=0, potential_id=0, initialstate=2)
+                                        #mode=20, N=2000, summary_bool=1, performance_bool=0, pop_bool=1, coupling_bool=1,
+                                        #pop_number=15, rhox_bool=1, plot_bool=1, meBND=6, meBND_small=6, xranges=2.0e0,
+                                        #medim1=60,medim0=60, timebool=0, potential_id=0, initialstate=2)
 #
 #
 ## In[ ]:
 #
-#project_pure_rhox = cluster.jobproject(name="pure_rhox", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
-#                                        mode=20, N=2000, summary_bool=1, performance_bool=1, pop_bool=1, coupling_bool=1,
-#                                        pop_number=5, evo_method=2, rhox_bool=1, plot_bool=1, meBND=6, meBND_small=6, xranges=2.0e0,
-#                                        medim1=60,medim0=60, timebool=0, potential_id=0, initialstate=2)
+project_pure_rhox = cluster.jobproject(name="pure_rhox", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
+                                        mode=20, N=2000, summary_bool=0, performance_bool=0, pop_bool=1, coupling_bool=0,
+                                        pop_number=5, evo_method=2, rhox_bool=1, plot_bool=1, meBND=5, meBND_small=5, xranges=2.0e0,
+                                        medim1=40,medim0=40, timebool=0, potential_id=0, initialstate=2)
 #
 #
 ## In[ ]:
 #
-#project_pure_list =[project_pure_rhox, project_pure] 
+project_pure_list =[project_pure_rhox] 
 #
 #
 ## In[ ]:
 #
-#for potential in configuration_dyn:
-#    for gate in potential["gate"]:
-#        for frank in potential["frank"]:
-#            for vb in potential["barrier"]:
-#                ## Reservoir Parameters
-#                    for b in bias:
-#                        for en in env:
-#                            for T in temp:
-#                                ## What States and Occupation
-#                                for s in states:
-#                                    for o in occupation:
-#                                
-#                                            string = ""
-#                                            string += human_readable_length(potential["l"])                                    
-#                                            string += "_G_" + str(gate) +  "_Vb_" + str(vb) + "_B_" + str(b) + "_S_" + str(s)                                                                  
-#                                            string += human_readable_frank(frank)
-#                                            string += human_readable_temperature(T)
-#                                            string += human_readable_environment(env)
-#                                            string += human_readable_occupation(o)
-#
-#
-#                                            ### PURE PURE PURE PURE
-#                                            ## Job no rhox
-#                                            for jobs in project_pure_list:
-#                                                jobs.add_job(
-#
-#                                                ## CLUSTER 
-#                                                cluster=cluster_2,
-#                                                time = clustertime_2,
-#
-#                                                specific=string, 
-#                                                start_bias_voltage=b,
-#                                                end_bias_voltage=b,
-#                                                grid_bias_voltage = 1,
-#
-#                                                ## Timing 
-#                                                time_start=timestart,
-#                                                time_end = timeend,
-#                                                time_grid = timegrid,
-#
-#                                                ## Fixed for this Project
-#                                                C= potential["C"],
-#                                                A =  potential["A"], B= potential["B"],
-#                                                l = potential["l"],
-#                                                delta= potential["delta"],
-#                                                Vb=vb,
-#                                                beta2L = set_bath_by_temp(T), beta2R=set_bath_by_temp(T),
-#
-#                                                #Loop Variables
-#
-#                                                start_gate_voltage=gate,
-#                                                end_gate_voltage=gate,
-#                                                xshift = frank,
-#                                                T = T, hbath_temp=T,
-#                                                eta = en, 
-#
-#                                                ### States
-#                                                initial_state_number=s, 
-#                                                initial_occupation = o
-#
-#                                                )
-#
-#
-## In[ ]:
+for potential in configuration_dyn:
+    for gate in potential["gate"]:
+        for frank in potential["frank"]:
+            for vb in potential["barrier"]:
+                ## Reservoir Parameters
+                    for b in bias:
+                        for en in env:
+                            for T in temp:
+                                ## What States and Occupation
+                                for s in states:
+                                    for o in occupation:
+                                
+                                            string = ""
+                                            string += human.human_readable_length(potential["l"])                                    
+                                            string += "_G_" + str(gate) +  "_Vb_" + str(vb) + "_B_" + str(b) + "_S_" + str(s)                                                                  
+                                            string += human.human_readable_frank(frank)
+                                            string += human.human_readable_temperature(T)
+                                            string += human.human_readable_environment(en)
+                                            string += human.human_readable_occupation(o)
+
+
+                                            ### PURE PURE PURE PURE
+                                            ## Job no rhox
+                                            for jobs in project_pure_list:
+                                                jobs.add_job(
+
+                                                ## CLUSTER 
+                                                cluster=cluster_2,
+                                                time = clustertime_2,
+
+                                                specific=string, 
+                                                start_bias_voltage=b,
+                                                end_bias_voltage=b,
+                                                grid_bias_voltage = 1,
+
+                                                ## Timing 
+                                                time_start=timestart,
+                                                time_end = timeend,
+                                                time_grid = timegrid,
+
+                                                ## Fixed for this Project
+                                                C= potential["C"],
+                                                A =  potential["A"], B= potential["B"],
+                                                l = potential["l"],
+                                                delta= potential["delta"],
+                                                Vb=vb,
+                                                beta2L = human.set_bath_by_temp(T), beta2R=human.set_bath_by_temp(T),
+
+                                                #Loop Variables
+
+                                                start_gate_voltage=gate,
+                                                end_gate_voltage=gate,
+                                                xshift = frank,
+                                                T = T, hbath_temp=T,
+                                                eta = en, 
+
+                                                ### States
+                                                initial_state_number=s, 
+                                                initial_occupation = o
+
+                                                )
+
+
+# In[ ]:
 #
 #project_pure.put_runscript();project_pure.put_jobproject()
 #
@@ -356,7 +357,7 @@ for system in configuration_dyn:
 #
 ## In[ ]:
 #
-#project_pure_rhox.put_runscript();project_pure_rhox.put_jobproject()
+project_pure_rhox.put_runscript();project_pure_rhox.put_jobproject()
 
 
 ## Switching
@@ -366,7 +367,7 @@ env =[0.0, 0.04]
 bias = [0.3]
 
 ## In[8]:
-timestart = 0; timeend= 1e8; timegrid=1e6; clustertime_3 = "24:00:00"; cluster_3="emmy"
+timestart = 0; timeend= 1e9; timegrid=1e6; clustertime_3 = "24:00:00"; cluster_3="emmy"
 
 ## In[9]:
 project_switch = cluster.jobproject(name="switch", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
@@ -380,9 +381,9 @@ project_switch = cluster.jobproject(name="switch", program=program_rrze, program
 #                                        medim1=40, medim0=40, timebool=0, potential_id=0, initialstate=1)
 
 #project_switch_rhox = cluster.jobproject(name="switch_rhox", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
-#                                        mode=21, N=2000, summary_bool=1, performance_bool=1, pop_bool=1, coupling_bool=1,
-#                                        pop_number=15, rhox_bool=1, plot_bool=1, meBND=6,meBND_small=6,xranges=2.0e0,
-#                                        medim1=60,medim0=60, timebool=0, potential_id=0, initialstate=1)
+#                                       mode=20, N=3000, summary_bool=1, performance_bool=0, pop_bool=1, coupling_bool=0,
+#                                       pop_number=15, rhox_bool=1, plot_bool=1, meBND=5,meBND_small=5,xranges=2.0e0,
+#                                       medim1=40,medim0=40, timebool=0, potential_id=0, initialstate=1)
 #
 #
 ## In[11]:
@@ -456,11 +457,8 @@ project_switch.put_jobproject()
 #
 ## In[14]:
 #
-#project_switch_rhox.put_jobproject()
-#
-#
-## # Stationary
-#
+#roject_switch_rhox.put_jobproject()
+
 ## ## Gate Tester
 #
 ## In[ ]:
@@ -533,17 +531,17 @@ env =[0.0, 0.04]
 clustertime_cvc = "24:00:00"; cluster_cvc="lima"
 
 project_paper_cvc_large = cluster.jobproject(name="Paper_job_cvc_large", program=program_rrze, programprojectpath=path_rrze , projectpath=projectpath,
-                                        mode=3, summary_bool=1, performance_bool=1, pop_bool=0, coupling_bool=0, 
+                                        mode=3, summary_bool=1, performance_bool=0, pop_bool=0, coupling_bool=0, 
                                         potential_id=0,pop_number=20, N=3000, rhox_bool=0, plot_bool=1, meBND_small=5, meBND=5, xranges=2.0e0,
                                         medim1=40,medim0=40, timebool=0)
  
 project_paper_cvc_medium = cluster.jobproject(name="Paper_job_cvc_medium", program=program_rrze, programprojectpath=path_rrze , projectpath=projectpath,
-                                        mode=3, summary_bool=1, performance_bool=1, pop_bool=0, coupling_bool=0, 
+                                        mode=3, summary_bool=1, performance_bool=0, pop_bool=0, coupling_bool=0, 
                                         potential_id=0, pop_number=20, N=3000, rhox_bool=0, plot_bool=1, meBND_small=23, meBND=23, xranges=2.0e0,
                                         medim1=25,medim0=25, timebool=0)
 
 project_paper_cvc_small = cluster.jobproject(name="Paper_job_cvc_small", program=program_rrze, programprojectpath=path_rrze , projectpath=projectpath,
-                                        mode=3, summary_bool=1, performance_bool=1, pop_bool=0, coupling_bool=0, 
+                                        mode=3, summary_bool=1, performance_bool=0, pop_bool=0, coupling_bool=0, 
                                         potential_id=0, pop_number=20, N=3000, rhox_bool=0, plot_bool=1, meBND_small=10, meBND=10, xranges=2.0e0,
                                         medim1=15,medim0=15, timebool=0)
 
@@ -626,7 +624,7 @@ project_paper_cvc_large.put_runscript()
 ## In[ ]:
 #
 #project_slowswitch_paper = cluster.jobproject(name="Paper_job_slow", program=program_rrze, programprojectpath=path_rrze , projectpath=projectpath,
-#                                        mode=2, summary_bool=1, performance_bool=1, pop_bool=1, coupling_bool=1, 
+#                                        mode=2, summary_bool=1, performance_bool=0, pop_bool=1, coupling_bool=1, 
 #                                        potential_id=0, pop_number=20, N=1000, rhox_bool=1, plot_bool=1, meBND=6, xranges=2.0e0,
 #                                        medim1=60,medim0=60, timebool=0)
 #
@@ -634,7 +632,7 @@ project_paper_cvc_large.put_runscript()
 ## In[ ]:
 #
 #project_slowswitch_paper = cluster.jobproject(name="Paper_job_slow", program=program_rrze, programprojectpath=path_rrze , projectpath=projectpath,
-#                                        mode=2, summary_bool=1, performance_bool=1, pop_bool=1, coupling_bool=1, 
+#                                        mode=2, summary_bool=1, performance_bool=0, pop_bool=1, coupling_bool=1, 
 #                                        potential_id=0, pop_number=20, N=1000, rhox_bool=1, plot_bool=1, meBND=6, xranges=2.0e0,
 #                                        medim1=60,medim0=60, timebool=0)
 #
@@ -810,7 +808,7 @@ project_paper_cvc_large.put_runscript()
 ## In[10]:
 #
 #project_paper_barrier = cluster.jobproject(name="Paper_barrier_cvc", program=program_rrze, programprojectpath=path_rrze , projectpath=projectpath,
-#                                        mode=1, summary_bool=1, performance_bool=1, pop_bool=1, coupling_bool=1, 
+#                                        mode=1, summary_bool=1, performance_bool=0, pop_bool=1, coupling_bool=1, 
 #                                        potential_id=20,pop_number=20, N=2000, rhox_bool=1, plot_bool=1,meBND_small=10, meBND=10,xranges=2.0e0,
 #                                        medim1=60,medim0=60, timebool=0)
 #
@@ -827,6 +825,137 @@ project_paper_cvc_large.put_runscript()
 #                        for en in env:
 #                            for T in temp:
 #                                
+#                                    barrier_change = vb + vb_diff
+#                                    
+#                                    string = ""
+#                                    string += human_readable_length(potential["l"])                                    
+#                                    string += "_G_" + str(gate) +  "_Vb_" + str(vb)
+#                                    string += human_readable_frank(frank)        
+#                                    string += human_readable_temperature(T)
+#                                    string += human_readable_environment(env)
+#                                    string += human_readable_barrier_change(vb_diff)                     
+#                                    
+#                                    if barrier_change > 0:
+#                                        
+#                                        project_paper_barrier.add_job(
+#                                        specific=string, 
+#
+#                                        start_bias_voltage=0,
+#                                        end_bias_voltage=1.5,
+#                                        grid_bias_voltage = 150,
+#
+#                                        ## Cluster
+#                                        cluster = cluster_barrier, 
+#                                        time = time_barrier,                
+#
+#                                        ## Fixed for this Project
+#                                        C= potential["C"],
+#                                        A =  potential["A"], B= potential["B"],
+#                                        l = potential["l"],
+#                                        delta= potential["delta"],
+#
+#
+#                                        ##Second Set
+#                                        l_2 = potential["l"], Vb_2 = barrier_change , 
+#
+#                                        ## Reservoir
+#                                        beta2L = set_bath_by_temp(T), beta2R=set_bath_by_temp(T),
+#
+#                                        #Loop Variables
+#                                        Vb=vb,
+#                                        xshift = frank,
+#                                        T = T, hbath_temp=T,
+#                                        eta = en,
+#
+#                                        start_gate_voltage=gate, 
+#                                        end_gate_voltage=gate
+#                                        )
+#
+#
+#project_paper_barrier.put_jobproject(); project_paper_barrier.put_runscript()
+
+import human_readable as human
+import cluster
+import numpy as np
+import math
+import time
+
+import os
+myhost = os.uname()[1]
+signature = time.strftime("%d_%m")
+
+if myhost=="lima" or myhost=="cshpc":
+    program_rrze =  "./Release_Intel64/gmaster13"
+    path_rrze = "/home/hpc/mpet/mpet07/gmaster13"
+    projectpath = "/home/vault/mpet/mpet07/projects/NEW_set_" + signature +"/"    
+else:
+    program_rrze =  "./gmaster13"
+    path_rrze = "/user/chriz/calculations"
+    projectpath =  "/user/chriz/calculations"    
+
+##Generate Gate Lists
+generic_list_large = np.linspace(0, 6.0, 61)
+generic_list_medium = np.linspace(0, 3.0, 31)
+generic_list_small = np.linspace(0, 2.0, 21)
+
+large_resonance = [-3.2, -1.9,0.695, 2.0, 3.305,4.61,5.95]
+medium_resonance = [-0.41, 1, 2.41]
+small_resonance = []
+
+large_gate = generic_list_large.tolist() + large_resonance
+medium_gate = generic_list_medium.tolist() + medium_resonance
+small_gate= generic_list_small.tolist() + small_resonance 
+
+# -0.5, 5.85, -1.8
+
+#large_gate_dyn = large_resonance + [1.2, 2.6, 3.6, 3.0, 5.6]
+#arge_gate_dyn =  [-3.2, -1.9, -0.6, 0.695, 3.305, 4.61, 5.95] + [-3.0, -0.5, 5.85, -1.8,2.0, 2.5, 1.0, 3.5, 4.9, 5.7, 6.1]
+large_gate_dyn = [1.8, 2.0, 2.5]
+
+medium_gate_dyn = medium_resonance + [2.3, 2.5, 1.6, 3.0, -3.0, -5.0, 5.0]
+small_gate_dyn = np.linspace(0, 2.0, 6)
+
+#Dynamic
+system_l025_dyn = {"l":0.25, "delta":0.025, "gate":small_gate_dyn , "frank":[0.0], "barrier":[0.05], 
+        "operation":[], "A":0.3, "B":1, "C":7, "Sym":0.5} 
+system_l05_dyn = {"l":0.5, "delta":0.1,"gate":medium_gate_dyn , "frank":[0.0],"barrier":[0.2], 
+        "operation":[], "A":0.3, "B":1, "C":7, "Sym":1}  
+system_l075_dyn = {"l":0.75, "delta":0.3, "gate":large_gate_dyn , "frank":[0.0, 0.3], "barrier":[0.8], 
+        "operation":[], "A":0.3, "B":1, "C":7, "Sym":2}
+
+configuration_dyn =[system_l025_dyn, system_l05_dyn, system_l075_dyn] 
+
+### Stationary
+system_l025_stat = {"l":0.25, "delta":0.025, "gate":small_gate , "frank":[0.0], "barrier":[0.05], 
+        "operation":[], "A":1.0, "B":1, "C":7, "gate_start":-2.5, "gate_end":3.5, "gate_points":300, "Sym":0.5}  
+system_l05_stat = {"l":0.5, "delta":0.1,"gate":medium_gate , "frank":[0.0],"barrier":[0.2], 
+        "operation":[], "A":1.0, "B":1, "C":7, "gate_start":-2.5, "gate_end":4.5, "gate_points":350, "Sym":1} 
+system_l075_stat = {"l":0.75, "delta":0.3, "gate":large_gate , "frank":[-0.8,-0.6,-0.2,-0.1,0.1,0.2,0.6,0.8], "barrier":[0.8], 
+        "operation":[], "A":1.0, "B":1, "C":7, "gate_start":-2.5, "gate_end":6.5, "gate_points":450, "Sym":2}
+
+configuration_stat =[system_l025_stat, system_l05_stat, system_l075_stat] 
+
+#With Fixed Point
+#for configuration in [configuration_stat,configuration_dyn]:
+#    for system in configuration:
+#        human.create_switch_operation_fixed_start(system, 0.0)
+
+for system in configuration_dyn:
+    human.create_switch_operation_around_symmetric(system, system["Sym"])
+
+
+# # Voltage off/on and off/on
+
+#External Parameters
+#temp =[293] 
+#env =[0.0, 0.04] 
+#bias = [0.2, 0.4, 0.8]
+
+
+# In[8]:
+#timestart = 0; timeend= 1e8; timegrid=1e5; clustertime_1 = "24:00:00"; cluster_1="lima"
+
+
 #                                    barrier_change = vb + vb_diff
 #                                    
 #                                    string = ""
