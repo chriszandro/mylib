@@ -172,12 +172,11 @@ class system(object):
         for i in lrange:
 
             transition_energy = -2 * (self.energy_unoccupied[i+quanta] - self.energy_occupied[i])
-            
-	    transition.append(transition_energy)
+            transition.append(transition_energy)
 
             pair.append(str(i+quanta) + '->' + str(i))
 
-	    print (transition_energy, str(i-quanta) + '<-' + str(i))
+        print (transition_energy, str(i-quanta) + '<-' + str(i))
 
         return transition, pair, lrange
 

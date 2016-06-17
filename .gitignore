@@ -3,3 +3,6 @@
 ./ropeproject
 .dro*
 *.pyc
+*.py~
+*.un~
+analysis.py~
