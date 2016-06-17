@@ -32,7 +32,7 @@ class system(object):
     @param au2second: cool
     '''
 
-    def __init__(self, computation_data, system_data="None", occupation_data="None", unoccupation_data="None", franck_data="None"):
+    def __init__(self, computation_data, system_data="None", occupation_data="None", unoccupation_data="None", franck_data="None", prob_data="None"):
         '''
             System
         '''
@@ -90,9 +90,15 @@ class system(object):
             self.franck = np.loadtxt(franck_data, comments='?')
 
         self.exitation_list = [[],[],[]]
+        
+        # Tunnel Probability
+        if prob_data != "None":
+            self.prob = np.loadtxt(prob_data, comments='?')
+            self.left_tunnel = self.prob[:, 1]
+            self.right_tunnel = self.prob[:, 2]
+
 
     def integralS(self, axes, plot_number=50):
-
         lrange = range(1, plot_number)
 
         SO = [np.sum(self.energy_occupied[i] + ((self.wavefunction[:, i] - self.energy_occupied[i]))) for i in lrange]
@@ -115,26 +121,27 @@ class system(object):
 
         if inverseplot:
             axes.plot(rangel, transitions, 'o--', label='m -> v = m + ' + str(quanta))
-            axes.set_ylabel('Voltage [V]')
+            axes.set_ylabel('Threshold Voltage [V]')
+            axes.xaxis.set_ticks_position('top') 
 
         else:
             axes.plot(transitions, rangel, 'o--', label='m -> v = m + ' + str(quanta))
-            axes.set_xlabel('Voltage [V]')
-
+            axes.set_xlabel('Threshold Voltage [V]')
+            axes.xaxis.set_ticks_position('top') 
         axes.set_ylabel('m')
 
         return axes
 
     def plot_transition_dex(self, axes, quanta, inverseplot=False):
 
-        transitions, pair, rangel = self.deexitation(0, 200, quanta)
+        transitions, pair, rangel = self.deexitation(0+quanta, 20, quanta)
 
         if inverseplot:
-            axes.plot(rangel, transitions, 'o--', label='m -> v = m + ' + str(quanta))
+            axes.plot(rangel, transitions, 'o--', label='v ' + str(quanta) + '-> m')
             axes.set_ylabel('Voltage [V]')
 
         else:
-            axes.plot(transitions, rangel, 'o--', label='m -> v = m + ' + str(quanta))
+            axes.plot(transitions, rangel, 'o--', label='v -> m ' + str(quanta))
             axes.set_xlabel('Voltage [V]')
 
         axes.set_ylabel('m')
@@ -164,8 +171,12 @@ class system(object):
 
         for i in lrange:
 
-            transition.append(-2 * (self.energy_occupied[i-quanta] - self.energy_unoccupied[i]))
-            pair.append(str(i-quanta) + '->' + str(i))
+            transition_energy = -2 * (self.energy_unoccupied[i+quanta] - self.energy_occupied[i])
+            transition.append(transition_energy)
+
+            pair.append(str(i+quanta) + '->' + str(i))
+
+        print (transition_energy, str(i-quanta) + '<-' + str(i))
 
         return transition, pair, lrange
 
@@ -347,7 +358,7 @@ class system(object):
     def putexitationlines(self, axes, quanta=1, start=0, end=20):
 
         exitations, pair, lrange = self.exitation(start, end, quanta)
-
+        axes.xaxis.set_ticks_position('top') 
         [axes.axvline(_volt, linewidth=1) for _volt in exitations]
 
         axes.set_xticks(exitations)
@@ -397,7 +408,6 @@ class system(object):
             transition.append(2 * (self.energy_occupied[element[1]] - self.energy_unoccupied[element[0]]))
             pair.append(str(element[0]) + '>' + str(element[1]))
 
-        #  print element[0], element[1], element
 
         # Put into List
         [axes.axvline(_volt, linewidth=2, color=inputcolor) for _volt in transition]
@@ -735,37 +745,97 @@ class density(object):
         return sgnmatrix
 
 
+class energydiagram(object):
+    
+    def __init__(self, energyfile_path="None", occupation_energy = 0.1):
+        if energyfile_path != "None":
+            self.energy_dia = np.loadtxt(energyfile_path).T
+            
+        self.gate_voltages = self.energy_dia[0]   
+        self.energys = self.energy_dia[1:]
+        
+        self.number_of_states = self.energys.shape[0]
+        self.number_of_gate_points = self.energys.shape[1]
+        self.occupation_energy = occupation_energy
+
+        self.thresholds = self.get_transition_matrix()
+        
+    def get_transition_matrix(self):
+        
+        threshold_list = []
+        for quanta in range(0, self.number_of_states):
+            threshold_list.append(self.get_transition_for_quanta(quanta))
+        return threshold_list
+            
+    def put_transition(self, ax, quanta, end_state=None):    
+        
+        if end_state is None:
+            end_state = (self.number_of_states - quanta)
+        
+        for i in range(0, end_state):
+            ax.plot(self.gate_voltages, self.thresholds[quanta]["threshold"][i], 
+                label = str(self.thresholds[quanta]["pair"][i][0]) +" > " + str(self.thresholds[quanta]["pair"][i][1]) )
+        
+        return ax
+            
+    def put_transition_const_state(self, ax, state):
+        
+        for i in range(0, self.number_of_states-state):
+            transition = 2*(self.energys[state + i] + self.occupation_energy - self.energys[state])
+            ax.plot(self.gate_voltages, transition, label=str(state) + " > "+ str(state + i))
+                  
+        return ax
+        
+        
+    def get_transition_for_quanta(self, quanta):
+        
+        transition = []
+        pair = []
+       
+        for i in range(0, (self.number_of_states - quanta)):
+        
+            transition.append(2*(self.energys[i + quanta] + self.occupation_energy - self.energys[i]))
+            pair.append([i, i + quanta])
+                  
+        return {"pair":pair, "threshold":transition}
+        
+
 class heatmap(object):
     def __init__(self, heatmap="None", primary_grid="None", secondary_grid="None"):
         """
         heatmap: File containing the z data
-        paramter_grid: Parameter
-        position_grid: Position
+        primary_grid: The primary grid
+        secondar_grid: The secondary grid
         """
 
         if heatmap != "None":
             self.data = np.loadtxt(heatmap, comments="?")
         if primary_grid != "None":
-            self.primary_grid = np.loadtxt(primary_grid)
+            self.primary_grid = np.loadtxt(primary_grid)# Bias Voltage, y - axis
         if secondary_grid != "None":
-            self.secondary_grid = np.loadtxt(secondary_grid)
+            self.secondary_grid = np.loadtxt(secondary_grid) # Gate Voltage, x - Axis
 
+
+        #Derivates
         self.primary_diff = np.diff(self.primary_grid)
         #Midpoints for derivates
         self.xd = (self.primary_grid[1:]+ self.primary_grid[:-1])/2
+
         #Differential Conductance
         self.conductance= None
 
         self.number = len(self.data[:, 1])
 
-        # Assign parameter value into single array entries in self.density
-        # self.density=[self.data[i,:] for i in range(0,self.number)]
 
         # Meshgrid for 3d Plots
         self.xv, self.yv = np.meshgrid(self.primary_grid, self.secondary_grid)
-        # self.zv = self.density
+        
 
-        self.calculate_conductance()
+    def calculate_derivate(self):
+
+        conductance = np.array([np.diff(line) / self.primary_diff  for line in self.data.T]).T
+
+        return conductance
 
     def plot_data_vs_bias(self, axes , index=1):
 
@@ -793,11 +863,6 @@ class heatmap(object):
         axes.set_ylabel('Current [$\mu$ A]')
 
         return axes
-
-    def calculate_conductance(self):
-
-       self.conductance= np.array([np.diff(line) / self.primary_diff  for line in self.data.T]).T
-
 
 
 class rhox(object):
