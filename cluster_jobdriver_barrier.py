@@ -17,6 +17,11 @@ else:
     path_rrze = "/user/chriz/calculations"
     projectpath =  "/user/chriz/calculations"    
 
+
+small_gate=[]
+medium_gate=[]
+large_gate=[]
+
 system_l025_stat = {"l":0.25, "delta":0.025, "gate":small_gate , "frank":[0.0], "barrier":[0.05], 
         "operation":[], "A":1.0, "B":1, "C":7, "gate_start":-2.5, "gate_end":3.5, "gate_points":300, "Sym":0.5}  
 system_l05_stat = {"l":0.5, "delta":0.1,"gate":medium_gate , "frank":[0.0],"barrier":[0.2], 
@@ -38,8 +43,8 @@ cluster_barrier = "lima";time_barrier = "12:00:00"
 
 
 project_paper_barrier = cluster.jobproject(name="Paper_barrier_cvc", program=program_rrze, programprojectpath=path_rrze , projectpath=projectpath,
-                                       mode=3, summary_bool=1, performance_bool=0, pop_bool=1, coupling_bool=1, 
-                                       potential_id=20,pop_number=15, N=2000, rhox_bool=1, plot_bool=1,meBND_small=5, meBND=5,xranges=2.0e0,
+                                       mode=3, summary_bool=1, performance_bool=0, pop_bool=0, coupling_bool=1, 
+                                       potential_id=20,pop_number=15, N=2000, rhox_bool=0, plot_bool=1, meBND_small=5, meBND=5,xranges=2.0e0,
                                        medim1=40,medim0=40, timebool=0)
 
 
@@ -54,21 +59,21 @@ for potential in configuration_stat:
                                    barrier_change = vb + vb_diff
                                    
                                    string = ""
-                                   string += human_readable_length(potential["l"])                                    
-                                   string += "_G_" + str(gate) +  "_Vb_" + str(vb)
-                                   string += human_readable_frank(frank)        
-                                   string += human_readable_temperature(T)
-                                   string += human_readable_environment(env)
-                                   string += human_readable_barrier_change(vb_diff)                     
+                                   string += human.human_readable_length(potential["l"])                                    
+                                   string += "_Vb_" + str(vb)
+                                   string += human.human_readable_frank(frank)        
+                                   string += human.human_readable_temperature(T)
+                                   string += human.human_readable_environment(en)
+                                   string += human.human_readable_barrier_change(vb_diff)                     
                                    
                                    if barrier_change > 0:
                                        
                                        project_paper_barrier.add_job(
                                        specific=string, 
 
-                                       start_bias_voltage=0,
-                                       end_bias_voltage=1.5,
-                                       grid_bias_voltage = 150,
+                                       start_bias_voltage=0.0,
+                                       end_bias_voltage=2.0,
+                                       grid_bias_voltage = 2000,
 
                                        # Cluster
                                        cluster = cluster_barrier, 
@@ -85,7 +90,7 @@ for potential in configuration_stat:
                                        l_2 = potential["l"], Vb_2 = barrier_change , 
 
                                        ## Reservoir
-                                       beta2L = set_bath_by_temp(T), beta2R=set_bath_by_temp(T),
+                                       beta2L = human.set_bath_by_temp(T), beta2R = human.set_bath_by_temp(T),
 
                                        #Loop Variables
                                        Vb=vb,
@@ -93,8 +98,10 @@ for potential in configuration_stat:
                                        T = T, hbath_temp=T,
                                        eta = en,
 
-                                       start_gate_voltage=gate, 
-                                       end_gate_voltage=gate
+                                        ##Gate
+                                        start_gate_voltage = potential["gate_start"], 
+                                        end_gate_voltage = potential["gate_end"],
+                                        grid_gate_voltage =  potential["gate_points"]
                                        )
 
 

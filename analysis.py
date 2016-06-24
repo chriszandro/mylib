@@ -3,29 +3,12 @@
 @author: chriszandro
 '''
 import os
-# from numpy import *
 import numpy as np
-
-# from pylab import *
-
 from scipy import fftpack
-# from scipy import constants
-# from scipy.signal import argrelextrema
-# from scipy import signal
-
-# from os.path import expanduser
-# from mpl_toolkits.mplot3d import Axes3D
-
-# from matplotlib import animation
 import matplotlib.pyplot as plt
-# from matplotlib.backends.backend_pdf import PdfPages
-# import matplotlib.image as mpimg
 from matplotlib import rcParams
 from matplotlib import cm
-# from matplotlib.ticker import LinearLocator, FormatStrFormatter
 from mpl_toolkits.mplot3d import Axes3D
-
-# from mayavi import mlab
 
 class system(object):
     '''
@@ -747,11 +730,11 @@ class density(object):
 
 class energydiagram(object):
     
-    def __init__(self, energyfile_path="None", occupation_energy = 0.1):
+    def __init__(self, energyfile_path="None", occupation_energy = 0.1, shift=0):
         if energyfile_path != "None":
             self.energy_dia = np.loadtxt(energyfile_path).T
             
-        self.gate_voltages = self.energy_dia[0]   
+        self.gate_voltages = self.energy_dia[0] - shift   
         self.energys = self.energy_dia[1:]
         
         self.number_of_states = self.energys.shape[0]
@@ -766,6 +749,23 @@ class energydiagram(object):
         for quanta in range(0, self.number_of_states):
             threshold_list.append(self.get_transition_for_quanta(quanta))
         return threshold_list
+    def put_distance(self, ax, initial_state=0, end_state=0, *args)
+
+        diff = (self.energys[end_state] - self.energys[initial_state])
+        ax.plot(self.gate_voltages, transition, label=label_dummy, linewidth=lw, linestyle=ls, color=col)
+
+        return ax
+
+    def put_single_transition(self, ax, initial_state=0, end_state=0, lw=2, ls='--', col='b'):
+       
+        #label_dummy = str(initial_state) + " > "+ str(end_state)
+        indecies = str(initial_state+1) + str(end_state+1) 
+        label_dummy = "$U_{" + indecies + "}$"
+
+        transition = 2*(self.energys[end_state] + self.occupation_energy - self.energys[initial_state])
+        ax.plot(self.gate_voltages, transition, label=label_dummy, linewidth=lw, linestyle=ls, color=col)
+
+        return ax
             
     def put_transition(self, ax, quanta, end_state=None):    
         
@@ -801,7 +801,7 @@ class energydiagram(object):
         
 
 class heatmap(object):
-    def __init__(self, heatmap="None", primary_grid="None", secondary_grid="None"):
+    def __init__(self, heatmap="None", primary_grid="None", secondary_grid="None", shift=0):
         """
         heatmap: File containing the z data
         primary_grid: The primary grid
@@ -813,7 +813,7 @@ class heatmap(object):
         if primary_grid != "None":
             self.primary_grid = np.loadtxt(primary_grid)# Bias Voltage, y - axis
         if secondary_grid != "None":
-            self.secondary_grid = np.loadtxt(secondary_grid) # Gate Voltage, x - Axis
+            self.secondary_grid = np.loadtxt(secondary_grid) - shift # Gate Voltage, x - Axis
 
 
         #Derivates
