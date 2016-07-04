@@ -312,8 +312,6 @@ for i in range(1,11):
     file_small_heatmap_pop_env_array.append('/home/vault/mpet/mpet07/projects/perfect_heatmaps/Paper_job_cvc_small/result/inputfile_Paper_job_cvc_small_small_Vb_0.05_ZeroS_env.inp_FeBo__heatmap_occ_' + str(i) + '_heatmap_state.pop')
 
   # } 
-
-
   # end population } 
 
 # end small system}

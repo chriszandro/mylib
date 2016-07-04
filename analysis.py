@@ -2,29 +2,13 @@
 @author: chriszandro
 '''
 import os
-# from numpy import *
 import numpy as np
-
-# from pylab import *
-
 from scipy import fftpack
-# from scipy import constants
-# from scipy.signal import argrelextrema
-# from scipy import signal
-
-# from os.path import expanduser
-# from mpl_toolkits.mplot3d import Axes3D
-
-# from matplotlib import animation
 import matplotlib.pyplot as plt
-# from matplotlib.backends.backend_pdf import PdfPages
-# import matplotlib.image as mpimg
 from matplotlib import rcParams
 from matplotlib import cm
-# from matplotlib.ticker import LinearLocator, FormatStrFormatter
 from mpl_toolkits.mplot3d import Axes3D
 
-# from mayavi import mlab
 
 class system(object):
     '''
