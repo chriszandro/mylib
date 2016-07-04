@@ -1,14 +1,30 @@
 '''
-
 @author: chriszandro
 '''
 import os
+# from numpy import *
 import numpy as np
+
+# from pylab import *
+
 from scipy import fftpack
+# from scipy import constants
+# from scipy.signal import argrelextrema
+# from scipy import signal
+
+# from os.path import expanduser
+# from mpl_toolkits.mplot3d import Axes3D
+
+# from matplotlib import animation
 import matplotlib.pyplot as plt
+# from matplotlib.backends.backend_pdf import PdfPages
+# import matplotlib.image as mpimg
 from matplotlib import rcParams
 from matplotlib import cm
+# from matplotlib.ticker import LinearLocator, FormatStrFormatter
 from mpl_toolkits.mplot3d import Axes3D
+
+# from mayavi import mlab
 
 class system(object):
     '''
@@ -103,15 +119,15 @@ class system(object):
         transitions, pair, rangel = self.exitation(0, 200, quanta)
 
         if inverseplot:
-            axes.plot(rangel, transitions, 'o--', label='m -> v = m + ' + str(quanta))
+            axes.plot(rangel, transitions, 'o--', label='l=' + str(quanta))
             axes.set_ylabel('Threshold Voltage [V]')
-            axes.xaxis.set_ticks_position('top') 
+            # axes.xaxis.set_ticks_position('top') 
 
         else:
-            axes.plot(transitions, rangel, 'o--', label='m -> v = m + ' + str(quanta))
+            axes.plot(transitions, rangel, 'o--', label='l=' + str(quanta))
             axes.set_xlabel('Threshold Voltage [V]')
-            axes.xaxis.set_ticks_position('top') 
-        axes.set_ylabel('m')
+            # axes.xaxis.set_ticks_position('top') 
+        axes.set_ylabel('n')
 
         return axes
 
@@ -727,9 +743,7 @@ class density(object):
         sgnmatrix = [np.sign(initial.densitymatrix[i]) for  i in range(0, initial.number)]
         return sgnmatrix
 
-
 class energydiagram(object):
-    
     def __init__(self, energyfile_path="None", occupation_energy = 0.1, shift=0):
         if energyfile_path != "None":
             self.energy_dia = np.loadtxt(energyfile_path).T
@@ -749,12 +763,7 @@ class energydiagram(object):
         for quanta in range(0, self.number_of_states):
             threshold_list.append(self.get_transition_for_quanta(quanta))
         return threshold_list
-    def put_distance(self, ax, initial_state=0, end_state=0, *args)
 
-        diff = (self.energys[end_state] - self.energys[initial_state])
-        ax.plot(self.gate_voltages, transition, label=label_dummy, linewidth=lw, linestyle=ls, color=col)
-
-        return ax
 
     def put_single_transition(self, ax, initial_state=0, end_state=0, lw=2, ls='--', col='b'):
        
@@ -766,7 +775,14 @@ class energydiagram(object):
         ax.plot(self.gate_voltages, transition, label=label_dummy, linewidth=lw, linestyle=ls, color=col)
 
         return ax
-            
+    
+    def put_distance(self, ax, initial_state=0, end_state=0, *args):
+
+        distance = self.energys[end_state] - self.energys[initial_state]
+        ax.plot(self.gate_voltages, distance, *args)
+
+        return ax
+
     def put_transition(self, ax, quanta, end_state=None):    
         
         if end_state is None:

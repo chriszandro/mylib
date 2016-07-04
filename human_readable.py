@@ -79,6 +79,8 @@ def human_readable_environment(env):
 
     if env==0.0:
         label = ""
+    elif env==0.004:
+        label = "_Menv"
     elif env==0.04:
         label = "_env"
     elif env==1e-3:

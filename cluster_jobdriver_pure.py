@@ -29,6 +29,9 @@ large_gate_dyn = large_resonance + large_resonance_in_between
 medium_gate_dyn = medium_resonance + medium_resonance_in_between
 small_gate_dyn = small_resonance + small_resonance_in_between
 
+#### Neu Large Gate Dyn
+large_gate_dyn = [2.0, 2.1, 1.9, 2.2, 1.8, 3.3, 2.65]
+
 #Switching Dynamic
 system_l025_dyn = {"l":0.25, "delta":0.025, "gate":small_gate_dyn , "frank":[0.0], "barrier":[0.05], "gateonoff":[0.0,2.5,3.304],
         "operation":[], "A":0.1, "B":1, "C":7, "Sym":0.5} 
@@ -42,18 +45,17 @@ configuration_dyn = [system_l075_dyn]
 #Reine Zustaende
 #------External Parameters
 temp =[293] 
-env =[0.04] 
-bias = [0, 1.5]
+env =[1e-3] 
+bias = [0, 0.3, 1.5]
 
 #------Calc Paramters
 occupation =[0] 
-states =[1,2,8,7,12] 
-
+states =[1,2,7,8,9,10] 
 
 timestart = 0; timeend= 1e9; timegrid=1e6; clustertime_2 = "24:00:00"; cluster_2="emmy"
 
 project_pure = cluster.jobproject(name="pure", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
-                                        mode=20, N=2000, summary_bool=1, performance_bool=0, pop_bool=0, coupling_bool=0,
+                                        mode=20, N=2000, summary_bool=1, performance_bool=0, pop_bool=1, coupling_bool=0,
                                         pop_number=15, rhox_bool=0, plot_bool=1, meBND=5, meBND_small=5, xranges=2.0e0,
                                         medim1=40,medim0=40, timebool=0, potential_id=0, initialstate=2)
 
@@ -127,8 +129,7 @@ for potential in configuration_dyn:
 
                                                 )
 
-
-project_pure.put_runscript();project_pure.put_jobproject()
+project_pure.put_runscript();project_pure.put_jobproject() 
 # project_pure_rhox.put_runscript();project_pure_rhox.put_jobproject() 
 
 

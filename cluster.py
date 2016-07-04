@@ -5,7 +5,7 @@ class computation:
 
     #Computation File Constructor retrieving parameters
     def __init__(self, computation_path="", computation_file="computation",
-                 mode=1, plot_bool=1, rhox_bool=1, surf_bool=1, pop_bool=1, performance_bool = 0,
+                 mode=1, plot_bool=1, rhox_bool=1, surf_bool=0, pop_bool=1, performance_bool = 0,
                  summary_bool = 1, coupling_bool=1, pop_number=10,
                  N=1500, dvr_method=1, fourier = 10.0e0, potential_id=0,
                  medim1=60, medim0=60, meBND=6, meBND_small=6,
@@ -482,7 +482,7 @@ class jobproject(computation):
       Jobsubmit.write("for FILE in *.job; do \n")
       Jobsubmit.write("echo \"Processing $FILE \" \n ")
       Jobsubmit.write("qsub ${FILE}\n")
-      Jobsubmit.write("sleep 3\n")
+      Jobsubmit.write("sleep 1\n")
       Jobsubmit.write("done")
       Jobsubmit.close()
         #---------------------------------------

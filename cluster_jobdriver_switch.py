@@ -8,10 +8,19 @@ import os
 myhost = os.uname()[1]
 signature = time.strftime("%d_%m")
 
+
 if myhost=="lima" or myhost=="cshpc":
-    program_rrze =  "./Release_Intel64/gmaster13"
+    
+    #Stiff 
+    program_rrze =  "./Release_Intel64_stiff/gmaster13"
     path_rrze = "/home/hpc/mpet/mpet07/gmaster13"
-    projectpath = "/home/vault/mpet/mpet07/projects/NEW_set_" + signature +"/"    
+    projectpath = "/home/vault/mpet/mpet07/projects/NEW_set_time_stiff" + signature +"/"    
+
+    #Non-Stiff
+    # program_rrze =  "./Release_Intel64/gmaster13"
+    # path_rrze = "/home/hpc/mpet/mpet07/gmaster13"
+    # projectpath = "/home/vault/mpet/mpet07/projects/NEW_set_time_non_stiff" + signature +"/"    
+
 else:
     program_rrze =  "./gmaster13"
     path_rrze = "/user/chriz/calculations"
@@ -29,7 +38,7 @@ medium_resonance = [-0.41, 1, 2.41]
 small_resonance = []
 
 #-----Close to the Resonances with paramter +-"close_paramter"
-close_paramter = 0.1
+close_paramter = 0.05
 
 large_resonance_close = []
 medium_resonance_close = []
@@ -45,19 +54,18 @@ medium_resonance_in_between = [1.7, 0.3]
 small_resonance_in_between = []
 
 #----Non Barrier Switching
-large_resonance_non_barrier = [6.5, -3.0]
+large_resonance_non_barrier = [7.0, -4.0]
 medium_resonance_non_barrier = [   ]
 small_resonance_non_barrier = [   ]
 
 ###Listen Zusammenbauen
-# large_gate_dyn = large_resonance + large_resonance_in_between 
+large_gate_dyn = large_resonance + large_resonance_in_between + large_resonance_non_barrier
 # medium_gate_dyn = medium_resonance + medium_resonance_in_between 
 # small_gate_dyn = np.linspace(0, 2.0, 6)
 
-large_gate_dyn = large_resonance
+# large_gate_dyn = [-0.61, 0, 3.305, 5.95]
 medium_gate_dyn = medium_resonance + medium_resonance_in_between 
 small_gate_dyn = np.linspace(0, 2.0, 6)
-
 
 # Testing Lists
 # large_gate_dyn =  [1.0, 3.0]
@@ -69,7 +77,6 @@ print "Medium"
 print medium_gate_dyn 
 print "Small"
 print small_gate_dyn 
-
 
 #Switching Dynamic
 system_l025_dyn = {"l":0.25, "delta":0.025, "gate":small_gate_dyn , "frank":[0.0], "barrier":[0.05], "gateonoff":[0.0,2.5,3.304],
@@ -84,27 +91,26 @@ configuration_dyn =[system_l075_dyn]
 for system in configuration_dyn:
     human.create_switch_operation_around_symmetric(system, system["Sym"])
 
-
 ## Switching
 ##External Parameters
 temp =[293] 
-env =[0.0, 0.04] 
-bias = [0.3]
+env =[0.04, 1e-3] 
+bias = [0.40]
 
 timestart = 0; timeend= 1e9; timegrid=1e6; clustertime_3 = "24:00:00"; cluster_3="emmy"
 
 project_switch = cluster.jobproject(name="switch", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
-                                        mode=20, N=3000, summary_bool=1, performance_bool=0, pop_bool=1, coupling_bool=0,
+                                        mode=20, N=3000, summary_bool=1, performance_bool=0, pop_bool=0, coupling_bool=0,
                                         pop_number=15, rhox_bool=0, plot_bool=1, meBND=5 , meBND_small=5,xranges=2.0e0,
                                         medim1=40, medim0=40, timebool=0, potential_id=0, initialstate=1)
 
 project_switch_specc2 = cluster.jobproject(name="switch_specc2", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
-                                        mode=20, N=2000, summary_bool=1, performance_bool=0, pop_bool=1, coupling_bool=0,
+                                        mode=20, N=2000, summary_bool=1, performance_bool=0, pop_bool=0, coupling_bool=0,
                                         pop_number=15, rhox_bool=0, plot_bool=1, meBND=5 , meBND_small=5,xranges=2.0e0,
                                         medim1=40, medim0=40, timebool=0, potential_id=0, initialstate=1)
 
 project_switch_specc3 = cluster.jobproject(name="switch_specc3", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
-                                        mode=20, N=3000, summary_bool=1, performance_bool=0, pop_bool=1, coupling_bool=0,
+                                        mode=20, N=3000, summary_bool=1, performance_bool=0, pop_bool=0, coupling_bool=0,
                                         pop_number=15, rhox_bool=0, plot_bool=1, meBND=10 , meBND_small=10,xranges=2.0e0,
                                         medim1=60, medim0=60, timebool=0, potential_id=0, initialstate=1)
 
@@ -118,7 +124,7 @@ project_switch_specc3 = cluster.jobproject(name="switch_specc3", program=program
 #                                       pop_number=15, rhox_bool=1, plot_bool=1, meBND=5,meBND_small=5,xranges=2.0e0,
 #                                       medim1=40,medim0=40, timebool=0, potential_id=0, initialstate=1)
 
-project_switch_list =[project_switch, project_switch_specc3, project_switch_specc2] 
+project_switch_list =[project_switch] 
 
 for potential in configuration_dyn:
         for frank in potential["frank"]:
@@ -176,6 +182,7 @@ for potential in configuration_dyn:
                                         xshift = frank,
                                         T = T, hbath_temp=T,
                                         eta = en)
+
 project_switch.put_jobproject()
 project_switch_specc2.put_jobproject()
 project_switch_specc3.put_jobproject()
