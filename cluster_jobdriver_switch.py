@@ -14,12 +14,12 @@ if myhost=="lima" or myhost=="cshpc":
     #Stiff 
     program_rrze =  "./Release_Intel64_stiff/gmaster13"
     path_rrze = "/home/hpc/mpet/mpet07/gmaster13"
-    projectpath = "/home/vault/mpet/mpet07/projects/NEW_set_time_stiff" + signature +"/"    
+    projectpath = "/home/vault/mpet/mpet07/projects/time/NEW_set_time_stiff" + signature +"/"    
 
     #Non-Stiff
     # program_rrze =  "./Release_Intel64/gmaster13"
     # path_rrze = "/home/hpc/mpet/mpet07/gmaster13"
-    # projectpath = "/home/vault/mpet/mpet07/projects/NEW_set_time_non_stiff" + signature +"/"    
+    # projectpath = "/home/vault/mpet/mpet07/projects/time/NEW_set_time_non_stiff" + signature +"/"    
 
 else:
     program_rrze =  "./gmaster13"
@@ -94,10 +94,10 @@ for system in configuration_dyn:
 ## Switching
 ##External Parameters
 temp =[293] 
-env =[0.04, 1e-3] 
-bias = [0.40]
+env =[1e-3] 
+bias = [0.30]
 
-timestart = 0; timeend= 1e9; timegrid=1e6; clustertime_3 = "24:00:00"; cluster_3="emmy"
+timestart = 0; timeend= 1e9; timegrid=1e7; clustertime_3 = "24:00:00"; cluster_3="emmy"
 
 project_switch = cluster.jobproject(name="switch", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
                                         mode=20, N=3000, summary_bool=1, performance_bool=0, pop_bool=0, coupling_bool=0,

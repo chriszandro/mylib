@@ -494,7 +494,7 @@ class jobproject(computation):
 #Class for the jobfile a the RRZE Computing systems
 class job_rrze(inputfile):
 
-    def __init__(self, name, programprojectname, program, computation_file, jobfilespath, joboutpath, specific="", subfolder="", cluster="lima", time="24:00:00", *args, **kwargs):
+    def __init__(self, name, programprojectname, program, computation_file, jobfilespath, joboutpath, specific="", subfolder="", cluster="lima", time="24:00:00", logfile=False , *args, **kwargs):
 
         # Read In
         self.name = name + specific
@@ -530,8 +530,13 @@ class job_rrze(inputfile):
 
         # JobFile
         self.jobName = "#PBS -N " + self.name
-        self.jobOutput = "#PBS -o " + self.joboutpath + "/" + "${PBS_JOBNAME}.log"
-        self.jobError = "#PBS -e " + self.joboutpath + "/" + "${PBS_JOBNAME}.err"
+ 
+        if logfile:  
+            self.jobOutput = "#PBS -o " + self.joboutpath + "/" + "${PBS_JOBNAME}.log"
+            self.jobError = "#PBS -e " + self.joboutpath + "/" + "${PBS_JOBNAME}.err"
+        else:
+            self.jobOutput = "#No Output will be generated"
+            self.jobError = "#PBS -e " + self.joboutpath + "/" + "${PBS_JOBNAME}.err"
 
         self.moduleLoad = "module load intel64"
         self.changeDirectory = "cd " + self.programprojectname
