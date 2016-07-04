@@ -8,7 +8,6 @@ import os
 myhost = os.uname()[1]
 signature = time.strftime("%d_%m")
 
-
 if myhost=="lima" or myhost=="cshpc":
     
     #Stiff 
