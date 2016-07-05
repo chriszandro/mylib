@@ -727,6 +727,42 @@ class density(object):
         sgnmatrix = [np.sign(initial.densitymatrix[i]) for  i in range(0, initial.number)]
         return sgnmatrix
 
+
+class frankmatrix(object):
+    
+    def __init__(self, frank_path="None", quanta=0, frank_shift=0):
+        if frank_path != "None":
+            self.data = np.loadtxt(frank_path).T
+
+        self.quanta = quanta
+        self.gate_voltages = self.data[0]   
+        self.frank_matrix = self.data[0:]
+
+        self.number_of_gate_points = self.gate_voltages.shape[0]
+        self.number_of_elements = self.frank_matrix.shape[0]-quanta
+
+        self.pairs = []
+        self.pair_labels = []
+
+        self.set_labels()
+        self.frank_shift = frank_shift
+
+    def set_labels(self):
+
+        for i in range(0, self.number_of_elements):
+           shift = i + self.quanta
+           self.pairs.append([i,shift])
+           self.pair_labels.append(str(i) + " > " + str(shift))
+        return
+
+
+    def put_pair(self, axes, state=0, *args):
+    
+       axes.plot(self.gate_voltages, self.frank_matrix[state], label= str(state) + " > " + str(state + self.quanta) + " ( "+ str(self.frank_shift) + " )", *args)
+       
+       return axes
+
+
 class energydiagram(object):
     def __init__(self, energyfile_path="None", occupation_energy = 0.1, shift=0):
         if energyfile_path != "None":
