@@ -32,24 +32,24 @@ configuration_stat =[system_l075_stat, system_l05_stat, system_l025_stat]
 
 ## # Current - Voltage - Characteristics Heatmap
 ##External Parameters
-temp =[293, 5] 
+temp =[293, 10] 
 env =[0.0, 0.04, 1e-3] 
 
 clustertime_cvc = "24:00:00"; cluster_cvc="lima"
 
 project_paper_cvc_large = cluster.jobproject(name="Paper_job_cvc_large", program=program_rrze, programprojectpath=path_rrze , projectpath=projectpath,
                                         mode=3, summary_bool=1, performance_bool=0, pop_bool=0, coupling_bool=0, 
-                                        potential_id=0,pop_number=20, N=3000, rhox_bool=0, plot_bool=1, meBND_small=5, meBND=5, xranges=2.0e0,
+                                        potential_id=0,pop_number=20, N=3000, rhox_bool=0, plot_bool=0, meBND_small=5, meBND=5, xranges=2.0e0,
                                         medim1=40,medim0=40, timebool=0)
  
 project_paper_cvc_medium = cluster.jobproject(name="Paper_job_cvc_medium", program=program_rrze, programprojectpath=path_rrze , projectpath=projectpath,
                                         mode=3, summary_bool=1, performance_bool=0, pop_bool=0, coupling_bool=0, 
-                                        potential_id=0, pop_number=20, N=3000, rhox_bool=0, plot_bool=1, meBND_small=23, meBND=23, xranges=2.0e0,
+                                        potential_id=0, pop_number=20, N=3000, rhox_bool=0, plot_bool=0, meBND_small=23, meBND=23, xranges=2.0e0,
                                         medim1=25,medim0=25, timebool=0)
 
 project_paper_cvc_small = cluster.jobproject(name="Paper_job_cvc_small", program=program_rrze, programprojectpath=path_rrze , projectpath=projectpath,
                                         mode=3, summary_bool=1, performance_bool=0, pop_bool=0, coupling_bool=0, 
-                                        potential_id=0, pop_number=20, N=3000, rhox_bool=0, plot_bool=1, meBND_small=10, meBND=10, xranges=2.0e0,
+                                        potential_id=0, pop_number=20, N=3000, rhox_bool=0, plot_bool=0, meBND_small=10, meBND=10, xranges=2.0e0,
                                         medim1=15,medim0=15, timebool=0)
 
 project_list_cvc = [project_paper_cvc_large, project_paper_cvc_medium, project_paper_cvc_small]
@@ -58,7 +58,7 @@ project_pair = [ [system_l075_stat, project_paper_cvc_large], [system_l05_stat, 
 
 
 for potential in configuration_stat:
-    for frank in potential["frank"]:
+   for frank in potential["frank"]:
         for vb in potential["barrier"]:
             for en in env:
                 for T in temp:

@@ -515,22 +515,37 @@ class system(object):
 
         return axes
 
-    def fft_position(self, axes, style='-', colorp='b', name=""):
+
+    def fft_position(self):
 
         time_step = np.average(np.diff(self.parameter))
 
         sample_freq = fftpack.fftfreq(len(self.position), d=time_step)
 
-        position_fft = fftpack.fft(self.position)
+        self.position_fft = fftpack.fft(self.position)
+       
         pidxs = np.where(sample_freq > 0)
-        freqs, power = sample_freq[pidxs], np.abs(position_fft)[pidxs]
-        freq = freqs[power.argmax()]
+        self.freqs, self.power = sample_freq[pidxs], np.abs(self.position_fft)[pidxs]
+        
+        self.freq = freqs[power.argmax()]
 
-        axes.plot(freqs, power, lw='3', linestyle=style, color=colorp, label=name)
+        # axes.plot(freqs, power, lw='3', linestyle=style, color=colorp, label=name)
+        # axes.set_xlabel('Frequency [$\omega_0$]')
+        # axes.set_ylabel('Amplitude')
+
+        print ("FFT of Position Calculatied")
+
+        return 
+
+
+    def plot_fft_position(self, axes, style='-', colorp='b', name=""):
+
+        axes.plot(self.freqs, self.power, lw='3', linestyle=style, color=colorp, label=name)
         axes.set_xlabel('Frequency [$\omega_0$]')
         axes.set_ylabel('Amplitude')
 
         return axes
+
 
     def fft_current(self, axes):
 
@@ -589,7 +604,7 @@ class system(object):
         for i in lrange:
 
             transition = (self.energy_occupied[i + quanta] - self.energy_occupied[i]) * self.factor
-            ticks = str(i) + '->' + str(i + quanta)
+            pair.append(str(i) + '->' + str(i + quanta))
 
             self.exitations.append([transition, ticks, color])
 
