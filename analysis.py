@@ -516,6 +516,23 @@ class system(object):
         return axes
 
 
+    def fft_observables(self):
+
+        time_step = np.average(np.diff(self.parameter))
+
+        sample_freq = fftpack.fftfreq(len(self.position), d=time_step)
+
+        self.position_fft = fftpack.fft(self.position)
+       
+        pidxs = np.where(sample_freq > 0)
+        self.freqs, self.power = sample_freq[pidxs], np.abs(self.position_fft)[pidxs]
+        
+        self.freq = self.freqs[power.argmax()]
+
+        print ("FFT of all observables calculated")
+
+        return
+
     def fft_position(self):
 
         time_step = np.average(np.diff(self.parameter))
@@ -527,11 +544,7 @@ class system(object):
         pidxs = np.where(sample_freq > 0)
         self.freqs, self.power = sample_freq[pidxs], np.abs(self.position_fft)[pidxs]
         
-        self.freq = freqs[power.argmax()]
-
-        # axes.plot(freqs, power, lw='3', linestyle=style, color=colorp, label=name)
-        # axes.set_xlabel('Frequency [$\omega_0$]')
-        # axes.set_ylabel('Amplitude')
+        self.freq = self.freqs[self.power.argmax()]
 
         print ("FFT of Position Calculatied")
 
@@ -544,7 +557,7 @@ class system(object):
         axes.set_xlabel('Frequency [$\omega_0$]')
         axes.set_ylabel('Amplitude')
 
-        return axes
+        return 
 
 
     def fft_current(self, axes):

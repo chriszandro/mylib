@@ -10,7 +10,6 @@ import list_creator as list_creator
 myhost = os.uname()[1]
 signature = time.strftime("%d_%m")
 
-
 ### Might be obsolete
 if myhost=="lima" or myhost=="cshpc":
     
@@ -30,7 +29,6 @@ else:
     path_rrze = "/user/chriz/calculations"
     projectpath =  "/user/chriz/calculations"    
 
-
 ##### List Generation
 #-----Equally Spaced List
 generic_list_large = np.linspace(0, 6.0, 61)
@@ -39,10 +37,12 @@ generic_list_small = np.linspace(0, 2.0, 21)
 
 #-----Resonaces in the systems
 large_resonance = [-3.2, -1.95, -0.61, 0.695, 2.0, 3.305,4.61,5.95]
+large_resonance_reduced = [-3.2, -1.95, -0.61, 4.61, 5.95]
+
 medium_resonance = [-0.41, 1, 2.41]
 small_resonance = []
 
-#-----Close to the Resonances with paramter +-"close_paramter"
+#-----Close to the Resonances with paramter +- "close_paramter"
 close_paramter = 0.05
 
 large_resonance_close = []
@@ -64,9 +64,8 @@ medium_resonance_non_barrier = [   ]
 small_resonance_non_barrier = [   ]
 
 ###Listen Zusammenbauen
-large_gate_dyn = large_resonance + large_resonance_in_between + large_resonance_non_barrier
+large_gate_dyn = large_resonance_reduced + large_resonance_close + large_resonance_non_barrier
 # large_gate_dyn = [-3, 3]
-
 # medium_gate_dyn = medium_resonance + medium_resonance_in_between 
 # small_gate_dyn = np.linspace(0, 2.0, 6)
 
@@ -242,7 +241,6 @@ for res in resources:
 ########################################################################################
 ### Expokit 
 ########################################################################################
-
 computation_lima_expokit = {"clustertime":"24:00:00", "cluster":"lima", "program_rrze":"./Release_Intel64/gmaster13", "path_rrze":"/home/hpc/mpet/mpet07/gmaster13", "projectpath":"/home/vault/mpet/mpet07/projects/time" + signature + "/lima/expokit/"} 
 
 computation_emmy_expokit = {"clustertime":"24:00:00", "cluster":"emmy", "program_rrze":"./Release_Intel64/gmaster13", "path_rrze":"/home/hpc/mpet/mpet07/gmaster13", "projectpath":"/home/vault/mpet/mpet07/projects/time" + signature + "/emmy/expokit/"} 
@@ -251,7 +249,6 @@ computation_emmy_expokit = {"clustertime":"24:00:00", "cluster":"emmy", "program
 list_expo = list_creator.magnitude_list(magnitude_start=10, magnitude_end=10, splitt_number=9, grid=1000)
 
 resources_expo = [computation_lima_expokit, computation_emmy_expokit]
-
 
 for res in resources_expo:
 

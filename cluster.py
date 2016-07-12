@@ -19,6 +19,7 @@ class computation:
 
         self.computation_path = computation_path
         self.computation_file = computation_file
+
         self.computation = self.computation_path + "/" + self.computation_file
 
         self.mode = mode
@@ -309,6 +310,12 @@ class jobproject(computation):
         computation.write_computation_file(self)
         self.put_bash()
 
+        pass
+
+    def get_computation_fullpath(self):
+
+        return self.mainpath + "/jobfiles/" + self.computation_file
+
     def reset_jobs(self):
         """
         Empty the Joblist.
@@ -355,6 +362,8 @@ class jobproject(computation):
                               jobfilespath=self.jobfilespath, joboutpath=self.joboutpath, *args, **kwargs)
 
         self.joblist.append(job)
+
+        return job.inputfile_fullpath
 
     def print_job_list(self):
         """
@@ -508,6 +517,8 @@ class job_rrze(inputfile):
         self.subfolder=subfolder
 
         self.inputfile = "inputfile_" + self.name + ".inp"
+        self.inputfile_fullpath = self.jobfilespath + "/" + self.inputfile
+        
         self.jobfile = self.jobfilespath + "/" + self.name + ".job"
 
         if self.cluster == "lima":
@@ -544,7 +555,7 @@ class job_rrze(inputfile):
         self.execution = self.program + " " + self.inputfile + " " + self.computation_file + " " + self.jobfilespath + "/"
 
         inputfile.__init__(self, inputfile_path=self.jobfilespath, inputfile_name=self.inputfile, *args, **kwargs)
-
+         
         pass
 
     def put_job(self):
@@ -553,6 +564,7 @@ class job_rrze(inputfile):
         inputfile.write_file(self)
         # Write the jobfile
         self.write_job_file()
+
 
     def run_job(self):
 
