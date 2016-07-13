@@ -4,10 +4,10 @@
 import os
 import numpy as np
 from scipy import fftpack
-import matplotlib.pyplot as plt
-from matplotlib import rcParams
-from matplotlib import cm
-from mpl_toolkits.mplot3d import Axes3D
+#import matplotlib.pyplot as plt
+# from matplotlib import rcParams
+# from matplotlib import cm
+# from mpl_toolkits.mplot3d import Axes3D
 
 
 class system(object):

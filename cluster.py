@@ -61,6 +61,7 @@ class computation:
         self.computation_modell_2 = computation_modell_2
 
     #Writing the computation file
+
     def write_computation_file(self):
 
         Computation = open(self.computation, "w")
@@ -312,9 +313,21 @@ class jobproject(computation):
 
         pass
 
-    def get_computation_fullpath(self):
+    def get_computation_file(self):
 
-        return self.mainpath + "/jobfiles/" + self.computation_file
+        return self.computation_file
+
+    def get_files_fullpath(self):
+
+        return self.mainpath + "/jobfiles/"
+
+    def get_result_fullpath(self):
+
+        return  self.resultpath 
+    
+    def get_output_fullpath(self):
+
+        return  
 
     def reset_jobs(self):
         """
@@ -363,7 +376,7 @@ class jobproject(computation):
 
         self.joblist.append(job)
 
-        return job.inputfile_fullpath
+        return job.inputfile
 
     def print_job_list(self):
         """
