@@ -5,12 +5,11 @@ import math
 import time
 import os
 import list_creator as list_creator
-import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 import analysis
-
+from shutil import copyfile
 from subprocess import call
-
+import numpy as np
 
 myhost = os.uname()[1]
 signature = time.strftime("%d_%m")
@@ -56,19 +55,48 @@ projectpath = computation["projectpath"]
 
 ## Switching
 ##External Parameters
-
-
 T=293
 en = 0.04
 bias = 0.30
 
+large_resonance_plus = [0.695, 2.0, 3.305,4.61,5.95]
+large_resonance_minus = [-3.2, -1.95, -0.61]
+
+#-----Close to the Resonances with paramter +- "close_paramter"
+close_paramter = 0.025
+large_resonance_close = []
+
+for number in large_resonance_plus: 
+    large_resonance_close.append(number + close_paramter) 
+    large_resonance_close.append(number - close_paramter) 
+    large_resonance_close.append(number + 2*close_paramter) 
+    large_resonance_close.append(number - 2*close_paramter) 
+
+#Gate Preparation 
 gate_start = 0.0
-gate_end_list = np.linspace(-3,7,51)
+gate_end_list = np.linspace(1,7,61)
+enumrator=0
 
-string="specifier"
 
+print gate_end_list
+
+
+grid_time = 140
+grid_gate = len(gate_end_list)
+
+current_matrix = np.zeros(shape=(grid_gate, grid_time))
+position_matrix = np.zeros(shape=(grid_gate, grid_time))
+energy_matrix = np.zeros(shape=(grid_gate, grid_time))
 
 for gate_end in gate_end_list: 
+  
+
+    # string = ""
+    # string += human.human_readable_length(potential["l"])                                    
+    # string += "_G" + str(gate_start)+ "_"+ str(gate_end) 
+    # string += str(potential["barrier"] + "_B_" + str(bias)
+    # string += human.human_readable_temperature(T)
+    # string += human.human_readable_environment(en)
 
     computation = cluster.jobproject(name="switch", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
                                             mode=40, N=3000, summary_bool=1, performance_bool=0, pop_bool=0, coupling_bool=0,
@@ -82,9 +110,9 @@ for gate_end in gate_end_list:
     time = clustertime_3,
 
     ## Timing 
-    time_start = 140,
-    time_end = 140,
-    time_grid = 140,
+    time_start = grid_time,
+    time_end = grid_time,
+    time_grid = grid_time,
 
     ## Bias
     specific="test", 
@@ -128,18 +156,33 @@ for gate_end in gate_end_list:
     os.system(execute)
 
     # Grap Data
+    path = "/home/hpc/mpet/mpet07/Dropbox/expokit/"
+
     result_evo = "/home/vault/mpet/mpet07/projects/experimental_time//switch/result/inputfile_switchtest.inp_FeBo__exptime.evo"
 
-    array = np.loadtxt(result_evo)
-    # print (array)
+    # Einzelfiles
+    copyfile(result_evo, path + "inputfile_switchtest_" + str(gate_end) + "_.evo") 
 
-    # Append Data
     system = analysis.system(computation_data=result_evo)
-    f, (ax) = plt.subplots(1,1)
-    system.plot_current(ax, scale='log') 
+ 
+    current_matrix[enumrator] = system.current.T
+    position_matrix[enumrator] = system.position.T
+    energy_matrix[enumrator] = system.energy.T
 
-    plt.savefig("/home/hpc/mpet/mpet07/Dropbox/expokit/test.png") 
+
+    enumrator += 1
+
+# Save files
+# current_file = open(, 'w')
+
+
+np.savetxt(path + "current.cum", current_matrix) 
+np.savetxt(path + "position.pom", position_matrix) 
+np.savetxt(path + "energy.enm", energy_matrix) 
+
+np.savetxt(path + "time.grid", system.parameter) 
+np.savetxt(path + "gate.grid", gate_end_list) 
 
 
 
-#End Loop
+

@@ -2,9 +2,10 @@
 @author: chriszandro
 '''
 import os
-import numpy as np
-from scipy import fftpack
-#import matplotlib.pyplot as plt
+# import numpy as np
+# from scipy import fftpack
+
+# import matplotlib.pyplot as plt
 # from matplotlib import rcParams
 # from matplotlib import cm
 # from mpl_toolkits.mplot3d import Axes3D
@@ -16,6 +17,7 @@ class system(object):
     '''
 
     def __init__(self, computation_data, system_data="None", occupation_data="None", unoccupation_data="None", franck_data="None", prob_data="None"):
+        import numpy as np
         '''
             System
         '''
@@ -82,6 +84,7 @@ class system(object):
 
 
     def integralS(self, axes, plot_number=50):
+        import numpy as np
         lrange = range(1, plot_number)
 
         SO = [np.sum(self.energy_occupied[i] + ((self.wavefunction[:, i] - self.energy_occupied[i]))) for i in lrange]
@@ -93,7 +96,8 @@ class system(object):
     # Returns the sum of occupation of given states
     # states: number of states for occupied states
     def occupationsum(self, states):
-
+        import numpy as np
+  
         summation = np.sum([self.occupation[i + 1] for i in states], axis=0) 
         return summation
 
@@ -402,6 +406,7 @@ class system(object):
 
     # Attention: Method works only for grid with a unit stepsize
     def derivate_energy(self):
+        import numpy as np
 
         stepsize = np.average(np.diff(self.parameter))
 
@@ -433,6 +438,7 @@ class system(object):
         return axes
 # Attention: Method works only for grid with a unit stepsize
     def derivate_position(self):
+        import numpy as np
 
         stepsize = np.average(np.diff(self.parameter))
 
@@ -448,6 +454,7 @@ class system(object):
         return (d_position, new_grid)
 
     def derivate_current(self):
+        import numpy as np
 
         stepsize = np.average(np.diff(self.parameter))
 
@@ -463,6 +470,7 @@ class system(object):
         return (d_current, new_grid)
 
     def derivate_2_energy(self):
+        import numpy as np
 
         d_energy, d_grid = self.derivate_energy()
 
@@ -481,6 +489,8 @@ class system(object):
 
     def fft_energy(self, axes, colorp='b', name=""):
 
+        import numpy as np
+        from scipy import fftpack
         time_step = np.average(np.diff(self.parameter))
 
         sample_freq = fftpack.fftfreq(len(self.energy), d=time_step)
@@ -498,6 +508,8 @@ class system(object):
 
     def fft_energy_derivate(self, axes, colorp='b', name=""):
 
+        import numpy as np
+        from scipy import fftpack
         d_energy, grid = self.derivate_energy()
 
         time_step = np.average(np.diff(grid))
@@ -518,6 +530,8 @@ class system(object):
 
     def fft_observables(self):
 
+        import numpy as np
+        from scipy import fftpack
         time_step = np.average(np.diff(self.parameter))
 
         sample_freq = fftpack.fftfreq(len(self.position), d=time_step)
@@ -534,7 +548,9 @@ class system(object):
         return
 
     def fft_position(self):
+        import numpy as np
 
+        from scipy import fftpack
         time_step = np.average(np.diff(self.parameter))
 
         sample_freq = fftpack.fftfreq(len(self.position), d=time_step)
@@ -561,7 +577,9 @@ class system(object):
 
 
     def fft_current(self, axes):
+        import numpy as np
 
+        from scipy import fftpack
         time_step = np.average(np.diff(self.parameter))
 
         sample_freq = fftpack.fftfreq(len(self.current), d=time_step)
@@ -578,7 +596,9 @@ class system(object):
         return axes
 
     def fft_energy(self, axes):
+        import numpy as np
 
+        from scipy import fftpack
         time_step = np.average(np.diff(self.parameter))
 
         sample_freq = fftpack.fftfreq(len(self.energy), d=time_step)
@@ -715,6 +735,7 @@ class system(object):
 
 class density(object):
     def __init__(self, rhoxfile="None", parameter_grid="None", position_grid="None"):
+        import numpy as np
         """
         rhoxfile: File containing the z data
         paramter_grid: Parameter
@@ -748,10 +769,13 @@ class density(object):
     def plotdensity(self, ax, index=0, colorb="b", labelb="no label", linestyleb="-"):
         ax.plot(self.grid, self.density[index] , color=colorb, label=labelb, linestyle=linestyleb, linewidth=1.5)
         return ax
+        import numpy as np
     def plotdensity_sgn(self, ax, index=0, colorb="b", labelb="no label", linestyleb="-"):
+        import numpy as np
         ax.plot(self.grid, np.sign(self.density[index]), color=colorb, label=labelb, linestyle=linestyleb, linewidth=1.5)
         return ax
     def signummatrix(self):
+        import numpy as np
         sgnmatrix = [np.sign(initial.densitymatrix[i]) for  i in range(0, initial.number)]
         return sgnmatrix
 
@@ -793,6 +817,7 @@ class frankmatrix(object):
 
 class energydiagram(object):
     def __init__(self, energyfile_path="None", occupation_energy = 0.1, shift=0):
+        import numpy as np
         if energyfile_path != "None":
             self.energy_dia = np.loadtxt(energyfile_path).T
             
@@ -866,6 +891,7 @@ class energydiagram(object):
 
 class heatmap(object):
     def __init__(self, heatmap="None", primary_grid="None", secondary_grid="None", shift=0):
+        import numpy as np
         """
         heatmap: File containing the z data
         primary_grid: The primary grid
@@ -896,6 +922,7 @@ class heatmap(object):
         
 
     def calculate_derivate(self):
+        import numpy as np
 
         conductance = np.array([np.diff(line) / self.primary_diff  for line in self.data.T]).T
 
@@ -931,6 +958,7 @@ class heatmap(object):
 
 class rhox(object):
     def __init__(self, data="None", primary_grid="None", secondary_grid="None"):
+        import numpy as np
         """
         heatmap: File containing the z data
         paramter_grid: Parameter
