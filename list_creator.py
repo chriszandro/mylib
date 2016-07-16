@@ -1,6 +1,7 @@
-import math as math
 
 def magnitude_list(magnitude_start=10, magnitude_end=10, splitt_number=9, grid=1000):
+    
+    import math as math
 
     splitt_tupels = []
     index_runner = 0
@@ -22,3 +23,15 @@ def magnitude_list(magnitude_start=10, magnitude_end=10, splitt_number=9, grid=1
 
     return splitt_tupels
 
+
+def resonance_refinement(reso_list, width=0.1, resolution=11):
+    
+    import numpy as np
+
+    refinement = []
+    liste =  [list(np.linspace(item - width*0.5, item + width*0.5, resolution).tolist()) for item in reso_list]
+
+    for item in liste: 
+    refinement = refinement + item
+
+    return refinement
