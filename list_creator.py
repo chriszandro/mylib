@@ -1,4 +1,3 @@
-
 def magnitude_list(magnitude_start=10, magnitude_end=10, splitt_number=9, grid=1000):
     
     import math as math
