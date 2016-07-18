@@ -31,6 +31,6 @@ def resonance_refinement(reso_list, width=0.1, resolution=11):
     liste =  [list(np.linspace(item - width*0.5, item + width*0.5, resolution).tolist()) for item in reso_list]
 
     for item in liste: 
-    refinement = refinement + item
+        refinement = refinement + item
 
     return refinement
