@@ -81,7 +81,7 @@ time.sleep(3)
 
 enumrator=0
 print gate_end_list
-grid_time = 332
+grid_time = 710
 grid_gate = len(gate_end_list)
 
 current_matrix = np.zeros(shape=(grid_gate, grid_time))
