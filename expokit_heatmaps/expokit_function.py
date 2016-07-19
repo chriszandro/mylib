@@ -32,11 +32,10 @@ bias = 0.30
 gate_points_regular_grid = 2
 
 #############PATHS
-print myhost
 #### Resources
 if myhost=="emmy1.rrze.uni-erlangen.de" or myhost=="lima.rrze.uni-erlangen.de" or myhost=="cshpc.rrze.uni-erlangen.de":
 
-    print "RRZE Resources"
+    print ("RRZE Resources")
     resource = {"timestart":0,  "timeend":1e9, "timegrid":1e7, "clustertime":"24:00:00", "cluster":"emmy", 
          "program_rrze":"./Release_Intel64_exp/gmaster13",
          "path_rrze":"/home/hpc/mpet/mpet07/gmaster13",
@@ -44,7 +43,7 @@ if myhost=="emmy1.rrze.uni-erlangen.de" or myhost=="lima.rrze.uni-erlangen.de" o
     path = "/home/hpc/mpet/mpet07/Dropbox/expokit_work_rrze/" + spec + "/"
 
 else:
-    print "THCP Resources"
+    print ("THCP Resources")
     resource = {"timestart":0,  "timeend":1e9, "timegrid":1e7, "clustertime":"24:00:00", "cluster":"emmy", 
          "program_rrze":"./Release_Intel64_exp/gmaster13",
          "path_rrze":"/user/chriz/gmaster13",
@@ -63,11 +62,11 @@ large_resonance_minus = [-3.2, -1.95, -0.61]
 gate_end_list =sorted(np.linspace(0,7,gate_points_regular_grid).tolist() + list_creator.resonance_refinement(large_resonance_plus,
     width=0.12, resolution=13))
 
-print len(gate_end_list)
+print (len(gate_end_list))
 time.sleep(3)
 
 enumrator=0
-print gate_end_list
+print (gate_end_list)
 np.savetxt(path + "gate.grid", gate_end_list) 
 
 grid_time = 710

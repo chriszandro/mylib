@@ -69,7 +69,7 @@ def human_readable_frank(frank):
         label ="_ZeroS"
     else:
         label = ""
-        print "no categorized shift is given!"
+        # print ("no categorized shift is given!")
     
     return label
 
@@ -83,7 +83,7 @@ def human_readable_length(length):
         label = "_small"
     else:
         label = ""
-        print "no categorized length is given!"
+        # print ("no categorized length is given!") 
         
     return label
                                  
@@ -103,7 +103,7 @@ def human_readable_environment(env):
         label = "_MMMenvMMM"
     else:
         label = ""
-        print "no categorized environment is given!"
+        # print ("no categorized environment is given!") 
       
     return label
 
@@ -136,7 +136,7 @@ def human_readable_occupation(occu):
         label = "_ELEC"
     else:
         label = ""
-        print "no categorized occupation is given!"
+        # print ("no categorized occupation is given!")
         
     return label
       
@@ -177,7 +177,7 @@ def human_readable_barrier_change(barrier):
 
     else:
         label = ""
-        print "no categorized Barrier change is given!"
+        # print ("no categorized Barrier change is given!")
         
     return label
 
