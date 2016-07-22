@@ -30,12 +30,11 @@ export MKL_NUM_THREADS=40
 module load intel64
 module load python/2.7-anaconda
 
-
 # Change Directory
-cd /home/hpc/mpet/mpet07/mylib/expokit_heatmaps
+cd /home/hpc/mpet/mpet07/mylib/expokit_heatmaps/g15
 
 # Run
-python expokit_function_spec1.py 
+python expokit_MenvM_B07.py 
 
 
 

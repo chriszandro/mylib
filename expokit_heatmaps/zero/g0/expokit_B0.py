@@ -3,11 +3,11 @@ import list_creator as list_creator
 import expokit_heatmap_function as expokit
 
 #Parameter
-spec="spec_1"
+spec="spec_g0_B0"
 gate_start = 0.0
 T=293
-en = 0.001
-bias = 0.30
+en = 0.000
+bias = 0.00
 
 #Gate End List Preparation 
 gate_points_regular_grid = 550 

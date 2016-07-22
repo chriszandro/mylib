@@ -35,7 +35,7 @@ module load python/2.7-anaconda
 cd /home/hpc/mpet/mpet07/mylib/expokit_heatmaps
 
 # Run
-python expokit_function_spec1.py 
+python expokit_function_spec1_low.py 
 
 
 

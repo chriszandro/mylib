@@ -3,8 +3,8 @@ import list_creator as list_creator
 import expokit_heatmap_function as expokit
 
 #Parameter
-spec="spec_1"
-gate_start = 0.0
+spec="spec_g15_MenvM_B03"
+gate_start = 1.5
 T=293
 en = 0.001
 bias = 0.30

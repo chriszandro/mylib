@@ -32,10 +32,10 @@ module load python/2.7-anaconda
 
 
 # Change Directory
-cd /home/hpc/mpet/mpet07/mylib/expokit_heatmaps
+cd /home/hpc/mpet/mpet07/mylib/expokit_heatmaps/g25
 
 # Run
-python expokit_function_spec1.py 
+python expokit_MenvM_B03.py 
 
 
 
