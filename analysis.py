@@ -2,8 +2,8 @@
 @author: chriszandro
 '''
 import os
-# import numpy as np
-# from scipy import fftpack
+import numpy as np
+from scipy import fftpack
 
 # import matplotlib.pyplot as plt
 # from matplotlib import rcParams
@@ -548,9 +548,9 @@ class system(object):
         return
 
     def fft_position(self):
-        import numpy as np
+        # import numpy as np
 
-        from scipy import fftpack
+        # from scipy import fftpack
         time_step = np.average(np.diff(self.parameter))
 
         sample_freq = fftpack.fftfreq(len(self.position), d=time_step)

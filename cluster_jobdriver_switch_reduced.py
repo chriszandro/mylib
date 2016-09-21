@@ -7,7 +7,7 @@ import list_creator as list_creator
 import human_readable as human 
 
 myhost = os.uname()[1]
-signature = time.strftime("%d_%m")
+signature = time.strftime("%d_%m") + "_reduced"
 
 ### Might be obsolete
 if myhost=="lima" or myhost=="cshpc":
@@ -15,12 +15,12 @@ if myhost=="lima" or myhost=="cshpc":
     #Stiff 
     # program_rrze =  "./Release_Intel64_stiff/gmaster13"
     # path_rrze = "/home/hpc/mpet/mpet07/gmaster13"
-    # projectpath = "/home/vault/mpet/mpet07/projects/time/NEW_set_time_stiff" + signature +"/"    
+    # projectpath = "/home/vault/mpet/mpet07/projects/time/NEWreduced_set_time_stiff" + signature +"/"    
 
     #Non-Stiff
     program_rrze =  "./Release_Intel64/gmaster13"
     path_rrze = "/home/hpc/mpet/mpet07/gmaster13"
-    projectpath = "/home/vault/mpet/mpet07/projects/time/lima_NEW_set_time_non_stiff" + signature +"/"    
+    projectpath = "/home/vault/mpet/mpet07/projects/time/lima_NEWreduced_set_time_non_stiff" + signature +"/"    
 
 else:
     
@@ -35,7 +35,7 @@ generic_list_medium = np.linspace(0, 3.0, 31)
 generic_list_small = np.linspace(0, 2.0, 21)
 
 #-----Resonaces in the systems
-large_resonance = [-3.2, -1.95, -0.61, 0.695, 2.0, 3.305,4.61,5.92]
+large_resonance = [-3.2, -1.95, -0.61, 0.695, 2.0, 3.305,4.61,5.95]
 large_resonance_reduced = [0.0, 4.61, 5.92]
 
 medium_resonance = [-0.41, 1, 2.41]
@@ -63,8 +63,9 @@ medium_resonance_non_barrier = [   ]
 small_resonance_non_barrier = [   ]
 
 ###Listen Zusammenbauen
-#large_gate_dyn =  [-1.92, -1.27, -0.61, 0.0, 4.0, 4.61, 5.26, 5.92]
 large_gate_dyn =  [-1.92, -1.27, -0.61, 0.0, 2.2, 4.0, 4.61, 5.26, 5.92, 14.6]
+
+
 # large_gate_dyn = [-3, 3]
 # medium_gate_dyn = medium_resonance + medium_resonance_in_between 
 # small_gate_dyn = np.linspace(0, 2.0, 6)
@@ -90,6 +91,7 @@ print (small_gate_dyn )
 # system_l05_dyn = {"l":0.5, "delta":0.1,"gate":medium_gate_dyn , "frank":[0.0],"barrier":[0.2], "gateonoff":[0.0,2.5,3.304],
         # "operation":[], "A":0.1, "B":1, "C":7, "Sym":1}  
 
+## Richtig Herum ist A = 0.1 und B = 1.0
 system_l075_dyn = {"l":0.75, "delta":0.3, "gate":large_gate_dyn , "frank":[0.0], "barrier":[0.8], "gateonoff":[0.0,2.5,3.304],
         "operation":[], "A":0.1, "B":1.0, "C":7, "Sym":2}
 
@@ -103,22 +105,22 @@ for system in configuration_dyn:
 computation_emmy_stiff = {"timestart":0,  "timeend":1e9, "timegrid":1e7, "clustertime":"24:00:00", "cluster":"emmy", 
      "program_rrze":"./Release_Intel64_stiff/gmaster13",
      "path_rrze":"/home/hpc/mpet/mpet07/gmaster13",
-     "projectpath":"/home/vault/mpet/mpet07/projects/time" + signature + "/emmy/NEW_set_time_stiff/"}
+     "projectpath":"/home/vault/mpet/mpet07/projects/time" + signature + "/emmy/NEWreduced_set_time_stiff/"}
 
 computation_emmy_non_stiff = {"timestart":0,  "timeend":1e9, "timegrid":1e7, "clustertime":"24:00:00", "cluster":"emmy", 
      "program_rrze":"./Release_Intel64/gmaster13",
      "path_rrze":"/home/hpc/mpet/mpet07/gmaster13",
-     "projectpath":"/home/vault/mpet/mpet07/projects/time" + signature + "/emmy/NEW_set_time_non_stiff/"}
+     "projectpath":"/home/vault/mpet/mpet07/projects/time" + signature + "/emmy/NEWreduced_set_time_non_stiff/"}
 
 computation_lima_stiff = {"timestart":0,  "timeend":1e9, "timegrid":1e6, "clustertime":"24:00:00", "cluster":"lima", 
      "program_rrze":"./Release_Intel64_stiff/gmaster13",
      "path_rrze":"/home/hpc/mpet/mpet07/gmaster13",
-     "projectpath":"/home/vault/mpet/mpet07/projects/time" + signature+ "/lima/NEW_set_time_stiff/"}
+     "projectpath":"/home/vault/mpet/mpet07/projects/time" + signature+ "/lima/NEWreduced_set_time_stiff/"}
 
 computation_lima_non_stiff = {"timestart":0,  "timeend":1e9, "timegrid":1e6, "clustertime":"24:00:00", "cluster":"lima", 
      "program_rrze":"./Release_Intel64/gmaster13",
      "path_rrze":"/home/hpc/mpet/mpet07/gmaster13",
-     "projectpath":"/home/vault/mpet/mpet07/projects/time" + signature + "/lima/NEW_set_time_non_stiff/"}
+     "projectpath":"/home/vault/mpet/mpet07/projects/time" + signature + "/lima/NEWreduced_set_time_non_stiff/"}
 
 ### Expokit
 ####  Run with same physical paramters as above
@@ -145,16 +147,15 @@ for res in resources:
     bias = [0.30]
 
 
-    project_switch = cluster.jobproject(name="switch", program=program_rrze, programprojectpath=path_rrze, projectpath=projectpath,
+    project_switch = cluster.jobproject(name="switch", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
                                             mode=20, N=3000, summary_bool=1, performance_bool=0, pop_bool=0, coupling_bool=0,
-                                            pop_number=15, rhox_bool=0, plot_bool=1, meBND=5 , meBND_small=5,xranges=2.0e0,
-                                            medim1=40, medim0=40, timebool=0, potential_id=0, initialstate=1)
+                                            pop_number=8, rhox_bool=0, plot_bool=1, meBND=5 , meBND_small=5,xranges=2.0e0,
+                                            medim1=8, medim0=8, timebool=0, potential_id=0, initialstate=1)
 
     project_switch_rhox = cluster.jobproject(name="switch_rhox", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
-                                           mode=20, N=3000, summary_bool=1, performance_bool=0, pop_bool=1, coupling_bool=0,
-                                           pop_number=15, rhox_bool=1, evo_method=2, plot_bool=1, meBND=5,meBND_small=5,xranges=2.0e0,
-                                           medim1=40,medim0=40, timebool=0, potential_id=0, initialstate=1)
-
+                                           mode=20, N=3000, evo_method=2, summary_bool=1, performance_bool=0, pop_bool=1, coupling_bool=0,
+                                           pop_number=8, rhox_bool=1, plot_bool=1, meBND=5,meBND_small=5,xranges=2.0e0,
+                                           medim1=8,medim0=8, timebool=0, potential_id=0, initialstate=1)
 
 
     # project_switch_specc2 = cluster.jobproject(name="switch_specc2", program=program_rrze, programprojectpath=path_rrze  , projectpath=projectpath,
@@ -244,6 +245,7 @@ for res in resources:
     #
     #roject_switch_rhox.put_jobproject()
 
+
 ########################################################################################
 ### Expokit 
 ########################################################################################
@@ -258,7 +260,7 @@ resources_expo = [computation_lima_expokit, computation_emmy_expokit]
 
 for res in resources_expo:
 
-    clustertime_3 = "24:00:00";
+    clustertime_3 = "8:00:00";
     cluster_3=res["cluster"] 
 
     program_rrze = res["program_rrze"]; 

@@ -37,7 +37,7 @@ import analysis as analysis
 #L A R G E {
 
 ### Resonances {
-large_symmetric = 2
+large_symmetric = 2.0
 large_resonance = [-3.2, -1.95, -0.61, 0.695, 2.0, 3.305,4.61,5.95]
 large_resonance_shift = [ x - large_symmetric for x in large_resonance ]
 #}
@@ -84,11 +84,11 @@ file_large_heatmap_pos_env='/home/vault/mpet/mpet07/projects/perfect_heatmaps/Pa
 
 file_large_heatmap_MenvM=''
 
-file_large_heatmap_T_MenvM='/home/vault/mpet/mpet07/projects/new_perfect_heatmaps/Paper_job_cvc_large/result/inputfile_Paper_job_cvc_large_LARGE_Vb_0.8_ZeroS_T_MenvM.inp_FeBo__heatmap_heatmap.cum'
+file_large_heatmap_T_MenvM='/home/vault/mpet/mpet07/projects/perfect_heatmaps/Paper_job_cvc_large/result/inputfile_Paper_job_cvc_large_LARGE_Vb_0.8_ZeroS_T_MenvM.inp_FeBo__heatmap_heatmap.cum'
   # End Current } 
 
   # Position { 
-file_large_heatmap_pos_T_MenvM='/home/vault/mpet/mpet07/projects/new_perfect_heatmaps/Paper_job_cvc_large/result/inputfile_Paper_job_cvc_large_LARGE_Vb_0.8_ZeroS_T_MenvM.inp_FeBo__heatmap_heatmap.pom'
+file_large_heatmap_pos_T_MenvM='/home/vault/mpet/mpet07/projects/perfect_heatmaps/Paper_job_cvc_large/result/inputfile_Paper_job_cvc_large_LARGE_Vb_0.8_ZeroS_T_MenvM.inp_FeBo__heatmap_heatmap.pom'
 
 file_large_heatmap_pos_MenvM=''
 
@@ -195,14 +195,16 @@ file_medium_heatmap_pos_env='/home/vault/mpet/mpet07/projects/perfect_heatmaps/P
  # Current { 
 file_medium_heatmap_MenvM=''
 
-file_medium_heatmap_T_MenvM='/home/vault/mpet/mpet07/projects/new_perfect_heatmaps/Paper_job_cvc_large/result/inputfile_Paper_job_cvc_large_NORM_Vb_0.2_ZeroS_T_MenvM.inp_FeBo__heatmap_heatmap.cum'
+file_medium_heatmap_T_MenvM='/home/vault/mpet/mpet07/projects/perfect_heatmaps/Paper_job_cvc_medium/result/inputfile_Paper_job_cvc_medium_NORM_Vb_0.2_ZeroS_T_MenvM.inp_FeBo__heatmap_heatmap.cum'
+
+file_medium_heatmap_MenvM='/home/vault/mpet/mpet07/projects/perfect_heatmaps/Paper_job_cvc_medium/result/inputfile_Paper_job_cvc_medium_NORM_Vb_0.2_ZeroS_MenvM.inp_FeBo__heatmap_heatmap.cum'
  
   # End Current } 
 
   # Position { 
-file_medium_heatmap_pos_T_MenvM='/home/vault/mpet/mpet07/projects/new_perfect_heatmaps/Paper_job_cvc_large/result/inputfile_Paper_job_cvc_large_NORM_Vb_0.2_ZeroS_T_MenvM.inp_FeBo__heatmap_heatmap.pom'
+file_medium_heatmap_pos_T_MenvM='/home/vault/mpet/mpet07/projects/perfect_heatmaps/Paper_job_cvc_medium/result/inputfile_Paper_job_cvc_medium_NORM_Vb_0.2_ZeroS_T_MenvM.inp_FeBo__heatmap_heatmap.pom'
 
-file_medium_heatmap_pos_MenvM=''
+file_medium_heatmap_pos_MenvM='/home/vault/mpet/mpet07/projects/perfect_heatmaps/Paper_job_cvc_medium/result/inputfile_Paper_job_cvc_medium_NORM_Vb_0.2_ZeroS_MenvM.inp_FeBo__heatmap_heatmap.pom'
 
    # End Position } 
  
@@ -296,6 +298,8 @@ file_small_heatmap='/home/vault/mpet/mpet07/projects/perfect_heatmaps/Paper_job_
   # Position { 
 file_small_heatmap_pos_T='/home/vault/mpet/mpet07/projects/perfect_heatmaps/Paper_job_cvc_small/result/inputfile_Paper_job_cvc_small_small_Vb_0.05_ZeroS_T.inp_FeBo__heatmap_heatmap.pom'
 
+file_small_heatmap_pos='/home/vault/mpet/mpet07/projects/perfect_heatmaps/Paper_job_cvc_small/result/inputfile_Paper_job_cvc_small_small_Vb_0.05_ZeroS.inp_FeBo__heatmap_heatmap.pom'
+
    # End Position } 
 
   # End Environment } 
@@ -313,6 +317,8 @@ file_small_heatmap_T_env='/home/vault/mpet/mpet07/projects/perfect_heatmaps/Pape
 
   # Position { 
 file_small_heatmap_pos_T_env='/home/vault/mpet/mpet07/projects/perfect_heatmaps/Paper_job_cvc_small/result/inputfile_Paper_job_cvc_small_small_Vb_0.05_ZeroS_T_env.inp_FeBo__heatmap_heatmap.pom'
+
+file_small_heatmap_pos_env='/home/vault/mpet/mpet07/projects/perfect_heatmaps/Paper_job_cvc_small/result/inputfile_Paper_job_cvc_small_small_Vb_0.05_ZeroS_env.inp_FeBo__heatmap_heatmap.pom'
    # End Position } 
 
   # } 
@@ -321,16 +327,17 @@ file_small_heatmap_pos_T_env='/home/vault/mpet/mpet07/projects/perfect_heatmaps/
 
  # Current { 
 
-file_small_heatmap_MenvM=''
-
-file_small_heatmap_T_MenvM='/home/vault/mpet/mpet07/projects/new_perfect_heatmaps/Paper_job_cvc_large/result/inputfile_Paper_job_cvc_large_small_Vb_0.05_ZeroS_T_MenvM.inp_FeBo__heatmap_heatmap.cum'
+file_small_heatmap_T_MenvM='/home/vault/mpet/mpet07/projects/perfect_heatmaps/Paper_job_cvc_small/result/inputfile_Paper_job_cvc_small_small_Vb_0.05_ZeroS_T_MenvM.inp_FeBo__heatmap_heatmap.cum'
+ 
+file_small_heatmap_MenvM='/home/vault/mpet/mpet07/projects/perfect_heatmaps/Paper_job_cvc_small/result/inputfile_Paper_job_cvc_small_small_Vb_0.05_ZeroS_MenvM.inp_FeBo__heatmap_heatmap.cum'
  
   # End Current } 
 
   # Position { 
-file_small_heatmap_pos_MenvM=''
 
-file_small_heatmap_pos_T_MenvM='/home/vault/mpet/mpet07/projects/new_perfect_heatmaps/Paper_job_cvc_large/result/inputfile_Paper_job_cvc_large_small_Vb_0.05_ZeroS_T_MenvM.inp_FeBo__heatmap_heatmap.pom'
+file_small_heatmap_pos_T_MenvM='/home/vault/mpet/mpet07/projects/perfect_heatmaps/Paper_job_cvc_small/result/inputfile_Paper_job_cvc_small_small_Vb_0.05_ZeroS_T_MenvM.inp_FeBo__heatmap_heatmap.pom'
+
+file_small_heatmap_pos_MenvM='/home/vault/mpet/mpet07/projects/perfect_heatmaps/Paper_job_cvc_small/result/inputfile_Paper_job_cvc_small_small_Vb_0.05_ZeroS_MenvM.inp_FeBo__heatmap_heatmap.pom'
 
    # End Position } 
 
@@ -376,4 +383,4 @@ for i in range(1,11):
   # } 
   # end population } 
 
-# end small system}
+# end small syste

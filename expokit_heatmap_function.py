@@ -1,5 +1,5 @@
 def create_expokit_heatmap(spec="dummy_specc", gate_start = 0.0, T = 293, en = 0.001, bias = 0.30, gate_end_list=[], 
-        path = "/home/hpc/mpet/mpet07/Dropbox/expokit_work_rrze/" + spec + "/"): 
+        outputpath = "/home/hpc/mpet/mpet07/Dropbox/expokit_work_rrze/", population=0, init_state=1): 
 
     import cluster
     import math
@@ -12,6 +12,7 @@ def create_expokit_heatmap(spec="dummy_specc", gate_start = 0.0, T = 293, en = 0
     import numpy as np
     import human_readable as human
     
+    path = outputpath + spec + "/" 
 
     # POTENTIAL
     #Switching Dynamic
@@ -30,7 +31,6 @@ def create_expokit_heatmap(spec="dummy_specc", gate_start = 0.0, T = 293, en = 0
     "program_rrze":"./Release_Intel64_exp/gmaster13",
     "path_rrze":"/home/hpc/mpet/mpet07/gmaster13",
     "projectpath":"/home/hpc/mpet/mpet07/expokit_heatmaps/"}
-
 
 
     ### Data Output
@@ -52,7 +52,7 @@ def create_expokit_heatmap(spec="dummy_specc", gate_start = 0.0, T = 293, en = 0
 
         computation = cluster.jobproject(name="switch", program=resource["program_rrze"], 
                 programprojectpath=resource["path_rrze"], projectpath=resource["projectpath"], mode=40, N=3000, 
-                summary_bool=1, performance_bool=0, pop_bool=0, coupling_bool=0, pop_number=15, rhox_bool=0, plot_bool=1, 
+                summary_bool=1, performance_bool=0, pop_bool=population, coupling_bool=0, pop_number=15, rhox_bool=0, plot_bool=1, 
                 meBND=5 , meBND_small=5,xranges=2.0e0, medim1=40, medim0=40, timebool=0, potential_id=0, initialstate=1) 
         
 
@@ -88,8 +88,9 @@ def create_expokit_heatmap(spec="dummy_specc", gate_start = 0.0, T = 293, en = 0
 
         #Loop Variables
         xshift = potential["frank"][0],
-        T = T, hbath_temp=T,
-        eta = en)
+        T = T, hbath_temp=T, eta=en,
+        initial_state_number=1, 
+        initial_occupation = 0)
 
         computation.put_jobproject()
 

@@ -116,7 +116,7 @@ class computation:
         Computation.write("20 Zvode Time Evolution | 30 Expokit Time Evolution |\n 50 Snaptshot Mode | 42...")
         Computation.close()
 
-        print "Computation file written: " + self.computation
+        print ("Computation file written: " + self.computation)
 
 #Inputfile for physical parameters
 class inputfile:
@@ -384,7 +384,7 @@ class jobproject(computation):
         """
 
         for job in self.joblist:
-            print job.name
+            print (job.name)
 
     def put_jobproject(self):
         """
@@ -585,7 +585,7 @@ class job_rrze(inputfile):
 
         command = "qsub " + self.jobfile
 
-        print "Execution of: " + self.jobfile
+        print ("Execution of: " + self.jobfile)
         os.system(command)
 
 
