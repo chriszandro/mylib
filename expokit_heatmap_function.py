@@ -1,5 +1,5 @@
-def create_expokit_heatmap(spec="dummy_specc", gate_start = 0.0, T = 293, en = 0.001, bias = 0.30, gate_end_list=[], 
-        outputpath = "/home/hpc/mpet/mpet07/Dropbox/expokit_work_rrze/", population=0, init_state=1): 
+def create_expokit_heatmap(spec="dummy_specc", gate_start = 0.0, T = 293, en = 0.001, bias = 0.30, gate_end_list=[],
+        outputpath = "/home/vault/mpet/mpet07/expokit_output/", population=0, init_state=1):
 
     import cluster
     import math
@@ -11,15 +11,15 @@ def create_expokit_heatmap(spec="dummy_specc", gate_start = 0.0, T = 293, en = 0
     from subprocess import call
     import numpy as np
     import human_readable as human
-    
-    path = outputpath + spec + "/" 
+
+    path = outputpath + spec + "/"
 
     # POTENTIAL
     #Switching Dynamic
     system_l025_dyn = {"l":0.25, "delta":0.025, "gate":[] , "frank":[0.0], "barrier":[0.05], "gateonoff":[0.0,2.5,3.304],
-            "operation":[], "A":0.1, "B":1, "C":7, "Sym":0.5} 
+            "operation":[], "A":0.1, "B":1, "C":7, "Sym":0.5}
     system_l05_dyn = {"l":0.5, "delta":0.1,"gate":[] , "frank":[0.0],"barrier":[0.2], "gateonoff":[0.0,2.5,3.304],
-            "operation":[], "A":0.1, "B":1, "C":7, "Sym":1}  
+            "operation":[], "A":0.1, "B":1, "C":7, "Sym":1}
     system_l075_dyn = {"l":0.75, "delta":0.3, "gate":[] , "frank":[0.0], "barrier":[0.8], "gateonoff":[0.0,2.5,3.304],
             "operation":[], "A":0.1, "B":1, "C":7, "Sym":2}
     potential = system_l075_dyn
@@ -27,10 +27,11 @@ def create_expokit_heatmap(spec="dummy_specc", gate_start = 0.0, T = 293, en = 0
     #############PATHS
     #### Resources
 
-    resource = {"timestart":0,  "timeend":1e9, "timegrid":1e7, "clustertime":"24:00:00", "cluster":"emmy", 
+    resource = {"timestart":0,  "timeend":1e9, "timegrid":1e7, "clustertime":"24:00:00", "cluster":"emmy",
     "program_rrze":"./Release_Intel64_exp/gmaster13",
     "path_rrze":"/home/hpc/mpet/mpet07/gmaster13",
-    "projectpath":"/home/hpc/mpet/mpet07/expokit_heatmaps/"}
+    # "projectpath":"/home/hpc/mpet/mpet07/expokit_heatmaps/"}
+    "projectpath":"/home/vault/mpet/mpet07/expokit_heatmaps/"}
 
 
     ### Data Output
@@ -39,7 +40,7 @@ def create_expokit_heatmap(spec="dummy_specc", gate_start = 0.0, T = 293, en = 0
 
     enumrator=0
 
-    np.savetxt(path + "gate.grid", gate_end_list) 
+    np.savetxt(path + "gate.grid", gate_end_list)
 
     grid_time = 710
     grid_gate = len(gate_end_list)
@@ -48,27 +49,27 @@ def create_expokit_heatmap(spec="dummy_specc", gate_start = 0.0, T = 293, en = 0
     position_matrix = np.zeros(shape=(grid_gate, grid_time))
     energy_matrix = np.zeros(shape=(grid_gate, grid_time))
 
-    for gate_end in gate_end_list: 
+    for gate_end in gate_end_list:
 
-        computation = cluster.jobproject(name="switch", program=resource["program_rrze"], 
-                programprojectpath=resource["path_rrze"], projectpath=resource["projectpath"], mode=40, N=3000, 
-                summary_bool=1, performance_bool=0, pop_bool=population, coupling_bool=0, pop_number=15, rhox_bool=0, plot_bool=1, 
-                meBND=5 , meBND_small=5,xranges=2.0e0, medim1=40, medim0=40, timebool=0, potential_id=0, initialstate=1) 
-        
+        computation = cluster.jobproject(name="switch", program=resource["program_rrze"],
+                programprojectpath=resource["path_rrze"], projectpath=resource["projectpath"], mode=40, N=3000,
+                summary_bool=1, performance_bool=0, pop_bool=population, coupling_bool=0, pop_number=15, rhox_bool=0, plot_bool=1,
+                meBND=5 , meBND_small=5,xranges=2.0e0, medim1=40, medim0=40, timebool=0, potential_id=0, initialstate=1)
+
 
         inputfile = computation.add_job(
 
-        ## CLUSTER 
+        ## CLUSTER
         cluster = resource["cluster"],
         time = resource["clustertime"],
 
-        ## Timing 
+        ## Timing
         time_start = grid_time,
         time_end = grid_time,
         time_grid = grid_time,
 
         ## Bias
-        specific=spec, 
+        specific=spec,
         start_bias_voltage=bias,
         end_bias_voltage=bias,
 
@@ -89,7 +90,7 @@ def create_expokit_heatmap(spec="dummy_specc", gate_start = 0.0, T = 293, en = 0
         #Loop Variables
         xshift = potential["frank"][0],
         T = T, hbath_temp=T, eta=en,
-        initial_state_number=1, 
+        initial_state_number=1,
         initial_occupation = 0)
 
         computation.put_jobproject()
@@ -100,13 +101,13 @@ def create_expokit_heatmap(spec="dummy_specc", gate_start = 0.0, T = 293, en = 0
 
         #Program Execution
         os.chdir(resource["projectpath"] + "switch/jobfiles")
-        execute = "./gmaster13" + " " + "inputfile_switch"+spec+".inp" + " " + computation_file 
+        execute = "./gmaster13" + " " + "inputfile_switch"+spec+".inp" + " " + computation_file
         os.system(execute)
 
         result_evo = resource["projectpath"] + "switch/result/inputfile_switch"+spec+".inp_FeBo__exptime.evo"
 
         # Single File Copy
-        #copyfile(result_evo, path + "inputfile_switch" + spec + "_" + str(gate_end) + "_.evo") 
+        #copyfile(result_evo, path + "inputfile_switch" + spec + "_" + str(gate_end) + "_.evo")
 
         #Pickup Data
         system = analysis.system(computation_data=result_evo)
@@ -117,10 +118,10 @@ def create_expokit_heatmap(spec="dummy_specc", gate_start = 0.0, T = 293, en = 0
         enumrator += 1
 
         #Save Heatmaps
-        np.savetxt(path + "current_heatmap.cum", current_matrix) 
-        np.savetxt(path + "position_heatmap.pom", position_matrix) 
-        np.savetxt(path + "energy_heatmap.enm", energy_matrix) 
+        np.savetxt(path + "current_heatmap.cum", current_matrix)
+        np.savetxt(path + "position_heatmap.pom", position_matrix)
+        np.savetxt(path + "energy_heatmap.enm", energy_matrix)
 
-        np.savetxt(path + "time.grid", system.parameter) 
+        np.savetxt(path + "time.grid", system.parameter)
 
 

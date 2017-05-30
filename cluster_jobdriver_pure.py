@@ -8,14 +8,9 @@ import os
 myhost = os.uname()[1]
 signature = time.strftime("%d_%m")
 
-if myhost=="lima" or myhost=="cshpc":
-    program_rrze =  "./Release_Intel64/gmaster13"
-    path_rrze = "/home/hpc/mpet/mpet07/gmaster13"
-    projectpath = "/home/vault/mpet/mpet07/projects/NEW_set_" + signature +"/"    
-else:
-    program_rrze =  "./gmaster14"
-    path_rrze = "/user/chriz/calculations"
-    projectpath =  "/user/chriz/calculations"    
+program_rrze =  "./Release_Intel64/gmaster13"
+path_rrze = "/home/hpc/mpet/mpet07/gmaster13"
+projectpath = "/home/vault/mpet/mpet07/projects/NEW_set_pure" + signature +"/"    
 
 large_resonance = [-3.2, -1.9,0.695, 2.0, 3.305,4.61,5.95]
 medium_resonance = [-0.41, 1, 2.41]
@@ -26,7 +21,7 @@ medium_resonance_in_between = [1.7, 0.3]
 small_resonance_in_between = []
 
 large_gate_dyn = large_resonance + large_resonance_in_between
-medium_gate_dyn = medium_resonance + medium_resonance_in_between
+medium_gate_dyn = medium_resonance + medium_resonance_in_between + [1.0, 0.8,1.2]
 small_gate_dyn = small_resonance + small_resonance_in_between
 
 #### Neu Large Gate Dyn
@@ -40,17 +35,17 @@ system_l05_dyn = {"l":0.5, "delta":0.1,"gate":medium_gate_dyn , "frank":[0.0],"b
 system_l075_dyn = {"l":0.75, "delta":0.3, "gate":large_gate_dyn , "frank":[0.0], "barrier":[0.8], "gateonoff":[0.0,2.5,3.304],
         "operation":[], "A":0.1, "B":1, "C":7, "Sym":2}
 
-configuration_dyn = [system_l075_dyn]
+configuration_dyn = [system_l05_dyn]
 
 #Reine Zustaende
 #------External Parameters
-temp =[293] 
+temp =[10, 293] 
 env =[1e-3] 
 bias = [0, 0.3, 1.5]
 
 #------Calc Paramters
 occupation =[0] 
-states =[1,2,7,8,9,10] 
+states =[1,2,3] 
 
 timestart = 0; timeend= 1e9; timegrid=1e6; clustertime_2 = "24:00:00"; cluster_2="emmy"
 

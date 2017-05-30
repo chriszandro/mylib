@@ -191,7 +191,15 @@ file_medium_heatmap_pos_env='/home/vault/mpet/mpet07/projects/perfect_heatmaps/P
    # End Position } 
   # }
 
- #MenvM { 
+
+#MMenvMM
+
+file_medium_heatmap_MMenvMM='/home/vault/mpet/mpet07/projects/perfect_heatmaps/Paper_job_cvc_medium/result/inputfile_Paper_job_cvc_medium_NORM_Vb_0.2_ZeroS_MMenvMM.inp_FeBo__heatmap_heatmap.cum'
+
+file_medium_heatmap_pos_MMenvMM='/home/vault/mpet/mpet07/projects/perfect_heatmaps/Paper_job_cvc_medium/result/inputfile_Paper_job_cvc_medium_NORM_Vb_0.2_ZeroS_MMenvMM.inp_FeBo__heatmap_heatmap.pom'
+
+
+#MenvM { 
  # Current { 
 file_medium_heatmap_MenvM=''
 
@@ -257,7 +265,7 @@ file_medium_heatmap_pop_7_env='/home/vault/mpet/mpet07/projects/perfect_heatmaps
 
 file_medium_heatmap_pop_env_array=[]
 for i in range(1,11):
-    file_medium_heatmap_pop_env_array.append('/home/vault/mpet/mpet07/projects/perfect_heatmaps/Paper_job_cvc_medium/result/inputfile_Paper_job_cvc_medium_NORM_Vb_0.2_ZeroS_env.inp_FeBo__heatmap_occ_'+str(i)+'_heatmap_state.pop')
+    file_medium_heatmap_pop_env_array.append('/home/vault/mpet/mpet07/projects/perfect_heatmaps/Paper_job_cvc_medium/result/inputfile_Paper_job_cvc_medium_NORM_Vb_0.2_ZeroS_MMenvMM.inp_FeBo__heatmap_occ_'+str(i)+'_heatmap_state.pop')
 
 ### }
 

@@ -1,0 +1,68 @@
+total 4160
+-rw-r--r-- 1 mpet07 mpet    3186 Jul 14 16:09 computation_switch
+-rwxr-xr-x 1 mpet07 mpet 4109263 Jul 13 00:54 gmaster13
+-rw-r--r-- 1 mpet07 mpet    2991 Jul 14 16:09 inputfile_switchtest.inp
+-rw-r--r-- 1 mpet07 mpet      88 Jul 14 16:09 jobsubmit.sh
+-rw-r--r-- 1 mpet07 mpet     729 Jul 14 16:09 switchtest.job
+ ***********************************************************
+ Proton Transfer in a Molecular Junction as switch mechanism
+ Author: Chriszandro Hofmeister                             
+ Last update: 2015/02/25                                    
+ ***********************************************************
+ ***********************
+ Mode 30 and 40 Time Evolution with Expokit
+ Mode 40 has a magnitude grid insteas of an equidistant
+ ***********************
+ 
+     Hermitian Grid Points (one-time initialization)
+     --------------------------------------------------------
+     Calculation of   3000 Hermitian grid points           ok
+     From   -77.031 to     77.031
+ 
+     Search Routine
+     --------------------------------------------------------
+Range :                 2.000
+Indize Range:                99
+x_left:                -2.008 at index:                  1451
+x_right:                1.967 at index:                  1549
+     --------------------------------------------------------
+ 
+ Preparing density matrix for initial state
+ 
+Bandwidth meBND:                                       5
+ 
+---00-Subspace
+Dimension                                             40
+Number of Bandelements                               370
+Number of total matrix elements                      410
+ 
+---11-Subspace
+Dimension                                             40
+Number of Bandelements                               370
+Number of total matrix elements                      410
+ 
+Total Number:                                        820
+
+--- rho-vector
+Size in MB:                                  0.131E-01
+
+Matrix Elements:                             0.672E+06
+Bytes:                                       0.108E+08
+MBytes:                                         10.758
+ 
+[ 0.          0.10144928  0.20289855  0.30434783  0.4057971   0.50724638
+  0.60869565  0.71014493  0.8115942   0.91304348  1.01449275  1.11594203
+  1.2173913   1.31884058  1.42028986  1.52173913  1.62318841  1.72463768
+  1.82608696  1.92753623  2.02898551  2.13043478  2.23188406  2.33333333
+  2.43478261  2.53623188  2.63768116  2.73913043  2.84057971  2.94202899
+  3.04347826  3.14492754  3.24637681  3.34782609  3.44927536  3.55072464
+  3.65217391  3.75362319  3.85507246  3.95652174  4.05797101  4.15942029
+  4.26086957  4.36231884  4.46376812  4.56521739  4.66666667  4.76811594
+  4.86956522  4.97101449  5.07246377  5.17391304  5.27536232  5.37681159
+  5.47826087  5.57971014  5.68115942  5.7826087   5.88405797  5.98550725
+  6.08695652  6.1884058   6.28985507  6.39130435  6.49275362  6.5942029
+  6.69565217  6.79710145  6.89855072  7.        ]
+Computation file written: /home/vault/mpet/mpet07/projects/experimental_time//switch/jobfiles/computation_switch
+computation_switch
+('inputfile', '/home/vault/mpet/mpet07/projects/experimental_time//switch/jobfiles/inputfile_switchtest.inp')
+('filepath', '/home/vault/mpet/mpet07/projects/experimental_time//switch/jobfiles/')

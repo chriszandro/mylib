@@ -59,7 +59,7 @@ class system(object):
             self.spectralength = len(self.energy_occupied)
             self.spectra_range = range(0, self.spectralength)
             print ( "Spectral Length: ", self.spectralength)
-       
+
        # READING OCCUPATION .po
         if occupation_data != "None":
                 self.occupation = np.loadtxt(occupation_data, unpack=True, comments='?')
@@ -75,7 +75,7 @@ class system(object):
             self.franck = np.loadtxt(franck_data, comments='?')
 
         self.exitation_list = [[],[],[]]
-        
+
         # Tunnel Probability
         if prob_data != "None":
             self.prob = np.loadtxt(prob_data, comments='?')
@@ -97,31 +97,38 @@ class system(object):
     # states: number of states for occupied states
     def occupationsum(self, states):
         import numpy as np
-  
-        summation = np.sum([self.occupation[i + 1] for i in states], axis=0) 
+
+        summation = np.sum([self.occupation[i + 1] for i in states], axis=0)
         return summation
 
 
-    def plot_transition(self, axes, quanta, inverseplot=False):
+    def plot_transition(self, axes, quanta, inverseplot=False, localized=[]):
 
         transitions, pair, rangel = self.exitation(0, 200, quanta)
+        rangel = [ x + 1 for x in rangel]
 
         if inverseplot:
             axes.plot(rangel, transitions, 'o--', label='l=' + str(quanta))
             axes.set_ylabel('Threshold Voltage [V]')
-            # axes.xaxis.set_ticks_position('top') 
+            # axes.xaxis.set_ticks_position('top')
 
         else:
             axes.plot(transitions, rangel, 'o--', label='l=' + str(quanta))
             axes.set_xlabel('Threshold Voltage [V]')
-            # axes.xaxis.set_ticks_position('top') 
-        axes.set_ylabel('n')
+            # axes.xaxis.set_ticks_position('top')
+
+            for k in localized:
+                for p in rangel:
+                    if p==k:
+                        axes.plot(transitions[p], p, 's--', color="k", label="Local-to-Local")
+
+            axes.set_ylabel('n')
 
         return axes
 
     def plot_transition_dex(self, axes, quanta, inverseplot=False):
 
-        transitions, pair, rangel = self.deexitation(0+quanta, 20, quanta)
+        transitions, pair, rangel = self.deexitation(0, 200, quanta)
 
         if inverseplot:
             axes.plot(rangel, transitions, 'o--', label='v ' + str(quanta) + '-> m')
@@ -158,12 +165,12 @@ class system(object):
 
         for i in lrange:
 
-            transition_energy = -2 * (self.energy_unoccupied[i+quanta] - self.energy_occupied[i])
+            transition_energy = 2 * (self.energy_unoccupied[i+quanta] - self.energy_occupied[i])
             transition.append(transition_energy)
 
             pair.append(str(i+quanta) + '->' + str(i))
 
-        print (transition_energy, str(i-quanta) + '<-' + str(i))
+            # print (transition_energy, str(i) + '->' + str(i + quanta))
 
         return transition, pair, lrange
 
@@ -345,7 +352,7 @@ class system(object):
     def putexitationlines(self, axes, quanta=1, start=0, end=20):
 
         exitations, pair, lrange = self.exitation(start, end, quanta)
-        axes.xaxis.set_ticks_position('top') 
+        axes.xaxis.set_ticks_position('top')
         [axes.axvline(_volt, linewidth=1) for _volt in exitations]
 
         axes.set_xticks(exitations)
@@ -397,14 +404,68 @@ class system(object):
 
 
         # Put into List
-        [axes.axvline(_volt, linewidth=2, color=inputcolor) for _volt in transition]
+        [axes.axvline(_volt, linewidth=2, label="w") for _volt in transition]
 
         axes.set_xticks(transition)
         axes.set_xticklabels(pair , color=inputcolor, fontsize=7)
 
         return axes
 
+    def putdeexitationslist_ticks(self, axes, exlist, fontsize_in=7, inputcolor='b'):
+
+        transition = []
+        pair = []
+
+        # Caclulate
+        for element in exlist:
+
+            transition.append(2 * (self.energy_unoccupied[element[1]] - self.energy_occupied[element[0]]))
+            index = "$D_{" + str(element[0]) + str(element[1]) + "}$"
+            pair.append(index)
+
+        axes.set_xticks(transition)
+        axes.set_xticklabels(pair , fontsize=fontsize_in)
+
+        return axes
+
+
+    def putexitationslist_ticks(self, axes, exlist, fontsize_in=15, inputcolor='b'):
+
+        transition = []
+        pair = []
+
+        # Caclulate
+        for element in exlist:
+
+            transition.append(2 * (self.energy_occupied[element[1]] - self.energy_unoccupied[element[0]]))
+            index = "$P_{" + str(element[0]+1) + str(element[1]+1) + "}^{out}$"
+            pair.append(index)
+
+        axes.set_xticks(transition)
+        axes.set_xticklabels(pair , fontsize=fontsize_in)
+
+        return axes
+
     # Attention: Method works only for grid with a unit stepsize
+
+    def put_single_deexitation_line(self, axes, init_state=0, final_state=1, linestyle_in="-", inputcolor='b'):
+
+        transition = (2 * (self.energy_unoccupied[final_state] - self.energy_occupied[init_state]))
+        index = "$P_{" + str(init_state + 1) + str(final_state + 1) + "}" + "^{o}"
+        axes.axvline(transition, linewidth=2, ls=linestyle_in, color=inputcolor, label=index)
+
+        return axes
+
+
+    def put_single_exitation_line(self, axes, init_state=0, final_state=1, linestyle_in="-", inputcolor='b'):
+
+        transition = (2 * (self.energy_occupied[final_state] - self.energy_unoccupied[init_state]))
+        index = "$P_{" + str(init_state + 1) + str(final_state + 1) + "}^{\mathregular{out}}$"
+        print (index)
+        axes.axvline(transition, linewidth=1, ls=linestyle_in, color=inputcolor, label=index)
+
+        return axes
+
     def derivate_energy(self):
         import numpy as np
 
@@ -537,10 +598,10 @@ class system(object):
         sample_freq = fftpack.fftfreq(len(self.position), d=time_step)
 
         self.position_fft = fftpack.fft(self.position)
-       
+
         pidxs = np.where(sample_freq > 0)
         self.freqs, self.power = sample_freq[pidxs], np.abs(self.position_fft)[pidxs]
-        
+
         self.freq = self.freqs[power.argmax()]
 
         print ("FFT of all observables calculated")
@@ -556,15 +617,15 @@ class system(object):
         sample_freq = fftpack.fftfreq(len(self.position), d=time_step)
 
         self.position_fft = fftpack.fft(self.position)
-       
+
         pidxs = np.where(sample_freq > 0)
         self.freqs, self.power = sample_freq[pidxs], np.abs(self.position_fft)[pidxs]
-        
+
         self.freq = self.freqs[self.power.argmax()]
 
         print ("FFT of Position Calculatied")
 
-        return 
+        return
 
 
     def plot_fft_position(self, axes, style='-', colorp='b', name=""):
@@ -573,7 +634,7 @@ class system(object):
         axes.set_xlabel('Frequency [$\omega_0$]')
         axes.set_ylabel('Amplitude')
 
-        return 
+        return
 
 
     def fft_current(self, axes):
@@ -667,6 +728,16 @@ class system(object):
 
         return axes
 
+    def put_deexcitation_list(self, axes, fontsize='10'):
+
+        for element in self.exitation_list[2]:
+            axes.axvline(element[0], linewidth=1, color=element[1])
+
+        axes.set_xticks(self.exitation_list[0])
+        axes.set_xticklabels(self.exitation_list[1] , fontsize=fontsize)
+
+        return axes
+
     def create_excitation_list(self, lower_bound=0, upper_bound=10, quanta=1, color='b'):
 
 
@@ -692,12 +763,12 @@ class system(object):
 
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
-       
+
         transitions, pair, rangel = self.exitation(0, 200, quanta)
 
         x = transitions
         y = rangel
-    
+
         ax.bar(xs, ys, zs=z, zdir='y', color=cs, alpha=0.8)
 
         ax.set_zlabel('Z')
@@ -705,8 +776,8 @@ class system(object):
         ax.set_ylabel('m')
 
         pass
-    
-    
+
+
     def set_pupblication_style(self):
         rcParams['axes.titlesize'] = 26
         rcParams['axes.labelsize'] = 30
@@ -781,13 +852,13 @@ class density(object):
 
 
 class frankmatrix(object):
-    
+
     def __init__(self, frank_path="None", quanta=0, frank_shift=0):
         if frank_path != "None":
             self.data = np.loadtxt(frank_path).T
 
         self.quanta = quanta
-        self.gate_voltages = self.data[0]   
+        self.gate_voltages = self.data[0]
         self.frank_matrix = self.data[0:]
 
         self.number_of_gate_points = self.gate_voltages.shape[0]
@@ -809,9 +880,9 @@ class frankmatrix(object):
 
 
     def put_pair(self, axes, state=0, *args):
-    
+
        axes.plot(self.gate_voltages, self.frank_matrix[state], label= str(state) + " > " + str(state + self.quanta) + " ( "+ str(self.frank_shift) + " )", *args)
-       
+
        return axes
 
 
@@ -820,35 +891,46 @@ class energydiagram(object):
         import numpy as np
         if energyfile_path != "None":
             self.energy_dia = np.loadtxt(energyfile_path).T
-            
-        self.gate_voltages = self.energy_dia[0] - shift   
+
+        self.gate_voltages = self.energy_dia[0] - shift
         self.energys = self.energy_dia[1:]
-        
+
         self.number_of_states = self.energys.shape[0]
         self.number_of_gate_points = self.energys.shape[1]
         self.occupation_energy = occupation_energy
 
         self.thresholds = self.get_transition_matrix()
-        
+
     def get_transition_matrix(self):
-        
+
         threshold_list = []
         for quanta in range(0, self.number_of_states):
             threshold_list.append(self.get_transition_for_quanta(quanta))
         return threshold_list
 
 
-    def put_single_transition(self, ax, initial_state=0, end_state=0, lw=2, ls='--', col='b'):
-       
+    def put_single_transition(self, ax, initial_state=0, end_state=0, lw=2, ls='--', res=1.0, col='b'):
+
         #label_dummy = str(initial_state) + " > "+ str(end_state)
-        indecies = str(initial_state+1) + str(end_state+1) 
+        indecies = str(initial_state+1) + str(end_state+1)
         label_dummy = "$U_{" + indecies + "}$"
 
         transition = 2*(self.energys[end_state] + self.occupation_energy - self.energys[initial_state])
+        ax.plot(self.gate_voltages/res, transition, label=label_dummy, linewidth=lw, linestyle=ls, color=col)
+
+        return ax
+
+    def put_single_dex_transition(self, ax, initial_state=0, end_state=0, lw=2, ls='--', col='b'):
+
+        #label_dummy = str(initial_state) + " > "+ str(end_state)
+        indecies = str(initial_state+1) + str(end_state+1)
+        label_dummy = "$U_{" + indecies + "}$"
+
+        transition = 2*(self.energys[initial_state] + self.occupation_energy - self.energys[end_state])
         ax.plot(self.gate_voltages, transition, label=label_dummy, linewidth=lw, linestyle=ls, color=col)
 
         return ax
-    
+
     def put_distance(self, ax, initial_state=0, end_state=0, *args):
 
         distance = self.energys[end_state] - self.energys[initial_state]
@@ -856,38 +938,38 @@ class energydiagram(object):
 
         return ax
 
-    def put_transition(self, ax, quanta, end_state=None):    
-        
+    def put_transition(self, ax, quanta, end_state=None):
+
         if end_state is None:
             end_state = (self.number_of_states - quanta)
-        
+
         for i in range(0, end_state):
-            ax.plot(self.gate_voltages, self.thresholds[quanta]["threshold"][i], 
+            ax.plot(self.gate_voltages, self.thresholds[quanta]["threshold"][i],
                 label = str(self.thresholds[quanta]["pair"][i][0]) +" > " + str(self.thresholds[quanta]["pair"][i][1]) )
-        
+
         return ax
-            
+
     def put_transition_const_state(self, ax, state):
-        
+
         for i in range(0, self.number_of_states-state):
             transition = 2*(self.energys[state + i] + self.occupation_energy - self.energys[state])
             ax.plot(self.gate_voltages, transition, label=str(state) + " > "+ str(state + i))
-                  
+
         return ax
-        
-        
+
+
     def get_transition_for_quanta(self, quanta):
-        
+
         transition = []
         pair = []
-       
+
         for i in range(0, (self.number_of_states - quanta)):
-        
+
             transition.append(2*(self.energys[i + quanta] + self.occupation_energy - self.energys[i]))
             pair.append([i, i + quanta])
-                  
+
         return {"pair":pair, "threshold":transition}
-        
+
 
 class heatmap(object):
     def __init__(self, heatmap="None", primary_grid="None", secondary_grid="None", shift=0):
@@ -919,7 +1001,7 @@ class heatmap(object):
 
         # Meshgrid for 3d Plots
         self.xv, self.yv = np.meshgrid(self.primary_grid, self.secondary_grid)
-        
+
 
     def calculate_derivate(self):
         import numpy as np
@@ -936,7 +1018,7 @@ class heatmap(object):
         axes.set_ylabel('Current [$\mu$ A]')
 
         return axes
-    
+
     def plot_derivate_data_vs_bias(self, axes , index=1):
 
         axes.plot(self.xd, self.conductance[:,index] ,linestyle='-', lw='2', label=str(index) )
@@ -1028,6 +1110,3 @@ class rhox(object):
 
         file_name = save_path + self.name + "rhox_overview.png"
         fig.savefig(file_name)
-
-
-

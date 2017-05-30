@@ -7,14 +7,9 @@ import os
 myhost = os.uname()[1]
 signature = time.strftime("%d_%m")
 
-if myhost=="lima" or myhost=="cshpc":
-    program_rrze =  "./Release_Intel64/gmaster13"
-    path_rrze = "/home/hpc/mpet/mpet07/gmaster13"
-    projectpath = "/home/vault/mpet/mpet07/projects/NEW_set_cvc_gegenproof" + signature +"/"    
-else:
-    program_rrze =  "./gmaster13"
-    path_rrze = "/user/chriz/calculations"
-    projectpath =  "/user/chriz/calculations"    
+program_rrze =  "./Release_Intel64/gmaster13"
+path_rrze = "/home/hpc/mpet/mpet07/gmaster13"
+projectpath = "/home/vault/mpet/mpet07/projects/NEW_set_cvc_gegenproof" + signature +"/"    
 
 small_gate=[]
 medium_gate=[]
@@ -24,10 +19,10 @@ large_gate=[]
 system_l025_stat = {"l":0.25, "delta":0.025, "gate":small_gate , "frank":[0.0], "barrier":[0.05], 
         "operation":[], "A":0.1, "B":1, "C":7, "gate_start":-2.5, "gate_end":3.5, "gate_points":300, "Sym":0.5}  
 system_l05_stat = {"l":0.5, "delta":0.1,"gate":medium_gate , "frank":[0.0],"barrier":[0.2], 
-        "operation":[], "A":0.1, "B":1, "C":7, "gate_start":-2.5, "gate_end":4.5, "gate_points":350, "Sym":1} 
+        "operation":[], "A":0.31622776601, "B":1, "C":7, "gate_start":-2.5, "gate_end":4.5, "gate_points":350, "Sym":1} 
 system_l075_stat = {"l":0.75, "delta":0.3, "gate":large_gate , "frank":[-0.2,0.2], "barrier":[0.8], 
         "operation":[], "A":0.1, "B":1, "C":7, "gate_start":-2.5, "gate_end":6.5, "gate_points":450, "Sym":2}
-
+#Square root of 0.1 is 0.31622776601
 configuration_stat =[system_l075_stat, system_l05_stat, system_l025_stat]
 
 ## # Current - Voltage - Characteristics Heatmap

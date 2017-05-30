@@ -5,7 +5,7 @@ import expokit_heatmap_function as expokit
 #Parameter
 spec="spec_g06_B0"
 gate_start = 0.695
-T=293
+T=10
 en = 0.000
 bias = 0.00
 
@@ -21,5 +21,6 @@ large_resonance_minus = [-3.2, -1.95, -0.61]
 gate_end_list =sorted(np.linspace(0, 1.5, gate_points_sub_grid).tolist() +  np.linspace(1.5,7,gate_points_regular_grid).tolist() + list_creator.resonance_refinement(large_resonance_plus, width=0.12, resolution=13))
 
 ## Function Call
-k = expokit.create_expokit_heatmap(spec=spec, gate_start=gate_start, T=T, en=en, bias=bias, gate_end_list=gate_end_list) 
+outputpath = "/home/hpc/mpet/mpet07/Dropbox/expokit_work_rrze_zero/"
+k = expokit.create_expokit_heatmap(spec=spec, gate_start=gate_start, T=T, en=en, bias=bias, gate_end_list=gate_end_list, outputpath=outputpath) 
 

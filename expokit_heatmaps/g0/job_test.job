@@ -1,0 +1,38 @@
+#!/bin/bash -l
+#
+# Resources
+#PBS -l nodes=1:ppn=24	
+#PBS -l walltime=24:00:00
+
+# Job Specifications
+# Job Name
+#PBS -N spec1
+
+# Job Output
+#PBS -e /home/hpc/mpet/mpet07/expokit_heatmaps//switch/joboutput/${PBS_JOBNAME}.err
+#PBS -o /home/hpc/mpet/mpet07/expokit_heatmaps//switch/joboutput/${PBS_JOBNAME}.out
+
+#Mail with (a)bort, (b)egin, (e)nd
+#PBS -m ae
+
+# Job Execution
+#OpenMP
+#export KMP_AFFINITY=disabled
+#export OMP_DYNAMIC=false
+#export OMP_NUM_THREADS=6
+
+#Threads MKL
+export MKL_DYNAMIC=true
+export MKL_NUM_THREADS=24
+
+# Module Load
+module load intel64
+
+# Change Directory
+cd /home/hpc/mpet/mpet07/mylib/expokit_heatmaps/g0
+
+# Run
+python expokit_B03.py 
+
+
+

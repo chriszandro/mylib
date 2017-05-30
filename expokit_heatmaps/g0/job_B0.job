@@ -1,5 +1,3 @@
-#!/bin/bash -l
-#
 # Resources
 #PBS -l nodes=1:ppn=40
 #PBS -l walltime=24:00:00
