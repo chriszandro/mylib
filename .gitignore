@@ -1,9 +1,0 @@
-*.swp
-*.swo
-./ropeproject
-.dro*
-*.pyc
-*.py~
-*.un~
-analysis.py~
-*.py~
