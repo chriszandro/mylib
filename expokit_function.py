@@ -1,4 +1,4 @@
-#### Preload 
+#### Preload
 import human_readable as human
 import cluster
 import math
@@ -13,9 +13,9 @@ import numpy as np
 # POTENTIAL
 #Switching Dynamic
 system_l025_dyn = {"l":0.25, "delta":0.025, "gate":[] , "frank":[0.0], "barrier":[0.05], "gateonoff":[0.0,2.5,3.304],
-        "operation":[], "A":0.1, "B":1, "C":7, "Sym":0.5} 
+        "operation":[], "A":0.1, "B":1, "C":7, "Sym":0.5}
 system_l05_dyn = {"l":0.5, "delta":0.1,"gate":[] , "frank":[0.0],"barrier":[0.2], "gateonoff":[0.0,2.5,3.304],
-        "operation":[], "A":0.1, "B":1, "C":7, "Sym":1}  
+        "operation":[], "A":0.1, "B":1, "C":7, "Sym":1}
 system_l075_dyn = {"l":0.75, "delta":0.3, "gate":[] , "frank":[0.0], "barrier":[0.8], "gateonoff":[0.0,2.5,3.304],
         "operation":[], "A":0.1, "B":1, "C":7, "Sym":2}
 potential = system_l075_dyn
@@ -37,7 +37,7 @@ print myhost
 if myhost=="emmy1.rrze.uni-erlangen.de" or myhost=="lima.rrze.uni-erlangen.de" or myhost=="cshpc.rrze.uni-erlangen.de":
 
     print "RRZE Resources"
-    resource = {"timestart":0,  "timeend":1e9, "timegrid":1e7, "clustertime":"24:00:00", "cluster":"emmy", 
+    resource = {"timestart":0,  "timeend":1e9, "timegrid":1e7, "clustertime":"24:00:00", "cluster":"emmy",
          "program_rrze":"./Release_Intel64_exp/gmaster13",
          "path_rrze":"/home/hpc/mpet/mpet07/gmaster13",
          "projectpath":"/home/hpc/mpet/mpet07/expokit_heatmaps/"}
@@ -45,7 +45,7 @@ if myhost=="emmy1.rrze.uni-erlangen.de" or myhost=="lima.rrze.uni-erlangen.de" o
 
 else:
     print "THCP Resources"
-    resource = {"timestart":0,  "timeend":1e9, "timegrid":1e7, "clustertime":"24:00:00", "cluster":"emmy", 
+    resource = {"timestart":0,  "timeend":1e9, "timegrid":1e7, "clustertime":"24:00:00", "cluster":"emmy",
          "program_rrze":"./Release_Intel64_exp/gmaster13",
          "path_rrze":"/user/chriz/gmaster13",
          "projectpath":"/user/chriz/expokit_heatmaps/"}
@@ -55,7 +55,7 @@ else:
 if not os.path.exists(path):
     os.makedirs(path)
 
-## Resonances 
+## Resonances
 large_resonance_plus = [0.695, 2.0, 3.305,4.61,5.95]
 large_resonance_minus = [-3.2, -1.95, -0.61]
 
@@ -68,7 +68,7 @@ time.sleep(3)
 
 enumrator=0
 print gate_end_list
-np.savetxt(path + "gate.grid", gate_end_list) 
+np.savetxt(path + "gate.grid", gate_end_list)
 
 grid_time = 710
 grid_gate = len(gate_end_list)
@@ -77,27 +77,27 @@ current_matrix = np.zeros(shape=(grid_gate, grid_time))
 position_matrix = np.zeros(shape=(grid_gate, grid_time))
 energy_matrix = np.zeros(shape=(grid_gate, grid_time))
 
-for gate_end in gate_end_list: 
+for gate_end in gate_end_list:
 
-    computation = cluster.jobproject(name="switch", program=resource["program_rrze"], 
-            programprojectpath=resource["path_rrze"], projectpath=resource["projectpath"], mode=40, N=3000, 
-            summary_bool=1, performance_bool=0, pop_bool=0, coupling_bool=0, pop_number=15, rhox_bool=0, plot_bool=1, 
-            meBND=5 , meBND_small=5,xranges=2.0e0, medim1=40, medim0=40, timebool=0, potential_id=0, initialstate=1) 
-    
+    computation = cluster.jobproject(name="switch", program=resource["program_rrze"],
+            programprojectpath=resource["path_rrze"], projectpath=resource["projectpath"], mode=40, N=3000,
+            summary_bool=1, performance_bool=0, pop_bool=0, coupling_bool=0, pop_number=15, rhox_bool=0, plot_bool=1,
+            meBND=5 , meBND_small=5,xranges=2.0e0, medim1=40, medim0=40, timebool=0, potential_id=0, initialstate=1)
+
 
     inputfile = computation.add_job(
 
-## CLUSTER 
+## CLUSTER
     cluster = resource["cluster"],
     time = resource["clustertime"],
 
-    ## Timing 
+    ## Timing
     time_start = grid_time,
     time_end = grid_time,
     time_grid = grid_time,
 
     ## Bias
-    specific=spec, 
+    specific=spec,
     start_bias_voltage=bias,
     end_bias_voltage=bias,
 
@@ -128,13 +128,13 @@ for gate_end in gate_end_list:
 
     #Program Execution
     os.chdir(resource["projectpath"] + "switch/jobfiles")
-    execute = "./gmaster13" + " " + "inputfile_switch"+spec+".inp" + " " + computation_file 
+    execute = "./gmaster13" + " " + "inputfile_switch"+spec+".inp" + " " + computation_file
     os.system(execute)
 
     result_evo = resource["projectpath"] + "switch/result/inputfile_switch"+spec+".inp_FeBo__exptime.evo"
 
     # Single File Copy
-    copyfile(result_evo, path + "inputfile_switch" + spec + "_" + str(gate_end) + "_.evo") 
+    copyfile(result_evo, path + "inputfile_switch" + spec + "_" + str(gate_end) + "_.evo")
 
     #Pickup Data
     system = analysis.system(computation_data=result_evo)
@@ -145,8 +145,7 @@ for gate_end in gate_end_list:
     enumrator += 1
 
 #Save Heatmaps
-np.savetxt(path + "current_heatmap.cum", current_matrix) 
-np.savetxt(path + "position_heatmap.pom", position_matrix) 
-np.savetxt(path + "energy_heatmap.enm", energy_matrix) 
-
-np.savetxt(path + "time.grid", system.parameter) 
+np.savetxt(path + "current_heatmap.cum", current_matrix)
+np.savetxt(path + "position_heatmap.pom", position_matrix)
+np.savetxt(path + "energy_heatmap.enm", energy_matrix)
+np.savetxt(path + "time.grid", system.parameter)
