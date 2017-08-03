@@ -1,22 +1,20 @@
 # New Cluster program
 
-#Class of the computation file
+# Class of the computation file
 class computation:
-
-    #Computation File Constructor retrieving parameters
+    # Computation File Constructor retrieving parameters
     def __init__(self, computation_path="", computation_file="computation",
-                 mode=1, plot_bool=1, rhox_bool=1, surf_bool=0, pop_bool=1, performance_bool = 0,
-                 summary_bool = 1, coupling_bool=1, pop_number=10,
-                 N=1500, dvr_method=1, fourier = 10.0e0, potential_id=0,
+                 mode=1, plot_bool=1, rhox_bool=1, surf_bool=0, pop_bool=1, performance_bool=0,
+                 summary_bool=1, coupling_bool=1, pop_number=10,
+                 N=1500, dvr_method=1, fourier=10.0e0, potential_id=0,
                  medim1=60, medim0=60, meBND=6, meBND_small=6,
                  system_output_filepath="./output/system",
                  summary_output_filepath="./output/summary",
                  result_output_filepath="./output/result",
                  evo_method=1, solve_method=2, abstol=1e-8, ideg=2, timebool=1,
-                 xranges=8.0e0, appendbool = 0, performancebool=0, rhox_tolerance=1e-6,
-                 fermion_bath=1,boson_bath=1,initialstate=1,
+                 xranges=8.0e0, appendbool=0, performancebool=0, rhox_tolerance=1e-6,
+                 fermion_bath=1, boson_bath=1, initialstate=1,
                  computation_modell=1, computation_modell_2=1):
-
         self.computation_path = computation_path
         self.computation_file = computation_file
 
@@ -55,33 +53,34 @@ class computation:
         self.rhox_tolerance = rhox_tolerance
         self.fermion_bath = fermion_bath
         self.boson_bath = boson_bath
-        self.initialstate =  initialstate
+        self.initialstate = initialstate
 
         self.computation_modell = computation_modell
         self.computation_modell_2 = computation_modell_2
 
-    #Writing the computation file
+    # Writing the computation file
 
     def write_computation_file(self):
-
         Computation = open(self.computation, "w")
         Computation.write("---------------Program Mode-------------------------------------\n")
-        Computation.write("%20d" % self.mode + "           " +  "#Program-Mode | 1: Voltage-Loop\n")
-        Computation.write("%20d" % self.plot_bool + "           " + "#Output System Generation: 0: No output, 1: Output\n")
+        Computation.write("%20d" % self.mode + "           " + "#Program-Mode | 1: Voltage-Loop\n")
+        Computation.write(
+            "%20d" % self.plot_bool + "           " + "#Output System Generation: 0: No output, 1: Output\n")
         Computation.write("%20d" % self.rhox_bool + "           " + "#rhox Output 0: No output, 1: Output\n")
         Computation.write("%20d" % self.surf_bool + "           " + "#surface Output 0: No output, 1: Output\n")
         Computation.write("%20d" % self.pop_bool + "           " + "#population Output 0: No output, 1: Output\n")
-        Computation.write("%20d" % self.summary_bool+ "           " + "# Performance File 0: No output, 1: Output\n")
+        Computation.write("%20d" % self.summary_bool + "           " + "# Performance File 0: No output, 1: Output\n")
         Computation.write("%20d" % self.performance_bool + "           " + "#Summary 0: No output, 1: Output\n")
-        Computation.write("%20d" % self.coupling_bool  + "           " + "# Franck - Condon Matrix 0: No output, 1: Output\n")
-        Computation.write("%20d" % self.pop_number+ "           " + "# Number of Population \n")
+        Computation.write(
+            "%20d" % self.coupling_bool + "           " + "# Franck - Condon Matrix 0: No output, 1: Output\n")
+        Computation.write("%20d" % self.pop_number + "           " + "# Number of Population \n")
         Computation.write("---------------System-------------------------------------------\n")
         Computation.write("%20d" % self.N + "           " + "#Number of Grid Points N\n")
         Computation.write("%20d" % self.dvr_method + "           " + "#N \n")
         Computation.write("%20e" % self.fourier + "           " + "Fourier \n")
         Computation.write("%20d" % self.potential_id + "           " + "#id\n")
         Computation.write("--------------MasterEq-----------------------------------------\n")
-        Computation.write("%20d" % self.medim0 + "           "  + "  #medim00          Dimension 00\n")
+        Computation.write("%20d" % self.medim0 + "           " + "  #medim00          Dimension 00\n")
         Computation.write("%20d" % self.medim1 + "           " + "  #medim11          Dimension 11\n")
         Computation.write("%20d" % self.meBND + "           " + "  #meBand           Bandwidth\n")
         Computation.write("%20d" % self.meBND_small + "           " + "  #meBand           Bandwidth\n")
@@ -93,7 +92,8 @@ class computation:
         Computation.write("--- Result output filepath\n")
         Computation.write(self.result_output_filepath + "\n")
         Computation.write("---------------Time Evolution-----------------------------------\n")
-        Computation.write("%20d" % self.evo_method + "           " + "  #Evaluation Method (1=expokit chebjev, 2=zvode, 3=expokit pade)\n")
+        Computation.write(
+            "%20d" % self.evo_method + "           " + "  #Evaluation Method (1=expokit chebjev, 2=zvode, 3=expokit pade)\n")
         Computation.write("%20d" % self.ideg + "           " + "  #Pade Coefficient for Calcs\n")
         Computation.write("---------------Schroedinger ------------------------------------\n")
         Computation.write("%20d" % self.ideg + "           " + "  #Logical for Eigensystem Routine for Schroedinger\n")
@@ -104,40 +104,42 @@ class computation:
         Computation.write("%20d" % self.appendbool + "           " + "append bool for performance testing\n")
         Computation.write("%20e" % self.rhox_tolerance + "           " + "tolerance parameter for the 3d plots\n")
         Computation.write("---------------------------Baths -------------------------------\n")
-        Computation.write("%20d" % self.fermion_bath + "           " + "  #(=1 for including fermion both, 0 otherwise) \n")
-        Computation.write("%20d" % self.boson_bath+ "           " + "(=1 for including harmonic bath, 0 otherwise \n")
+        Computation.write(
+            "%20d" % self.fermion_bath + "           " + "  #(=1 for including fermion both, 0 otherwise) \n")
+        Computation.write("%20d" % self.boson_bath + "           " + "(=1 for including harmonic bath, 0 otherwise \n")
         Computation.write("---------------------------Initial States -------------------------------\n")
-        Computation.write("%20d" % self.initialstate + "           " + "Initial state for time evolution. 1 for conventinal switching. 2 for pure state\n")
+        Computation.write(
+            "%20d" % self.initialstate + "           " + "Initial state for time evolution. 1 for conventinal switching. 2 for pure state\n")
         Computation.write("---------------------------Initial States -------------------------------\n")
         Computation.write("%20d" % self.computation_modell + "           " + "Computation Modell \n")
         Computation.write("%20d" % self.computation_modell_2 + "           " + "Computation Modell Paramter 2 \n")
         Computation.write("---------------End Of File------------------------------------\n")
-        Computation.write("Modes: 1 CVC Mode bias-independent | 2 Varying Gate Voltage with constant voltage |\n 3 CVC with heatmaps | 4 CVC biasDEPENDENT |")
+        Computation.write(
+            "Modes: 1 CVC Mode bias-independent | 2 Varying Gate Voltage with constant voltage |\n 3 CVC with heatmaps | 4 CVC biasDEPENDENT |")
         Computation.write("20 Zvode Time Evolution | 30 Expokit Time Evolution |\n 50 Snaptshot Mode | 42...")
         Computation.close()
 
-        print ("Computation file written: " + self.computation)
+        print("Computation file written: " + self.computation)
 
-#Inputfile for physical parameters
+
+# Inputfile for physical parameters
 class inputfile:
-
-    #Constructor to obtain the parameters
+    # Constructor to obtain the parameters
     def __init__(self, inputfile_path="",
-            inputfile_name="inputfile", l=1.25,
-            delta=0.4, Vb=0.5, shiftEnergy=0.1,
-            xshift=0.0, omega=1.0, lambdas=0.0,
-            parabolashift=0.3,
-            A=1.0, B=0.2, C=1.0, switchshift=0.0,
-            grid_bias_voltage=10, start_bias_voltage=0.3, end_bias_voltage=0.3,
-            grid_gate_voltage=100, start_gate_voltage=0.0, end_gate_voltage=1.8, d=1.0,
-            Lj = 1, angle = 60, trans_shift = 1.0,
-            beta1L=3.0, beta2L=0.1, beta1R=3.0, beta2R=0.1, T=293.0,
-            fermi_level=0.0, time_grid=1000, time_start=0.0, time_end=1e3,
-            rhox_step=1000, parameter_start=0, parameter_end=1000, parameter1=5,
-            wcut=0.097, eta=0.0138,hbath_temp=293, 
-            initial_occupation=0, initial_state_number=1, initial_state_number_2=2, 
-            l_2=1.25, delta_2=0.1, Vb_2=0.5 ):
-
+                 inputfile_name="inputfile", l=1.25,
+                 delta=0.4, Vb=0.5, shiftEnergy=0.1,
+                 xshift=0.0, omega=1.0, lambdas=0.0,
+                 parabolashift=0.3,
+                 A=1.0, B=0.2, C=1.0, switchshift=0.0,
+                 grid_bias_voltage=10, start_bias_voltage=0.3, end_bias_voltage=0.3,
+                 grid_gate_voltage=100, start_gate_voltage=0.0, end_gate_voltage=1.8, d=1.0,
+                 Lj=1, angle=60, trans_shift=1.0,
+                 beta1L=3.0, beta2L=0.1, beta1R=3.0, beta2R=0.1, T=293.0,
+                 fermi_level=0.0, time_grid=1000, time_start=0.0, time_end=1e3,
+                 rhox_step=1000, parameter_start=0, parameter_end=1000, parameter1=5,
+                 wcut=0.097, eta=0.0138, hbath_temp=293,
+                 initial_occupation=0, initial_state_number=1, initial_state_number_2=2,
+                 l_2=1.25, delta_2=0.1, Vb_2=0.5):
         self.Lj = Lj
         self.angle = angle
         self.trans_shift = trans_shift
@@ -185,29 +187,30 @@ class inputfile:
         self.end_gate_voltage = end_gate_voltage
         self.d = d
 
-        self.wcut= wcut
-        self.eta=eta
-        self.hbath_temp=hbath_temp
+        self.wcut = wcut
+        self.eta = eta
+        self.hbath_temp = hbath_temp
 
         self.inputfile = self.inputfile_path + "/" + self.inputfile_name
 
         self.initial_occupation = initial_occupation
-        self.initial_state_number= initial_state_number
-        self.initial_state_number_2 =  initial_state_number_2
- 
+        self.initial_state_number = initial_state_number
+        self.initial_state_number_2 = initial_state_number_2
+
         self.l_2 = l_2
         self.delta_2 = delta_2
         self.Vb_2 = Vb_2
 
- #Writing the inputfile in given path
-    def write_file(self):
+        # Writing the inputfile in given path
 
+    def write_file(self):
         InputFile = open(self.inputfile, 'w')
         InputFile.write("-----------------------Potential----------------------------------------------" + "\n")
         InputFile.write("%20.10f" % self.l + "  #translocation length" + "\n")
         InputFile.write("%20.10f" % self.delta + "  #Delta + \n")
         InputFile.write("%20.10f" % self.Vb + "  #Barrier Height Vb" + "\n")
-        InputFile.write("%20.10f" % self.shiftEnergy + "  # Energy shift between occupied and unoccupied Potential" + "\n")
+        InputFile.write(
+            "%20.10f" % self.shiftEnergy + "  # Energy shift between occupied and unoccupied Potential" + "\n")
         InputFile.write("%20.10f" % self.xshift + "   #x-shift" + "\n")
         InputFile.write("-----------------------Vibronic-----------------------------------------" + "\n")
         InputFile.write("%20.10f" % self.omega + "  #Omega (.1) " + "\n")
@@ -256,7 +259,8 @@ class inputfile:
         InputFile.write("%20.10f" % self.eta + "  #eta" + "\n")
         InputFile.write("%20.10f" % self.hbath_temp + "  #Temperature of the harmonic Bath" + "\n")
         InputFile.write("-----------------------Pure State Management-----------------------------------" + "\n")
-        InputFile.write("%10d" % self.initial_occupation + "           " + "Initial occupation switching. 2 for pure state\n")
+        InputFile.write(
+            "%10d" % self.initial_occupation + "           " + "Initial occupation switching. 2 for pure state\n")
         InputFile.write("%10d" % self.initial_state_number + "           " + "Initial state number\n")
         InputFile.write("%10d" % self.initial_state_number_2 + "           " + "Second Initial state number\n")
         InputFile.write("-----------------------Second Set of Double Well Parameters--------------------" + "\n")
@@ -268,7 +272,6 @@ class inputfile:
 
 
 class jobproject(computation):
-
     def __init__(self, name, program, programprojectpath, projectpath, *args, **kwargs):
         """
         Main Object to handle a jobproject. It prepares all necessary paths and folders. Subsequently it
@@ -284,10 +287,10 @@ class jobproject(computation):
 
         self.home = expanduser("~")
 
-        self.mainpath =  self.projectpath + "/" + self.name
+        self.mainpath = self.projectpath + "/" + self.name
 
         # Paths
-        self.resultpath =  self.mainpath + "/result"
+        self.resultpath = self.mainpath + "/result"
         self.summarypath = self.mainpath + "/summary"
         self.systempath = self.mainpath + "/system"
         self.collectorpath = self.mainpath + "/collector"
@@ -323,11 +326,11 @@ class jobproject(computation):
 
     def get_result_fullpath(self):
 
-        return  self.resultpath 
-    
+        return self.resultpath
+
     def get_output_fullpath(self):
 
-        return  
+        return
 
     def reset_jobs(self):
         """
@@ -366,13 +369,14 @@ class jobproject(computation):
 
         jobnumber = len(self.joblist) + 1
 
-        if number_bool==1: 
+        if number_bool == 1:
             jobname = self.name + str(jobnumber)
         else:
-            jobname = self.name 
+            jobname = self.name
 
-        job = job_rrze(name=jobname, programprojectname=self.programprojectpath, program=self.program, computation_file=self.computation_file,
-                              jobfilespath=self.jobfilespath, joboutpath=self.joboutpath, *args, **kwargs)
+        job = job_rrze(name=jobname, programprojectname=self.programprojectpath, program=self.program,
+                       computation_file=self.computation_file,
+                       jobfilespath=self.jobfilespath, joboutpath=self.joboutpath, *args, **kwargs)
 
         self.joblist.append(job)
 
@@ -384,7 +388,7 @@ class jobproject(computation):
         """
 
         for job in self.joblist:
-            print (job.name)
+            print(job.name)
 
     def put_jobproject(self):
         """
@@ -400,7 +404,7 @@ class jobproject(computation):
 
     def put_job_file_merger(self):
 
-        path = self.resultpath + "/filename.list" 
+        path = self.resultpath + "/filename.list"
 
         namefile = open(path, 'w')
 
@@ -417,9 +421,9 @@ class jobproject(computation):
         """
 
         for job in self.joblist:
-            #---------------------------------------
+            # ---------------------------------------
             # Testscript Folder
-            #---------------------------------------
+            # ---------------------------------------
             # Create a Test file to execute the created inputfile easily
 
             path = self.testscriptspath + "/" + job.name + ".sh"
@@ -429,48 +433,48 @@ class jobproject(computation):
             Testscript.write(job.execution)
             Testscript.close()
 
-            #print "Testscript in: " +  path
+            # print "Testscript in: " +  path
 
     def put_local_jobscript(self, path="./jobstarters"):
-            """
-            Creates bash scripts in to the "path" folder which executes all jobs created by the jobproject
-            """
+        """
+        Creates bash scripts in to the "path" folder which executes all jobs created by the jobproject
+        """
 
-            import os
+        import os
 
-            if not os.path.exists(path):
-                os.makedirs(path)
+        if not os.path.exists(path):
+            os.makedirs(path)
 
-            # Create Bash File for job execution
-            Jobsubmit = open(path + "/" + self.name + "_jobstart.sh", 'w')
-            Jobsubmit.write("#!/bin/bash \n")
-            Jobsubmit.write("echo \"Processing" + self.name + "\" \n ")
+        # Create Bash File for job execution
+        Jobsubmit = open(path + "/" + self.name + "_jobstart.sh", 'w')
+        Jobsubmit.write("#!/bin/bash \n")
+        Jobsubmit.write("echo \"Processing" + self.name + "\" \n ")
 
-            for job in self.joblist:
-                submitt_string = "qsub " + job.jobfile
-                Jobsubmit.write(submitt_string + "\n")
-                Jobsubmit.write("sleep 1 \n")
+        for job in self.joblist:
+            submitt_string = "qsub " + job.jobfile
+            Jobsubmit.write(submitt_string + "\n")
+            Jobsubmit.write("sleep 1 \n")
 
-            Jobsubmit.close()
+        Jobsubmit.close()
 
     def put_runscript(self):
 
-            runscript = open(self.jobfilespath + "/runscript.sh", 'w')
+        runscript = open(self.jobfilespath + "/runscript.sh", 'w')
 
-            for job in self.joblist:
-                execute = job.program + " " + job.inputfile_name + " " + job.computation_file 
-                runscript.write(execute + "\n")
-                runscript.write("sleep 1 \n")
+        for job in self.joblist:
+            execute = job.program + " " + job.inputfile_name + " " + job.computation_file
+            runscript.write(execute + "\n")
+            runscript.write("sleep 1 \n")
 
-            runscript.close()
+        runscript.close()
 
-            runscript_neg = open(self.jobfilespath + "/runscript_neg.sh", 'w')
+        runscript_neg = open(self.jobfilespath + "/runscript_neg.sh", 'w')
 
-            for job in self.joblist:
-                execute = "#./" +job.program + " " + job.inputfile_name + " " + job.computation_file 
-                runscript_neg.write(execute + "\n")
-                runscript_neg.write("#sleep 1 \n")
-            runscript_neg.close()
+        for job in self.joblist:
+            execute = "#./" + job.program + " " + job.inputfile_name + " " + job.computation_file
+            runscript_neg.write(execute + "\n")
+            runscript_neg.write("#sleep 1 \n")
+        runscript_neg.close()
 
     def create_project_folder(self):
         """
@@ -499,24 +503,25 @@ class jobproject(computation):
             os.makedirs(self.testscriptspath)
 
     def put_bash(self):
-      Jobsubmit = open(self.jobfilespath + "/" + "jobsubmit.sh", 'w')
-      Jobsubmit.write("#!/bin/bash \n")
-      Jobsubmit.write("for FILE in *.job; do \n")
-      Jobsubmit.write("echo \"Processing $FILE \" \n ")
-      Jobsubmit.write("qsub ${FILE}\n")
-      Jobsubmit.write("sleep 1\n")
-      Jobsubmit.write("done")
-      Jobsubmit.close()
-        #---------------------------------------
-            # SMALL Bash Script to submitt all Jobs
-        #---------------------------------------
+        Jobsubmit = open(self.jobfilespath + "/" + "jobsubmit.sh", 'w')
+        Jobsubmit.write("#!/bin/bash \n")
+        Jobsubmit.write("for FILE in *.job; do \n")
+        Jobsubmit.write("echo \"Processing $FILE \" \n ")
+        Jobsubmit.write("qsub ${FILE}\n")
+        Jobsubmit.write("sleep 1\n")
+        Jobsubmit.write("done")
+        Jobsubmit.close()
+        # ---------------------------------------
+        # SMALL Bash Script to submitt all Jobs
+        # ---------------------------------------
 
         # Create Bash File for job execution
 
-#Class for the jobfile a the RRZE Computing systems
-class job_rrze(inputfile):
 
-    def __init__(self, name, programprojectname, program, computation_file, jobfilespath, joboutpath, specific="", subfolder="", cluster="lima", time="24:00:00", logfile=False , *args, **kwargs):
+# Class for the jobfile a the RRZE Computing systems
+class job_rrze(inputfile):
+    def __init__(self, name, programprojectname, program, computation_file, jobfilespath, joboutpath, specific="",
+                 subfolder="", cluster="lima", time="24:00:00", logfile=False, *args, **kwargs):
 
         # Read In
         self.name = name + specific
@@ -527,11 +532,11 @@ class job_rrze(inputfile):
         self.joboutpath = joboutpath
         self.cluster = cluster
         self.time = time
-        self.subfolder=subfolder
+        self.subfolder = subfolder
 
         self.inputfile = "inputfile_" + self.name + ".inp"
         self.inputfile_fullpath = self.jobfilespath + "/" + self.inputfile
-        
+
         self.jobfile = self.jobfilespath + "/" + self.name + ".job"
 
         if self.cluster == "lima":
@@ -540,11 +545,11 @@ class job_rrze(inputfile):
             self.cores = "40"
 
         # RESOURCES
-        #---Threads MKL
+        # ---Threads MKL
         self.mkldynamic = "export MKL_DYNAMIC=true"
         self.mklnumthreads = "export MKL_NUM_THREADS=" + self.cores
 
-        #---OpenMP
+        # ---OpenMP
         self.kmpaffinity = "#export KMP_AFFINITY=disabled"
         self.ompdynamic = "#export OMP_DYNAMIC=false"
         self.ompnumthreads = "#export OMP_NUM_THREADS=6"
@@ -554,8 +559,8 @@ class job_rrze(inputfile):
 
         # JobFile
         self.jobName = "#PBS -N " + self.name
- 
-        if logfile:  
+
+        if logfile:
             self.jobOutput = "#PBS -o " + self.joboutpath + "/" + "${PBS_JOBNAME}.log"
             self.jobError = "#PBS -e " + self.joboutpath + "/" + "${PBS_JOBNAME}.err"
         else:
@@ -568,7 +573,7 @@ class job_rrze(inputfile):
         self.execution = self.program + " " + self.inputfile + " " + self.computation_file + " " + self.jobfilespath + "/"
 
         inputfile.__init__(self, inputfile_path=self.jobfilespath, inputfile_name=self.inputfile, *args, **kwargs)
-         
+
         pass
 
     def put_job(self):
@@ -578,16 +583,14 @@ class job_rrze(inputfile):
         # Write the jobfile
         self.write_job_file()
 
-
     def run_job(self):
 
         import os
 
         command = "qsub " + self.jobfile
 
-        print ("Execution of: " + self.jobfile)
+        print("Execution of: " + self.jobfile)
         os.system(command)
-
 
     def write_job_file(self):
 
