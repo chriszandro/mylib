@@ -1,9 +1,6 @@
-import analysis as analysis
-import matplotlib.pyplot as plt
 import numpy as np
 from scipy import fftpack
-import analysis as analysis
-from matplotlib.colors import LogNorm
+import os
 
 au2second = 2.418884254e-17
 au2femto = au2second*1e15
@@ -19,17 +16,48 @@ def fourier_transform(parameter, variable):
 
     """
 
-    :param parameter: Zeitparameter 
-    :param variable: Variable for the fourier analysis 
-    :return: SampleFrequencies, power 
+    :param parameter: zeitparameter 
+    :param variable: variable for the fourier analysis 
+    :return: samplefrequencies, power 
     """
     # time_vec = parameter * femto2au *au2second
 
     time_vec = parameter*femto2au
     time_step = np.average(np.diff(time_vec))
-    sample_freq = fftpack.fftfreq(len(parameter), d=time_step)
+    N = len(parameter)
+    sample_freq = fftpack.fftfreq(N, d=time_step)
     pidxs = np.where(sample_freq > 0)
     fft = fftpack.fft(variable)
     freqs, power = sample_freq[pidxs], np.abs(fft)[pidxs]
+    amplitude = power*(2.0/N)
+
     print("Fourier Analysis is Done")
+    return freqs, amplitude
+
+def create_fourier_files(filename):
+
+    parameter = np.loadtxt(filename, usecols=(0,))
+    position = np.loadtxt(filename, usecols=(1,))
+    freqs, power = fourier_transform(parameter, position)
+
+    output_freq = filename_converter(filename, "freq" )
+    output_pos = filename_converter(filename, "position" )
+
+    np.save(output_pos, power)
+    np.save(output_freq, freqs)
+
+    print("Frequencies are saved to:", output_freq + ".npy")
+    print("Positions are saved to:", output_pos + ".npy")
+
     return freqs, power
+
+
+def filename_converter(filename, specifier):
+    return os.path.splitext(filename)[0] + "_FOURIER_" + specifier
+
+
+sys_2_res_freq, sys_2_res_pos_freq = create_fourier_files('D:/data/dynamik_einzeln/24_weak_g0/short/inputfile_switch_LARGE_G0_4.61_Vb_0.8_B_0.3_Switch_ON__ZeroS_T.inp_FeBo__ztime.evo')
+
+sys_2_res_freq = np.load('D:/data/dynamik_einzeln/24_weak_g0/short/inputfile_switch_LARGE_G0_4.61_Vb_0.8_B_0.3_Switch_ON__ZeroS_T.inp_FeBo__ztime_FOURIER_freq.npy')
+sys_2_res_pos_freq = np.load('D:/data/dynamik_einzeln/24_weak_g0/short/inputfile_switch_LARGE_G0_4.61_Vb_0.8_B_0.3_Switch_ON__ZeroS_T.inp_FeBo__ztime_FOURIER_position.npy')
+print(sys_2_res_freq.shape, sys_2_res_pos_freq.shape)
