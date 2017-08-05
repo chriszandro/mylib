@@ -3,7 +3,7 @@
 '''
 import os
 import numpy as np
-# from scipy import fftpack
+from scipy import fftpack
 
 # import matplotlib.pyplot as plt
 # from matplotlib import rcParams
@@ -420,7 +420,7 @@ class system(object):
         for element in exlist:
 
             transition.append(2 * (self.energy_unoccupied[element[1]] - self.energy_occupied[element[0]]))
-            index = "$P_{" + str(element[0]+1) + str(element[1]+1) + "}^{out}$"
+            index = "$D_{" + str(element[0]) + str(element[1]) + "}$"
             pair.append(index)
 
         axes.set_xticks(transition)
@@ -451,9 +451,7 @@ class system(object):
     def put_single_deexitation_line(self, axes, init_state=0, final_state=1, linestyle_in="-", inputcolor='b'):
 
         transition = (2 * (self.energy_unoccupied[final_state] - self.energy_occupied[init_state]))
-        # transition.append(2 * (self.energy_unoccupied[element[1]] - self.energy_occupied[element[0]]))
-
-        index = "$P_{" + str(init_state + 1) + str(final_state + 1) + "}^{\mathregular{out}}$"
+        index = "$P_{" + str(init_state + 1) + str(final_state + 1) + "}" + "^{o}"
         axes.axvline(transition, linewidth=2, ls=linestyle_in, color=inputcolor, label=index)
 
         return axes
@@ -462,7 +460,7 @@ class system(object):
     def put_single_exitation_line(self, axes, init_state=0, final_state=1, linestyle_in="-", inputcolor='b'):
 
         transition = (2 * (self.energy_occupied[final_state] - self.energy_unoccupied[init_state]))
-        index = "$P_{" + str(init_state + 1) + str(final_state + 1) + "}^{\mathregular{in}}$"
+        index = "$P_{" + str(init_state + 1) + str(final_state + 1) + "}^{\mathregular{out}}$"
         print (index)
         axes.axvline(transition, linewidth=1, ls=linestyle_in, color=inputcolor, label=index)
 
