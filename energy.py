@@ -28,11 +28,10 @@ class energy_inspector:
 
        return np.roll(self.energies, N) -  self.energies
 
-    def putex(self, ax, state_shift=1, state_list=[], color="r", height=1):
+       # def putex(self, ax, state_shift=1, state_list=[], color="r", height=1):
 
-        for i in state_list
-            frequency = self.get_trans_au(state_shift+i, i)
-            label_ed = "$\omega_{" + str(state_shift + i + 1) + "," +  str(i + 1)  + "}$"
-            ax.axvline(frequency,color="r", lw=1.0)
-            ax.text(frequency , height, label_ed, color="r", fontsize=18)
-
+       # for i in state_list
+       #     frequency = self.get_trans_au(state_shift+i, i)
+       #     label_ed = "$\omega_{" + str(state_shift + i + 1) + "," +  str(i + 1)  + "}$"
+       #     ax.axvline(frequency,color="r", lw=1.0)
+       #     ax.text(frequency , height, label_ed, color="r", fontsize=18)

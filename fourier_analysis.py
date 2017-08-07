@@ -51,13 +51,5 @@ def create_fourier_files(filename):
 
     return freqs, power
 
-
 def filename_converter(filename, specifier):
     return os.path.splitext(filename)[0] + "_FOURIER_" + specifier
-
-
-sys_2_res_freq, sys_2_res_pos_freq = create_fourier_files('D:/data/dynamik_einzeln/24_weak_g0/short/inputfile_switch_LARGE_G0_4.61_Vb_0.8_B_0.3_Switch_ON__ZeroS_T.inp_FeBo__ztime.evo')
-
-sys_2_res_freq = np.load('D:/data/dynamik_einzeln/24_weak_g0/short/inputfile_switch_LARGE_G0_4.61_Vb_0.8_B_0.3_Switch_ON__ZeroS_T.inp_FeBo__ztime_FOURIER_freq.npy')
-sys_2_res_pos_freq = np.load('D:/data/dynamik_einzeln/24_weak_g0/short/inputfile_switch_LARGE_G0_4.61_Vb_0.8_B_0.3_Switch_ON__ZeroS_T.inp_FeBo__ztime_FOURIER_position.npy')
-print(sys_2_res_freq.shape, sys_2_res_pos_freq.shape)
