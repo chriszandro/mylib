@@ -34,3 +34,4 @@ def resonance_refinement(reso_list, width=0.1, resolution=11):
         refinement = refinement + item
 
     return refinement
+
