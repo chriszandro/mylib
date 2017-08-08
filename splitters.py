@@ -2,12 +2,17 @@ import numpy as np
 import os as os
 
 
+def load_splitted_files(filename):
+    paramter = np.load(os.path.splitext(filename)[0] + "_SPLITT_" + "parameter.npy")
+    position = np.load(os.path.splitext(filename)[0] + "_SPLITT_" + "position.npy")
+    current = np.load(os.path.splitext(filename)[0] + "_SPLITT_" + "current.npy")
+    energy = np.load(os.path.splitext(filename)[0] + "_SPLITT_" + "energy.npy")
+
+    return {"parameter": paramter, "position": position, "current": current, "energy": energy}
+
+
 def create_splitted_files(filename):
     data_matrix = np.loadtxt(filename, usecols=(0, 1, 2, 3))
-    # parameter = np.loadtxt(filename, usecols=(0,))
-    # position = np.loadtxt(filename, usecols=(1,))
-    # current = np.loadtxt(filename, usecols=(2,))
-    # energy = np.loadtxt(filename, usecols=(2,))
 
     print("Files Loaded")
     output_parameter = filename_converter(filename, "parameter")
