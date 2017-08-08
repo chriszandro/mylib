@@ -13,10 +13,10 @@ def magnitude_list(magnitude_start=10, magnitude_end=10, splitt_number=9, grid=1
 
         for i in range(0, splitt_number):
             index_runner += 1
-            print(i, start_point)
             start_point = start + i * splitt
             end_point = start + (i+1) * splitt
 
+            print(i, "%E" % start_point, "%E" % end_point)
             tulpel = {"start":start_point, "end":end_point, "index":index_runner, "grid":grid}
             splitt_tupels.append(tulpel)
 
