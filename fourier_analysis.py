@@ -51,7 +51,8 @@ def create_fourier_files(filename):
 
     return freqs, power
 
-
 def filename_converter(filename, specifier):
     return os.path.splitext(filename)[0] + "_FOURIER_" + specifier
-
+<<<<<<< HEAD
+=======
+>>>>>>> 5588e5bd25dbbd336fe5ea987d31b0ef90fca01c

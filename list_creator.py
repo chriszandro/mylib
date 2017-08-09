@@ -9,14 +9,14 @@ def magnitude_list(magnitude_start=10, magnitude_end=10, splitt_number=9, grid=1
 
         start = math.pow(10,magnitude) 
         end  = math.pow(10,magnitude+1) 
-        splitt = (end-start)/splitt_number 
+        splitt = (end-start)/splitt_number
 
-        for i in range(1, splitt_number):
+        for i in range(0, splitt_number):
             index_runner += 1
-
             start_point = start + i * splitt
             end_point = start + (i+1) * splitt
 
+            print(i, "%E" % start_point, "%E" % end_point)
             tulpel = {"start":start_point, "end":end_point, "index":index_runner, "grid":grid}
             splitt_tupels.append(tulpel)
 
@@ -34,3 +34,4 @@ def resonance_refinement(reso_list, width=0.1, resolution=11):
         refinement = refinement + item
 
     return refinement
+
