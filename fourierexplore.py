@@ -20,7 +20,7 @@ def example_frequency_grid(time_start, time_end, time_grid_length):
 
 
 sample_array, factor = example_frequency_grid(0, 1e7, 1e7)
-print(sample_array / 1e-6, sample_array.shape)
+print(sample_array[0:10], sample_array.shape)
 print factor
 
 signal = np.array([-2, 8, 6, 4, 1, 0, 3, 5], dtype=float)

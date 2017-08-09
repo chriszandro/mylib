@@ -53,3 +53,10 @@ def create_fourier_files(filename):
 
 def filename_converter(filename, specifier):
     return os.path.splitext(filename)[0] + "_FOURIER_" + specifier
+
+def transform_folder(folder):
+   for subdir, dirs, files in os.walk():
+       for file in files:
+           if file.endswith("evo"):
+               print("catched", file)
+
