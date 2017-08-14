@@ -1,11 +1,6 @@
 from scipy import fftpack
 import numpy as np
 
-time_end = 1e8
-time_start = 0
-time_grid = int(1e5 + 1)
-
-
 def example_frequency_grid(time_start, time_end, time_grid_length):
     time_step = (time_end - time_start) / time_grid_length
     time_grid = [time_start + (i - 1) * time_step for i in range(0, int(time_grid_length))]
@@ -19,7 +14,7 @@ def example_frequency_grid(time_start, time_end, time_grid_length):
     return sample_freq[pidxs], factor
 
 
-sample_array, factor = example_frequency_grid(0, 1e7, 1e7)
+sample_array, factor = example_frequency_grid(0, 1e8, 1e7)
 print(sample_array[0:10], sample_array.shape)
 print factor
 

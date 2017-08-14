@@ -11,3 +11,4 @@ def merge_files_in_folder(folder):
             os.chdir(subdir)
             command = 'cat $(ls -v) > merged_' + spec
             subprocess.Popen([command])
+
