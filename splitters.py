@@ -34,9 +34,10 @@ def create_splitted_files(filename):
 
 def create_splitted_population_files(filename):
     data_matrix = np.loadtxt(filename)
-    output_population = filename_converter(filename, "POP_0")
+    output_population = filename_converter(filename, "POP_SPLITT")
     np.save(output_population, data_matrix)
     print("Population is saved to:", output_population+ ".npy")
+
 
 def splitt_files_in_folder(folder):
     for subdir, dirs, files in os.walk(folder):
@@ -50,7 +51,7 @@ def splitt_population_files_in_folder(folder):
     for subdir, dirs, files in os.walk(folder):
         for file in files:
            if file.endswith("p0"):
-               create_splitted_files(os.path.join(subdir, file))
+               create_splitted_population_files(os.path.join(subdir, file))
 
 
         # normed_path = os.path.normpath(subdir)
