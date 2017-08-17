@@ -22,7 +22,7 @@ def magnitude_list(magnitude_start=10, magnitude_end=10, splitt_number=9, grid=1
 
     return splitt_tupels
 
-def magnitude_list_frequenzsonden(magnitude_start=9, magnitude_end=10):
+def magnitude_list_frequenzsonden(magnitude_start=9, magnitude_end=15):
 
     import math as math
 
@@ -32,9 +32,16 @@ def magnitude_list_frequenzsonden(magnitude_start=9, magnitude_end=10):
     end_point_value = 1e8
 
     for magnitude in range(magnitude_start, magnitude_end + 1):
-        for i in range(0,10):
+            #At the beginning of a magnitude
             index_runner = index_runner + 1
-            start = i*math.pow(10, magnitude)
+            start = 1.0*math.pow(10, magnitude)
+            end = start + end_point_value
+            tulpel = {"start":start, "end":end, "index":index_runner, "grid":grid}
+            splitt_tupels.append(tulpel)
+
+            #In the center of a magnitude
+            index_runner = index_runner + 1
+            start = 5.0*math.pow(10, magnitude)
             end = start + end_point_value
             tulpel = {"start":start, "end":end, "index":index_runner, "grid":grid}
             splitt_tupels.append(tulpel)
