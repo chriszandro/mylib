@@ -22,6 +22,23 @@ def magnitude_list(magnitude_start=10, magnitude_end=10, splitt_number=9, grid=1
 
     return splitt_tupels
 
+def magnitude_list_frequenzsonden(magnitude_start=9, magnitude_end=10):
+
+    import math as math
+
+    splitt_tupels = []
+    index_runner = 0
+    grid=1e7 # Maximal Value of the lima machine
+
+    for magnitude in range(magnitude_start, magnitude_end + 1):
+        for i in range(0,10):
+            index_runner = index_runner + 1
+            start = i*math.pow(10, magnitude)
+            end = start + grid
+            tulpel = {"start":start, "end":end, "index":index_runner, "grid":grid}
+            splitt_tupels.append(tulpel)
+
+    return splitt_tupels
 
 def resonance_refinement(reso_list, width=0.1, resolution=11):
     
