@@ -58,5 +58,5 @@ def transform_folder(folder):
    for subdir, dirs, files in os.walk():
        for file in files:
            if file.endswith("evo"):
-               print("catched", file)
-
+               print("Catched and Transforming", file)
+               create_fourier_files(os.path.join(subdir, file))
