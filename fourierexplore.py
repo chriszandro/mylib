@@ -14,7 +14,7 @@ def example_frequency_grid(time_start, time_end, time_grid_length):
     return sample_freq[pidxs], factor
 
 
-sample_array, factor = example_frequency_grid(0, 1e8, 1e7)
+sample_array, factor = example_frequency_grid(0, 1e7, 1e8)
 print(sample_array[0:10], sample_array.shape)
 print factor
 

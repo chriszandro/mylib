@@ -3,7 +3,7 @@ import numpy as np
 au2second = 2.418884254e-17
 au2femto = au2second*1e15
 femto2au = 1/au2femto
-au2ev = 27.21138
+au2ev = 27.2113834
 ev2au = 1/au2ev
 eVtoHz = 2.41798945e14
 Hztoau = 4.13413732914335e16
