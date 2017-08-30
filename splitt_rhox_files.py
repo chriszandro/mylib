@@ -29,7 +29,7 @@ def create_reduced_files_mat(filename):
 def reduce_rhob_files_in_folder(folder):
     for subdir, dirs, files in os.walk(folder):
         for file in files:
-            if file.endswith("rhob"):
+            if file.endswith("rhob") or file.endswith("rhomb"):
                 print ('Processing file :', file)
                 create_reduced_files(os.path.join(subdir, file))
                 create_reduced_files_mat(os.path.join(subdir, file))
