@@ -37,13 +37,3 @@ def reduce_rhob_files_in_folder(folder):
 def filename_converter(filename, specifier):
     return os.path.splitext(filename)[0] + "_REDUCED_" + specifier
 
-testfile = "C:/Users/chriz/Dropbox/PHD/rodeo/mediumdaten/medium/inputfile_cvc_-0_3.inp_FeBo__stat.rhob"
-testfolder = "C:/Users/chriz/Dropbox/PHD/rodeo/mediumdaten/medium/"
-create_reduced_files(testfolder)
-
-reduce_rhob_files_in_folder(testfolder)
-
-testfile = "C:/Users/chriz/Dropbox/PHD/rodeo/mediumdaten/medium/inputfile_cvc_-0_3.inp_FeBo__stat_REDUCED__.npz"
-l = np.load(testfile)
-
-
